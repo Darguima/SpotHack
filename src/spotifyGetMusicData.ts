@@ -1,3 +1,4 @@
+import { exit } from 'process'
 /* eslint-disable camelcase */
 import spotifyApi from '../services/spotifyApi'
 
@@ -7,6 +8,8 @@ import spotifyApi from '../services/spotifyApi'
 * MusicId/PlaylistId: 6y6jbcPG4Yn3Du4moXaenr
 
 */
+
+// spotifyApi interfaces
 
 interface spotifyApiResponseArtistsArrayItems {
   external_urls: {
@@ -73,6 +76,8 @@ interface spotifyApiResponse {
   }
 }
 
+// return object interfaces
+
 interface musicDataSchemaArtistsArrayItems {
   id: string,
   name: string,
@@ -80,7 +85,7 @@ interface musicDataSchemaArtistsArrayItems {
 
 interface musicDataSchemaArtistsArray extends Array<musicDataSchemaArtistsArrayItems> {}
 
-interface musicDataSchema {
+export interface musicDataSchema {
   artists: musicDataSchemaArtistsArray,
   name: string
   id: string
@@ -105,9 +110,13 @@ const spotifyGetMusicData = async (musicId: string, spotifyToken: string) => {
   } catch (err) {
     console.log('\n\n\n*** spotifyGetMusicData Error ***\n\n===\n')
     console.warn(err)
-    console.log('\n\n\nResponse: \n')
-    console.log(err.response)
+    if (err.response) {
+      console.log('\n\n\nResponse: \n')
+      console.log(err.response)
+    }
     console.log('\n\n\n')
+
+    exit()
   }
 }
 
