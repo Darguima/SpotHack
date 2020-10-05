@@ -1,3 +1,3 @@
 # SpotHack
 
-* An project to download music/playlists from Spotify.
+* A project to download music/playlists from Spotify.
