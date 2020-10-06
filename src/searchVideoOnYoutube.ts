@@ -38,7 +38,8 @@ export interface musicYoutubeDataSchema {
   name: string,
   spotifyId: string,
   artists: musicYoutubeDataSchemaArtistsArray,
-  youtubeVideoId: string
+  youtubeVideoId: string,
+  youtubeQuerySearch: string
 }
 
 const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
@@ -47,9 +48,9 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
 
     musicData.artists.map(item => (querySearch += item.name))
 
-    // const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${querySearch}&maxResults=1&key=${youtubeApiKey}`)
+    const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${querySearch}&maxResults=1&key=${youtubeApiKey}`)
 
-    const { data }: youtubeApiResponse = {
+    /* const { data }: youtubeApiResponse = {
       data: {
         kind: 'youtube#searchListResponse',
         etag: '_qJeAABqybSpab4uckr0twuHy-g',
@@ -64,13 +65,14 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
           }
         ]
       }
-    }
+    } */
 
     const musicYoutubeData: musicYoutubeDataSchema = {
       name: musicData.name,
       spotifyId: musicData.id,
       artists: [],
-      youtubeVideoId: data.items[0].id.videoId
+      youtubeVideoId: data.items[0].id.videoId,
+      youtubeQuerySearch: querySearch
     }
 
     musicData.artists.map(item => (

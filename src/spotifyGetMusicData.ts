@@ -1,4 +1,3 @@
-import { exit } from 'process'
 /* eslint-disable camelcase */
 import spotifyApi from '../services/spotifyApi'
 
@@ -8,6 +7,8 @@ import spotifyApi from '../services/spotifyApi'
 * MusicId/PlaylistId: 6y6jbcPG4Yn3Du4moXaenr
 
 */
+
+import { exit } from 'process'
 
 // spotifyApi interfaces
 
