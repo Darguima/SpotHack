@@ -4,7 +4,7 @@ import spotifyApi from '../services/spotifyApi'
 /*
 
 * https://open.spotify.com/track/6y6jbcPG4Yn3Du4moXaenr?si=P1uxKL3HQmaPAEiEFUJyMA
-* MusicId/PlaylistId: 6y6jbcPG4Yn3Du4moXaenr
+* MusicId: 6y6jbcPG4Yn3Du4moXaenr
 
 */
 
@@ -33,48 +33,50 @@ interface spotifyApiResponseImagesArrayItems {
 
 interface spotifyApiResponseImagesArray extends Array<spotifyApiResponseImagesArrayItems> {}
 
-interface spotifyApiResponse {
-  data: {
-    album: {
-      album_type: string,
-      artists: spotifyApiResponseArtistsArray,
-      available_markets: Array<string>,
-      external_urls: {
-        spotify: string
-      },
-      href: string,
-      id: string,
-      images: spotifyApiResponseImagesArray,
-      name: string,
-      release_date: string,
-      release_date_precision: string,
-      total_tracks: number,
-      type: string,
-      uri: string
-    },
-
+export interface spotifyApiForMusicResponseItems {
+  album: {
+    album_type: string,
     artists: spotifyApiResponseArtistsArray,
     available_markets: Array<string>,
-    disc_number: number,
-    duration_ms: number,
-    explicit: boolean,
-    external_ids: {
-      isrc: string
-    },
     external_urls: {
       spotify: string
     },
     href: string,
     id: string,
-    is_local: boolean,
-    is_playable: boolean,
+    images: spotifyApiResponseImagesArray,
     name: string,
-    popularity: number,
-    preview_url: string,
-    track_number: number,
+    release_date: string,
+    release_date_precision: string,
+    total_tracks: number,
     type: string,
-    uri: string,
-  }
+    uri: string
+  },
+
+  artists: spotifyApiResponseArtistsArray,
+  available_markets: Array<string>,
+  disc_number: number,
+  duration_ms: number,
+  explicit: boolean,
+  external_ids: {
+    isrc: string
+  },
+  external_urls: {
+    spotify: string
+  },
+  href: string,
+  id: string,
+  is_local: boolean,
+  is_playable: boolean,
+  name: string,
+  popularity: number,
+  preview_url: string,
+  track_number: number,
+  type: string,
+  uri: string,
+}
+
+interface spotifyApiForMusicResponse {
+  data: spotifyApiForMusicResponseItems
 }
 
 // return object interfaces
@@ -92,10 +94,9 @@ export interface musicDataSchema {
   id: string
 }
 
-const spotifyGetMusicData = async (musicId: string, spotifyToken: string) => {
+const spotifyGetMusicData = async (musicId: string) => {
   try {
-    spotifyApi.defaults.headers.Authorization = `Bearer ${spotifyToken}`
-    const { data }: spotifyApiResponse = await spotifyApi.get(`/v1/tracks/${musicId}`)
+    const { data }: spotifyApiForMusicResponse = await spotifyApi.get(`/v1/tracks/${musicId}`)
 
     const musicData: musicDataSchema = {
       name: data.name,
