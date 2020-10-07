@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import spotifyApi from '../services/spotifyApi'
+import spotifyApi from './services/spotifyApi'
 import { spotifyApiForMusicResponseItems } from './spotifyGetMusicData'
 
 /*

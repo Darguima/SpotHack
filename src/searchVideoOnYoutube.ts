@@ -1,4 +1,4 @@
-import youtubeApi from '../services/youtubeApi'
+import youtubeApi from './services/youtubeApi'
 import { youtubeApiKey } from './YoutubeApiKey.json'
 
 import { musicDataSchema } from './spotifyGetMusicData'
