@@ -9,8 +9,6 @@ import { spotifyApiForMusicResponseItems } from './spotifyGetMusicData'
 
 */
 
-import { exit } from 'process'
-
 // spotifyApi interfaces
 
 interface spotifyApiForPlaylistResponseTracksArrayItems {
@@ -95,13 +93,13 @@ interface musicDataSchemaArtistsArrayItems {
 
 interface musicDataSchemaArtistsArray extends Array<musicDataSchemaArtistsArrayItems> {}
 
-interface musicsDataSchemaItems {
+interface musicDataSchema {
   artists: musicDataSchemaArtistsArray,
   name: string
   id: string
 }
 
-export interface musicsDataSchema extends Array<musicsDataSchemaItems> {}
+export interface musicsDataSchema extends Array<musicDataSchema> {}
 
 const spotifyGetPlaylistData = async (playlistId: string) => {
   try {
@@ -110,7 +108,7 @@ const spotifyGetPlaylistData = async (playlistId: string) => {
     const musicsData: musicsDataSchema = []
 
     data.tracks.items.map(item => {
-      const musicData: musicsDataSchemaItems = {
+      const musicData: musicDataSchema = {
         name: item.track.name,
         id: item.track.id,
         artists: []
@@ -133,7 +131,7 @@ const spotifyGetPlaylistData = async (playlistId: string) => {
     }
     console.log('\n\n\n')
 
-    exit()
+    return 0
   }
 }
 

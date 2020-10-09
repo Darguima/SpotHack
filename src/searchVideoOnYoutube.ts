@@ -2,7 +2,6 @@ import youtubeApi from './services/youtubeApi'
 import { youtubeApiKey } from './YoutubeApiKey.json'
 
 import { musicDataSchema } from './spotifyGetMusicData'
-import { exit } from 'process'
 
 // youtubeApi interfaces
 
@@ -48,9 +47,9 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
 
     musicData.artists.map(item => (querySearch += item.name))
 
-    const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${querySearch}&maxResults=1&key=${youtubeApiKey}`)
+    // const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${querySearch}&maxResults=1&key=${youtubeApiKey}`)
 
-    /* const { data }: youtubeApiResponse = {
+    const { data }: youtubeApiResponse = {
       data: {
         kind: 'youtube#searchListResponse',
         etag: '_qJeAABqybSpab4uckr0twuHy-g',
@@ -65,7 +64,7 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
           }
         ]
       }
-    } */
+    }
 
     const musicYoutubeData: musicYoutubeDataSchema = {
       name: musicData.name,
@@ -92,7 +91,7 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
     }
     console.log('\n\n\n')
 
-    exit()
+    return 0
   }
 }
 

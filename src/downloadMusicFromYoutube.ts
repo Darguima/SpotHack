@@ -3,7 +3,6 @@ import fs from 'fs'
 // https://github.com/fent/node-ytdl-core
 
 import { musicYoutubeDataSchema } from './searchVideoOnYoutube'
-import { exit } from 'process'
 
 const downloadMusicFromYoutube = (musicYoutubeData: musicYoutubeDataSchema, pathToSaveFile: string) => {
   try {
@@ -20,7 +19,7 @@ const downloadMusicFromYoutube = (musicYoutubeData: musicYoutubeDataSchema, path
     console.warn(err)
     console.log('\n\n\n')
 
-    exit()
+    return 0
   }
 }
 
