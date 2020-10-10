@@ -8,7 +8,8 @@ export async function up (knex:Knex) {
 
     table.json('artists').notNullable()
 
-    table.string('youtubeUrl').notNullable()
+    table.string('youtubeId').notNullable()
+    table.string('youtubeQuerySearch').notNullable()
   })
 }
 

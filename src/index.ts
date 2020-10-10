@@ -1,11 +1,12 @@
 import spotifyGetMusicData, { musicsDataSchema } from './spotifyGetMusicData'
 import spotifyGetPlaylistData from './spotifyGetPlaylistData'
 
-import searchVideoOnYoutube from './searchVideoOnYoutube'
+import searchVideoOnDB from './searchVideoOnDB'
+import searchVideoOnYoutube, { musicYoutubeDataSchema } from './searchVideoOnYoutube'
+
+import recordMusicDataInDB from './recordMusicDataInDB'
 
 import downloadMusicFromYoutube from './downloadMusicFromYoutube'
-
-import { exit } from 'process'
 
 const main = async () => {
   console.log('\n\n\n')
@@ -35,7 +36,7 @@ const main = async () => {
 
   if (!musicsData) {
     console.log('\n\nERROR on SpotifyApi')
-    exit()
+    return
   }
 
   console.log('\n\n\nspotifyGetMusicData/spotifyGetPlaylistData (SpotifyApi): ')
@@ -45,20 +46,48 @@ const main = async () => {
     const musicName = item.name + ' - ' + item.artists[0].name
     /*
     ==========================================================
+    ====================  Database Search  ====================
+    ==========================================================
+    */
+
+    var musicYoutubeData = await searchVideoOnDB(item.id)
+
+    console.log('\n\n\nmusicYoutubeData (DB Search): ')
+    console.log(musicYoutubeData)
+
+    /*
+    ==========================================================
     ====================  Youtube Search  ====================
     ==========================================================
     */
 
-    const musicYoutubeData = await searchVideoOnYoutube(item)
+    if (musicYoutubeData === 0) {
+      musicYoutubeData = await searchVideoOnYoutube(item)
 
-    if (!musicYoutubeData) {
-      console.log('\n\nERROR on YoutubeApi')
-      console.log('Ignoring music: ' + musicName)
-      return null
+      if (!musicYoutubeData) {
+        console.log('\n\nERROR on YoutubeApi')
+        console.log('Ignoring music: ' + musicName)
+        return null
+      }
+
+      console.log('\n\n\nmusicYoutubeData (Youtube Search): ')
+      console.log(musicYoutubeData)
+
+      /*
+      ==========================================================
+      ===================  Database Record  ====================
+      ==========================================================
+      */
+
+      const recordMusicDataInDBStatus = await recordMusicDataInDB(musicYoutubeData as musicYoutubeDataSchema)
+
+      if (recordMusicDataInDBStatus === 1) {
+        console.log('\n\n\nMusic Data Saved on DB: ' + musicName)
+      } else if (!recordMusicDataInDBStatus) {
+        console.log('\n\nERROR on DB Recording')
+        console.log('Ignoring record music on DB: ' + musicName)
+      }
     }
-
-    console.log('\n\n\nmusicYoutubeData (Youtube Search): ')
-    console.log(musicYoutubeData)
 
     /*
     ==========================================================
@@ -66,7 +95,7 @@ const main = async () => {
     ==========================================================
     */
 
-    const downloadStatus = downloadMusicFromYoutube(musicYoutubeData, pathToSaveFile)
+    const downloadStatus = downloadMusicFromYoutube(musicYoutubeData as musicYoutubeDataSchema, pathToSaveFile)
 
     if (downloadStatus === 1) {
       console.log('\n\n\nDownload Successful: ' + musicName)
@@ -76,7 +105,7 @@ const main = async () => {
       console.log('\n\nERROR on Youtube Download')
       console.log('Ignoring music: ' + musicName)
 
-      return null
+      return 0
     }
   })
 }

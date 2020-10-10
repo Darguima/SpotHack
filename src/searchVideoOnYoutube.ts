@@ -45,11 +45,22 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
   try {
     let querySearch = musicData.name + ' - '
 
-    musicData.artists.map(item => (querySearch += item.name))
+    const numberOfArtists = musicData.artists.length
+    var actualArtist = 1
 
-    // const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${querySearch}&maxResults=1&key=${youtubeApiKey}`)
+    musicData.artists.map(item => {
+      if (actualArtist === numberOfArtists) {
+        querySearch += item.name
+      } else {
+        querySearch += item.name + ' ft '
+      }
 
-    const { data }: youtubeApiResponse = {
+      actualArtist++
+    })
+
+    const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${querySearch}&maxResults=1&key=${youtubeApiKey}`)
+
+    /* const { data }: youtubeApiResponse = {
       data: {
         kind: 'youtube#searchListResponse',
         etag: '_qJeAABqybSpab4uckr0twuHy-g',
@@ -64,7 +75,7 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
           }
         ]
       }
-    }
+    } */
 
     const musicYoutubeData: musicYoutubeDataSchema = {
       name: musicData.name,
