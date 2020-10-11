@@ -1,5 +1,5 @@
 import youtubeApi from './services/youtubeApi'
-import { youtubeApiKey } from './YoutubeApiKey.json'
+import { youtubeApiKey } from './SpotHackVariables.json'
 
 import { musicDataSchema } from './spotifyGetMusicData'
 

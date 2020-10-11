@@ -8,6 +8,8 @@ import recordMusicDataInDB from './recordMusicDataInDB'
 
 import downloadMusicFromYoutube from './downloadMusicFromYoutube'
 
+import convertMp3ToMp4 from './convertMp3ToMp4'
+
 const main = async () => {
   console.log('\n\n\n')
   console.log('================')
@@ -36,7 +38,7 @@ const main = async () => {
 
   if (!musicsData) {
     console.log('\n\nERROR on SpotifyApi')
-    return
+    return 0
   }
 
   console.log('\n\n\nspotifyGetMusicData/spotifyGetPlaylistData (SpotifyApi): ')
@@ -50,7 +52,7 @@ const main = async () => {
     ==========================================================
     */
 
-    var musicYoutubeData = await searchVideoOnDB(item.id)
+    var musicYoutubeData: musicYoutubeDataSchema | 0 = await searchVideoOnDB(item.id)
 
     console.log('\n\n\nmusicYoutubeData (DB Search): ')
     console.log(musicYoutubeData)
@@ -67,7 +69,7 @@ const main = async () => {
       if (!musicYoutubeData) {
         console.log('\n\nERROR on YoutubeApi')
         console.log('Ignoring music: ' + musicName)
-        return null
+        return 0
       }
 
       console.log('\n\n\nmusicYoutubeData (Youtube Search): ')
@@ -95,14 +97,29 @@ const main = async () => {
     ==========================================================
     */
 
-    const downloadStatus = downloadMusicFromYoutube(musicYoutubeData as musicYoutubeDataSchema, pathToSaveFile)
+    const videoYtdl = downloadMusicFromYoutube(musicYoutubeData as musicYoutubeDataSchema)
 
-    if (downloadStatus === 1) {
-      console.log('\n\n\nDownload Successful: ' + musicName)
-
-      return 1
-    } else if (!downloadStatus) {
+    if (!videoYtdl) {
       console.log('\n\nERROR on Youtube Download')
+      console.log('Ignoring music: ' + musicName)
+
+      return 0
+    }
+
+    console.log('\n\n\nDownload Successful: ' + musicName)
+
+    /*
+    ==========================================================
+    ==================  Mp3 to Mp4 - ffmpeg  =================
+    ==========================================================
+    */
+
+    const convertMp3ToMp4Status = convertMp3ToMp4(videoYtdl, pathToSaveFile, musicYoutubeData.youtubeQuerySearch)
+
+    if (convertMp3ToMp4Status) {
+      console.log('\n\n\nConversion Successful: ' + musicName)
+    } else if (!convertMp3ToMp4Status) {
+      console.log('\n\nERROR on convert Mp3 to Mp4')
       console.log('Ignoring music: ' + musicName)
 
       return 0
