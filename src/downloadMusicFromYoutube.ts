@@ -1,12 +1,13 @@
 import ytdl from 'ytdl-core'
 // https://github.com/fent/node-ytdl-core
 
-import { musicYoutubeDataSchema } from './searchVideoOnYoutube'
+import { musicDataSchema } from './index'
 
-const downloadMusicFromYoutube = (musicYoutubeData: musicYoutubeDataSchema) => {
+const downloadMusicFromYoutube = (musicYoutubeData: musicDataSchema) => {
   try {
+    console.log(musicYoutubeData)
     return ytdl(
-      `https://www.youtube.com/watch?v=${musicYoutubeData.youtubeVideoId}`,
+      musicYoutubeData.youtubeId,
       {
         filter: 'audioonly'
       }
@@ -14,7 +15,7 @@ const downloadMusicFromYoutube = (musicYoutubeData: musicYoutubeDataSchema) => {
   } catch (err) {
     console.log('\n\n\n*** downloadMusicFromYoutube Error ***\n\n===\n')
     console.warn(err)
-    console.log('\n\n\n')
+    console.log('\n\n****************\n\n\n')
 
     return 0
   }

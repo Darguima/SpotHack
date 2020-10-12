@@ -2,7 +2,7 @@ import db from './database/connection'
 
 // return object interfaces
 
-import { musicYoutubeDataSchema } from './searchVideoOnYoutube'
+import { musicDataSchema } from './index'
 
 const searchVideoOnDB = async (spotifyId: string) => {
   try {
@@ -20,19 +20,20 @@ const searchVideoOnDB = async (spotifyId: string) => {
       return 0
     }
 
-    const musicYoutubeData: musicYoutubeDataSchema = {
+    const musicYoutubeData: musicDataSchema = {
       name: musicDataOnDB[0].name,
       spotifyId: musicDataOnDB[0].musicSpotifyId,
       artists: JSON.parse(musicDataOnDB[0].artists),
-      youtubeVideoId: musicDataOnDB[0].youtubeId,
-      youtubeQuerySearch: musicDataOnDB[0].youtubeQuerySearch
+      youtubeId: musicDataOnDB[0].youtubeId,
+      youtubeQuerySearch: musicDataOnDB[0].youtubeQuerySearch,
+      video: null
     }
 
     return musicYoutubeData
   } catch (err) {
     console.log('\n\n\n*** searchVideoOnDB Error ***\n\n===\n')
     console.warn(err)
-    console.log('\n\n\n')
+    console.log('\n\n****************\n\n\n')
 
     return 0
   }

@@ -1,7 +1,9 @@
 import youtubeApi from './services/youtubeApi'
 import { youtubeApiKey } from './SpotHackVariables.json'
 
-import { musicDataSchema } from './spotifyGetMusicData'
+// return object interfaces
+
+import { musicDataSchema } from './index'
 
 // youtubeApi interfaces
 
@@ -24,41 +26,9 @@ interface youtubeApiResponse {
   }
 }
 
-// return object interfaces
-
-interface musicYoutubeDataSchemaArtistsArrayItems {
-  spotifyId: string,
-  name: string,
-}
-
-interface musicYoutubeDataSchemaArtistsArray extends Array<musicYoutubeDataSchemaArtistsArrayItems> {}
-
-export interface musicYoutubeDataSchema {
-  name: string,
-  spotifyId: string,
-  artists: musicYoutubeDataSchemaArtistsArray,
-  youtubeVideoId: string,
-  youtubeQuerySearch: string
-}
-
 const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
   try {
-    let querySearch = musicData.name + ' - '
-
-    const numberOfArtists = musicData.artists.length
-    var actualArtist = 1
-
-    musicData.artists.map(item => {
-      if (actualArtist === numberOfArtists) {
-        querySearch += item.name
-      } else {
-        querySearch += item.name + ' ft '
-      }
-
-      actualArtist++
-    })
-
-    const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${querySearch}&maxResults=1&key=${youtubeApiKey}`)
+    const { data }: youtubeApiResponse = await youtubeApi(`/search?q=${musicData.youtubeQuerySearch}&maxResults=1&key=${youtubeApiKey}`)
 
     /* const { data }: youtubeApiResponse = {
       data: {
@@ -77,20 +47,12 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
       }
     } */
 
-    const musicYoutubeData: musicYoutubeDataSchema = {
-      name: musicData.name,
-      spotifyId: musicData.id,
-      artists: [],
-      youtubeVideoId: data.items[0].id.videoId,
-      youtubeQuerySearch: querySearch
-    }
+    const musicYoutubeData: musicDataSchema = {
+      ...musicData,
 
-    musicData.artists.map(item => (
-      musicYoutubeData.artists.push({
-        name: item.name,
-        spotifyId: item.id
-      })
-    ))
+      youtubeId: data.items[0].id.videoId,
+      youtubeQuerySearch: musicData.youtubeQuerySearch
+    }
 
     return musicYoutubeData
   } catch (err) {
@@ -100,7 +62,7 @@ const searchVideoOnYoutube = async (musicData: musicDataSchema) => {
       console.log('\n\n\nResponse: \n')
       console.log(err.response)
     }
-    console.log('\n\n\n')
+    console.log('\n\n****************\n\n\n')
 
     return 0
   }

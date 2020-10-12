@@ -9,6 +9,10 @@ import { spotifyApiForMusicResponseItems } from './spotifyGetMusicData'
 
 */
 
+// return object interfaces
+
+import { musicDataSchema, musicsDataSchema } from './index'
+
 // spotifyApi interfaces
 
 interface spotifyApiForPlaylistResponseTracksArrayItems {
@@ -84,23 +88,6 @@ interface spotifyApiForPlaylistResponse {
   data: spotifyApiForPlaylistResponseItems,
 }
 
-// return object interfaces
-
-interface musicDataSchemaArtistsArrayItems {
-  id: string,
-  name: string,
-}
-
-interface musicDataSchemaArtistsArray extends Array<musicDataSchemaArtistsArrayItems> {}
-
-interface musicDataSchema {
-  artists: musicDataSchemaArtistsArray,
-  name: string
-  id: string
-}
-
-export interface musicsDataSchema extends Array<musicDataSchema> {}
-
 const spotifyGetPlaylistData = async (playlistId: string) => {
   try {
     const { data }: spotifyApiForPlaylistResponse = await spotifyApi.get(`/v1/playlists/${playlistId}`)
@@ -110,8 +97,11 @@ const spotifyGetPlaylistData = async (playlistId: string) => {
     data.tracks.items.map(item => {
       const musicData: musicDataSchema = {
         name: item.track.name,
-        id: item.track.id,
-        artists: []
+        spotifyId: item.track.id,
+        youtubeId: null,
+        youtubeQuerySearch: null,
+        artists: [],
+        video: null
       }
 
       item.track.artists.map(item => (
@@ -129,7 +119,7 @@ const spotifyGetPlaylistData = async (playlistId: string) => {
       console.log('\n\n\nResponse: \n')
       console.log(err.response)
     }
-    console.log('\n\n\n')
+    console.log('\n\n****************\n\n\n')
 
     return 0
   }

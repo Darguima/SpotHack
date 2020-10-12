@@ -17,7 +17,7 @@ const recordMusicDataInDB = async (musicYoutubeData: musicYoutubeDataSchema) => 
   } catch (err) {
     console.log('\n\n\n*** recordMusicDataInDB Error ***\n\n===\n')
     console.warn(err)
-    console.log('\n\n\n')
+    console.log('\n\n****************\n\n\n')
 
     return 0
   }
