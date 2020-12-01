@@ -1,3 +1,2 @@
-node_modules/
-dist/
-src/SpotHackVariables.json
+mobile/node_modules
+mobile/src/spotifyApi.json
