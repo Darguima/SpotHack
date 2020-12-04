@@ -1,4 +1,4 @@
-import { authAsync, refreshAsync, getDefaultOAuthRedirect } from 'expo-app-auth'
+import { authAsync, refreshAsync, revokeAsync, getDefaultOAuthRedirect } from 'expo-app-auth'
 import spotifyApiCredentials from './spotifyApiCredentials.json'
 
 class AuthenticationHandler {
@@ -22,6 +22,16 @@ class AuthenticationHandler {
     const result = await refreshAsync(this.spotifyAuthConfig, refreshToken)
 
     return result
+  }
+
+  async logout (token: string) {
+    return await revokeAsync(
+      this.spotifyAuthConfig,
+      {
+        token: token,
+        isClientIdProvided: true
+      }
+    )
   }
 }
 

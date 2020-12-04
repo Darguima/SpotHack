@@ -2,15 +2,15 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import Dashboard from '../pages/Dashboard'
+import Home from '../pages/Home'
 
-const AppStack = createStackNavigator()
+const { Navigator, Screen } = createStackNavigator()
 
 const AppRoutes: React.FC = () => (
   <NavigationContainer>
-    <AppStack.Navigator>
-      <AppStack.Screen name="Dashboard" component={Dashboard}/>
-    </AppStack.Navigator>
+    <Navigator screenOptions={{ headerShown: false }}>
+      <Screen name="Home" component={Home}/>
+    </Navigator>
   </NavigationContainer>
 )
 

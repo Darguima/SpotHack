@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
 
   const [apiLastResponse, setApiLastResponse] = useState<TokenResponse | undefined>(undefined)
 
@@ -51,7 +51,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
           return { response: response.accessToken, login: 1 }
         } else {
-          return { response: 'response.accessToken is empty', login: 1 }
+          return { response: 'response.accessToken is empty', login: 0 }
         }
       } else {
         return { response: 'response is empty', login: 1 }
@@ -60,10 +60,20 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   const logOut = () => {
-    setAccessToken(undefined)
-    setApiLastResponse(undefined)
+    if (accessToken) {
+      try {
+        spotifyApi.logout(accessToken)
 
-    AsyncStorage.clear()
+        setAccessToken(undefined)
+        setApiLastResponse(undefined)
+
+        AsyncStorage.clear()
+
+        return { response: 'sucess on logout', logout: 1 }
+      } catch (err) {
+        return { response: 'error on logout', logout: 0 }
+      }
+    }
   }
 
   return (
