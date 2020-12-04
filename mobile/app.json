@@ -3,12 +3,15 @@
     "name": "SpotHack",
     "slug": "SpotHack",
     "version": "1.0.0",
+
+    "scheme": "com.darguima.spothack",
+
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1c5ed6"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,8 +25,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#1c5ed6"
+      },
+
+      "package": "com.darguima.spothack"
     },
     "web": {
       "favicon": "./assets/favicon.png"

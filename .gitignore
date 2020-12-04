@@ -1,2 +1,2 @@
 mobile/node_modules
-mobile/src/spotifyApi.json
+mobile/src/services/spotifyApiCredentials.json

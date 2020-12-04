@@ -6,11 +6,11 @@
 
 ### spotifyApi.json
 
-* The variables that this project use to acess the spotifyApi are saved in src/spotifyApi.json.
+* The variables that this project use to acess the spotifyApi are saved in `src/services/spotifyApiCredentials.json`.
 
 So you need create this file and save the required data there:
 
-> touch src/spotifyApi.json
+> touch src/services/spotifyApiCredentials.json
 
 ```
 {
