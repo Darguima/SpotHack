@@ -1,14 +1,31 @@
-import React from 'react'
-import { Button, View, StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Button, Text, View, StyleSheet } from 'react-native'
 
 import useAuth from '../../contexts/auth'
 
+import spotifyApi from '../../services/spotifyApi'
+
 const Home:React.FC = () => {
+  const [spotifyData, setSpotifyData] = useState('wait')
   const { logOut } = useAuth()
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const spotifyResponse = await spotifyApi.get('me')
+
+        setSpotifyData(JSON.stringify(spotifyResponse.data))
+      } catch (err) {
+        setSpotifyData(JSON.stringify(err.response.data))
+      }
+    })()
+  }, [])
 
   return (
     <View style={styles.container}>
-      <Button
+      <Text>{spotifyData}</Text>
+
+    <Button
         title="LogOut"
         onPress={() => { logOut() }}
       />
@@ -18,7 +35,9 @@ const Home:React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-
+    flex: 1,
+    justifyContent: 'space-evenly',
+    alignItems: 'center'
   }
 })
 

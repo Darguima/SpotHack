@@ -1,36 +1,43 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { TokenResponse } from 'expo-app-auth'
-
-import spotifyApi from '../services/spotifyApi'
 import AsyncStorage from '@react-native-community/async-storage'
+
+import spotifyOAuth from '../services/spotifyOAuth'
+import spotifyApi from '../services/spotifyApi'
 
 interface AuthContextData {
   loading: boolean,
 
-  accessToken: string | undefined,
   signed: boolean,
 
-  apiLastResponse: TokenResponse | undefined,
-
-  logIn(): Promise<{ response: string | any; login: number }>,
+  logIn(): void,
   logOut(): void
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [oAuthCode, setOAuthCode] = useState<string | undefined>(undefined)
 
-  const [apiLastResponse, setApiLastResponse] = useState<TokenResponse | undefined>(undefined)
+  const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
+  const [refreshToken, seRefreshToken] = useState<string | undefined>(undefined)
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     (async () => {
-      const [[, apiLastResponseStoraged], [, accessTokenStoraged]] = await AsyncStorage.multiGet(['@SpotHackAuth:apiLastResponse', '@SpotHackAuth:accessToken'])
+      const [[, oAuthCodeStoraged], [, accessTokenStoraged], [, refreshTokenStoraged]] = await AsyncStorage.multiGet(
+        [
+          '@SpotHackAuth:oAuthCode',
+          '@SpotHackAuth:accessToken',
+          '@SpotHackAuth:refreshToken'
+        ]
+      )
 
-      if (apiLastResponseStoraged && accessTokenStoraged) {
-        setApiLastResponse(JSON.parse(apiLastResponseStoraged))
+      if (oAuthCodeStoraged && accessTokenStoraged && refreshTokenStoraged) {
+        setOAuthCode(oAuthCodeStoraged)
+        seRefreshToken(refreshTokenStoraged)
         setAccessToken(accessTokenStoraged)
+
+        spotifyApi.defaults.headers.Authorization = `Bearer ${accessToken}`
       }
     })()
 
@@ -38,34 +45,41 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, [])
 
   const logIn = async () => {
-    try {
-      const response = await spotifyApi.login()
-
-      if (response) {
-        if (response.accessToken) {
-          setApiLastResponse(response)
-          AsyncStorage.setItem('@SpotHackAuth:apiLastResponse', JSON.stringify(response))
-
-          setAccessToken(response.accessToken)
-          AsyncStorage.setItem('@SpotHackAuth:accessToken', response.accessToken)
-
-          return { response: response.accessToken, login: 1 }
-        } else {
-          return { response: 'response.accessToken is empty', login: 0 }
-        }
-      } else {
-        return { response: 'response is empty', login: 1 }
-      }
-    } catch (err) { return { response: err, login: 0 } }
+    await spotifyOAuth.getoAuthCode(setOAuthCode)
+    // This will change the value on oAuthCode and fire the next useEffect
   }
+
+  useEffect(() => {
+    (async () => {
+      if (oAuthCode) {
+        if (oAuthCode !== 'error') {
+          const credentials = await spotifyOAuth.getOauthCredentials(oAuthCode)
+
+          if (credentials.access_token && credentials.refresh_token) {
+            if (credentials.access_token !== 'error' && credentials.refresh_token !== 'error') {
+              setAccessToken(credentials.access_token)
+              seRefreshToken(credentials.refresh_token)
+
+              AsyncStorage.multiSet([
+                ['@SpotHackAuth:oAuthCode', oAuthCode],
+                ['@SpotHackAuth:accessToken', credentials.access_token],
+                ['@SpotHackAuth:refreshToken', credentials.refresh_token]
+              ])
+
+              spotifyApi.defaults.headers.Authorization = `Bearer ${accessToken}`
+            }
+          }
+        }
+      }
+    })()
+  }, [oAuthCode])
 
   const logOut = () => {
     if (accessToken) {
       try {
-        spotifyApi.logout(accessToken)
-
+        setOAuthCode(undefined)
         setAccessToken(undefined)
-        setApiLastResponse(undefined)
+        seRefreshToken(undefined)
 
         AsyncStorage.clear()
 
@@ -77,7 +91,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ loading, signed: !!accessToken, accessToken, apiLastResponse, logIn, logOut }}>
+    <AuthContext.Provider value={{ loading, signed: !!accessToken, logIn, logOut }}>
       {children}
     </AuthContext.Provider>
   )
