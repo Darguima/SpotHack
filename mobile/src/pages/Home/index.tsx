@@ -19,11 +19,12 @@ const Home:React.FC = () => {
         setSpotifyData(JSON.stringify(err.response.data))
       }
     })()
-  }, [])
+  }, [spotifyApi.defaults.headers.Authorization])
 
   return (
     <View style={styles.container}>
       <Text>{spotifyData}</Text>
+      <Text>{spotifyApi.defaults.headers.Authorization}</Text>
 
     <Button
         title="LogOut"

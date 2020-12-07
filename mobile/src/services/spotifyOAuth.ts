@@ -26,10 +26,12 @@ export const getoAuthCode = async (setOAuthCode: React.Dispatch<React.SetStateAc
       if (queryParams) {
         if (queryParams.code) {
           return setOAuthCode(queryParams.code)
+        } else {
+          return setOAuthCode('error')
         }
+      } else {
+        return setOAuthCode('error')
       }
-
-      return setOAuthCode('error')
     }
   })
 }

@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import useAuth from '../../contexts/auth'
 
 const LoginPage:React.FC = () => {
-  const { logIn } = useAuth()
+  const { logIn, errorOnLogin } = useAuth()
 
   return (
     <View style={styles.container}>
@@ -15,6 +15,12 @@ const LoginPage:React.FC = () => {
             style={styles.spotHackLogo}
           />
       </View>
+
+      {!!errorOnLogin &&
+        <View style={styles.errorMsgContainer}>
+          <Text style={styles.errorMsg}>{errorOnLogin}</Text>
+        </View>
+      }
 
       <TouchableOpacity
         style={styles.bottomContainer}
@@ -54,6 +60,31 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'contain'
+  },
+
+  errorMsgContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    width: '70%',
+    height: '12%',
+
+    padding: '2%',
+
+    backgroundColor: '#fff',
+
+    borderRadius: 25,
+    borderColor: '#ff0000',
+    borderWidth: 2
+  },
+
+  errorMsg: {
+    color: '#ff2020',
+
+    fontSize: 18,
+    fontWeight: 'bold',
+
+    textAlign: 'center'
   },
 
   bottomContainer: {

@@ -7,6 +7,8 @@ import spotifyApi from '../services/spotifyApi'
 interface AuthContextData {
   loading: boolean,
 
+  errorOnLogin: 0 | string,
+
   signed: boolean,
 
   logIn(): void,
@@ -16,11 +18,14 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 export const AuthProvider: React.FC = ({ children }) => {
+  const [loading, setLoading] = useState<boolean>(true)
+
+  const [errorOnLogin, setErrorOnLogin] = useState<0 | string>(0)
+
   const [oAuthCode, setOAuthCode] = useState<string | undefined>(undefined)
 
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
   const [refreshToken, seRefreshToken] = useState<string | undefined>(undefined)
-  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     (async () => {
@@ -37,12 +42,15 @@ export const AuthProvider: React.FC = ({ children }) => {
         seRefreshToken(refreshTokenStoraged)
         setAccessToken(accessTokenStoraged)
 
-        spotifyApi.defaults.headers.Authorization = `Bearer ${accessToken}`
+        spotifyApi.defaults.headers.Authorization = `Bearer ${accessTokenStoraged}`
+        setErrorOnLogin('')
       }
-    })()
 
-    setLoading(false)
+      setLoading(false)
+    })()
   }, [])
+
+  useEffect(() => { console.log(accessToken) }, [accessToken])
 
   const logIn = async () => {
     await spotifyOAuth.getoAuthCode(setOAuthCode)
@@ -66,9 +74,16 @@ export const AuthProvider: React.FC = ({ children }) => {
                 ['@SpotHackAuth:refreshToken', credentials.refresh_token]
               ])
 
-              spotifyApi.defaults.headers.Authorization = `Bearer ${accessToken}`
+              spotifyApi.defaults.headers.Authorization = `Bearer ${credentials.access_token}`
+              setErrorOnLogin('')
+            } else {
+              setErrorOnLogin("We can't get your tokens from Spotify")
             }
+          } else {
+            setErrorOnLogin("We can't get your tokens from Spotify")
           }
+        } else {
+          setErrorOnLogin("We can't get your oAuth Code from Spotify")
         }
       }
     })()
@@ -80,8 +95,11 @@ export const AuthProvider: React.FC = ({ children }) => {
         setOAuthCode(undefined)
         setAccessToken(undefined)
         seRefreshToken(undefined)
+        setErrorOnLogin('')
 
         AsyncStorage.clear()
+
+        spotifyApi.defaults.headers.Authorization = ''
 
         return { response: 'sucess on logout', logout: 1 }
       } catch (err) {
@@ -91,7 +109,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ loading, signed: !!accessToken, logIn, logOut }}>
+    <AuthContext.Provider value={{ loading, errorOnLogin, signed: !!accessToken, logIn, logOut }}>
       {children}
     </AuthContext.Provider>
   )
