@@ -1,35 +1,74 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Text, View, StyleSheet } from 'react-native'
+import React from 'react'
+import { View, Image, StyleSheet } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
-import useAuth from '../../contexts/auth'
-
-import spotifyApi from '../../services/spotifyApi'
+import { useNavigation } from '@react-navigation/native'
 
 const Home:React.FC = () => {
-  const [spotifyData, setSpotifyData] = useState('wait')
-  const { logOut } = useAuth()
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const spotifyResponse = await spotifyApi.get('me')
-
-        setSpotifyData(JSON.stringify(spotifyResponse.data))
-      } catch (err) {
-        setSpotifyData(JSON.stringify(err.response.data))
-      }
-    })()
-  }, [spotifyApi.defaults.headers.Authorization])
+  const { navigate } = useNavigation()
 
   return (
-    <View style={styles.container}>
-      <Text>{spotifyData}</Text>
-      <Text>{spotifyApi.defaults.headers.Authorization}</Text>
+    <View
+      style={styles.container}
+    >
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{
+          flexGrow: 1,
+          alignItems: 'center'
+        }}
+      >
 
-    <Button
-        title="LogOut"
-        onPress={() => { logOut() }}
-      />
+        <View style={[styles.imagesButtonContainer, { marginTop: '10%' }]}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => navigate('SearchMusicPage')}
+          >
+            <Image
+              source={require('../../assets/searchMusic.png')}
+              style={styles.images}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.imagesButtonContainer}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => navigate('PlaylistsPage')}
+          >
+            <Image
+              source={require('../../assets/playlists.png')}
+              style={styles.images}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.imagesButtonContainer}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => navigate('SavedMusicPage')}
+          >
+            <Image
+              source={require('../../assets/savedMusic.png')}
+              style={styles.images}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={[styles.imagesButtonContainer, { marginBottom: '10%' }]}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => navigate('SettingsPage')}
+          >
+            <Image
+              source={require('../../assets/settings.png')}
+              style={styles.images}
+            />
+          </TouchableOpacity>
+        </View>
+
+      </ScrollView>
+
     </View>
   )
 }
@@ -37,8 +76,39 @@ const Home:React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-evenly',
-    alignItems: 'center'
+
+    alignItems: 'center',
+
+    width: '100%',
+    height: '100%',
+
+    backgroundColor: '#000'
+  },
+
+  scrollView: {
+    width: '100%'
+  },
+
+  imagesButtonContainer: {
+    width: '80%',
+    aspectRatio: 1.5,
+
+    marginVertical: '5%'
+  },
+
+  imageButton: {
+    width: '100%',
+    height: '100%'
+
+  },
+
+  images: {
+    resizeMode: 'stretch',
+    width: '100%',
+    height: '100%',
+
+    borderRadius: 25
+
   }
 })
 

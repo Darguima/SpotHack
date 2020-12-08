@@ -50,8 +50,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     })()
   }, [])
 
-  useEffect(() => { console.log(accessToken) }, [accessToken])
-
   const logIn = async () => {
     await spotifyOAuth.getoAuthCode(setOAuthCode)
     // This will change the value on oAuthCode and fire the next useEffect
