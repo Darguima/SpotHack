@@ -13,10 +13,7 @@ const Home:React.FC = () => {
     >
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={{
-          flexGrow: 1,
-          alignItems: 'center'
-        }}
+        contentContainerStyle={styles.scrolViewContentContainerStyle}
       >
 
         <View style={[styles.imagesButtonContainer, { marginTop: '10%' }]}>
@@ -87,6 +84,11 @@ const styles = StyleSheet.create({
 
   scrollView: {
     width: '100%'
+  },
+
+  scrolViewContentContainerStyle: {
+    flexGrow: 1,
+    alignItems: 'center'
   },
 
   imagesButtonContainer: {

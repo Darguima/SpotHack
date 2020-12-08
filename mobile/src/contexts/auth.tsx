@@ -63,6 +63,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
           if (credentials.access_token && credentials.refresh_token) {
             if (credentials.access_token !== 'error' && credentials.refresh_token !== 'error') {
+              spotifyApi.defaults.headers.Authorization = `Bearer ${credentials.access_token}`
               setAccessToken(credentials.access_token)
               seRefreshToken(credentials.refresh_token)
 
@@ -71,8 +72,6 @@ export const AuthProvider: React.FC = ({ children }) => {
                 ['@SpotHackAuth:accessToken', credentials.access_token],
                 ['@SpotHackAuth:refreshToken', credentials.refresh_token]
               ])
-
-              spotifyApi.defaults.headers.Authorization = `Bearer ${credentials.access_token}`
               setErrorOnLogin('')
             } else {
               setErrorOnLogin("We can't get your tokens from Spotify")

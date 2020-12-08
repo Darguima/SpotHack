@@ -11,10 +11,13 @@ import Home from '../pages/Home'
 import SavedMusicPage from '../pages/SavedMusicPage'
 import SettingsPage from '../pages/SettingsPage'
 
+import { UserDataProvider } from '../contexts/userData'
+
 const { Navigator, Screen } = createBottomTabNavigator()
 
 const AppRoutes: React.FC = () => (
   <NavigationContainer>
+  <UserDataProvider>
     <Navigator
       initialRouteName="Home"
       tabBarOptions={{
@@ -128,6 +131,7 @@ const AppRoutes: React.FC = () => (
       />
 
     </Navigator>
+  </UserDataProvider>
   </NavigationContainer>
 )
 
