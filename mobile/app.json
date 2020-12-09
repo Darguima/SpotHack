@@ -28,6 +28,8 @@
         "backgroundColor": "#1c5ed6"
       },
 
+      "softwareKeyboardLayoutMode": "pan",
+
       "package": "com.darguima.spothack"
     },
     "web": {

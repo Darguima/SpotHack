@@ -1,7 +1,10 @@
 /* eslint-disable camelcase */
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { Alert } from 'react-native'
 
 import spotifyApi from '../services/spotifyApi'
+
+import useAuth from './auth'
 
 interface UserDataContextData {
   userData: SpotifyResponseSchema,
@@ -36,19 +39,19 @@ const UserDataContext = createContext<UserDataContextData>({} as UserDataContext
 
 export const UserDataProvider: React.FC = ({ children }) => {
   const [userData, setUserData] = useState({} as SpotifyResponseSchema)
+  const { logOut } = useAuth()
 
   const requestSpotifyData = useCallback(() => {
-    if (spotifyApi.defaults.headers.Authorization) {
-      (async () => {
-        try {
-          const spotifyResponse: SpotifyResponseSchema = (await spotifyApi.get('me')).data
+    (async () => {
+      try {
+        const spotifyResponse: SpotifyResponseSchema = (await spotifyApi.get('me')).data
 
-          setUserData(spotifyResponse)
-        } catch (err) {
-          console.log(err.response.data)
-        }
-      })()
-    }
+        setUserData(spotifyResponse)
+      } catch (err) {
+        Alert.alert('Something went wrong.')
+        logOut()
+      }
+    })()
   }, [])
 
   useEffect(() => {

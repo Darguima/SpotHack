@@ -1,138 +1,155 @@
-import React from 'react'
-import { Image } from 'react-native'
+import React, { useEffect } from 'react'
+import { Dimensions, Image } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import SearchMusicPage from '../pages/SearchMusicPage'
+import SearchMusicRoutes from './searchMusic.routes'
 import PlaylistsPage from '../pages/PlaylistsPage'
 import Home from '../pages/Home'
 import SavedMusicPage from '../pages/SavedMusicPage'
 import SettingsPage from '../pages/SettingsPage'
 
 import { UserDataProvider } from '../contexts/userData'
+import useAuth from '../contexts/auth'
+import LoadingPage from '../pages/LoadingPage'
 
-const { Navigator, Screen } = createBottomTabNavigator()
+const { Navigator, Screen } = createMaterialTopTabNavigator()
 
-const AppRoutes: React.FC = () => (
-  <NavigationContainer>
-  <UserDataProvider>
-    <Navigator
-      initialRouteName="Home"
-      tabBarOptions={{
-        style: {
-          height: 60
-        },
+const AppRoutes: React.FC = () => {
+  const { signed } = useAuth()
 
-        labelStyle: {
-          fontSize: 12
-        },
+  return (
+    <>
+    {signed &&
+      <NavigationContainer>
+      <UserDataProvider>
+        <Navigator
+          initialRouteName="Home"
+          tabBarPosition="bottom"
 
-        inactiveBackgroundColor: '#212121',
-        inactiveTintColor: '#fff',
-        activeBackgroundColor: '#212121',
-        activeTintColor: '#1c5ed6'
+          initialLayout={{ width: Dimensions.get('window').width /* To don't have half the screen white on initial render */ }}
 
-      }}
-    >
+          tabBarOptions={{
 
-      <Screen
-        name="SearchMusicPage"
-        component={SearchMusicPage}
+            inactiveTintColor: '#fff',
+            activeTintColor: '#1c5ed6',
+            showIcon: true,
+            showLabel: false,
 
-        options={{
-          tabBarLabel: 'Search Music',
-          tabBarIcon: function icon ({ color, size, focused }) {
-            return (
-              <MaterialCommunityIcons
-                name="music-box-outline"
-                size={size}
-                color={focused ? '#1c5ed6' : color}
-              />
-            )
-          }
-        }}
-      />
+            tabStyle: {
+              backgroundColor: '#212121'
+            }
 
-      <Screen
-        name="PlaylistsPage"
-        component={PlaylistsPage}
+          }}
+        >
 
-        options={{
-          tabBarLabel: 'Playlists',
-          tabBarIcon: function icon ({ color, size, focused }) {
-            return (
-              <MaterialCommunityIcons
-                name="playlist-music-outline"
-                size={size}
-                color={focused ? '#1c5ed6' : color}
-              />
-            )
-          }
-        }}
-      />
+          <Screen
+            name="SearchMusicRoutes"
+            component={SearchMusicRoutes}
 
-      <Screen
-        name="Home"
-        component={Home}
+            options={{
+              tabBarLabel: 'Search Music',
+              tabBarIcon: function icon ({ color, focused }) {
+                return (
+                  <MaterialCommunityIcons
+                    name="music-box-outline"
+                    size={25}
+                    color={focused ? '#1c5ed6' : color}
+                  />
+                )
+              }
+            }}
+          />
 
-        options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: function icon ({ color, size, focused }) {
-            return (
-              <Image
-                source={require('../assets/icons/homeIcon.png')}
+          <Screen
+            name="PlaylistsPage"
+            component={PlaylistsPage}
 
-                style={{ width: size, height: size }}
+            options={{
+              tabBarLabel: 'Playlists',
+              tabBarIcon: function icon ({ color, focused }) {
+                return (
+                  <MaterialCommunityIcons
+                    name="playlist-music-outline"
+                    size={25}
+                    color={focused ? '#1c5ed6' : color}
+                  />
+                )
+              }
+            }}
+          />
 
-                height={size}
-                width={size}
-              />
-            )
-          }
-        }}
-      />
+          <Screen
+            name="Home"
+            component={Home}
 
-      <Screen
-        name="SavedMusicPage"
-        component={SavedMusicPage}
+            options={{
+              tabBarLabel: 'Home',
+              tabBarIcon: function icon ({ focused }) {
+                return (
+                  <Image
 
-        options={{
-          tabBarLabel: 'Saved Music',
-          tabBarIcon: function icon ({ color, size, focused }) {
-            return (
-              <MaterialCommunityIcons
-                name="file-music-outline"
-                size={size}
-                color={focused ? '#1c5ed6' : color}
-              />
-            )
-          }
-        }}
-      />
+                    source={
+                      focused
+                        ? require('../assets/icons/homeIcon.png')
+                        : require('../assets/icons/homeIconWhite.png')
+                    }
 
-      <Screen
-        name="SettingsPage"
-        component={SettingsPage}
+                    style={{ width: 25, height: 25 }}
 
-        options={{
-          tabBarLabel: 'Settings',
-          tabBarIcon: function icon ({ color, size, focused }) {
-            return (
-              <MaterialCommunityIcons
-                name="account-settings"
-                size={size}
-                color={focused ? '#1c5ed6' : color}
-              />
-            )
-          }
-        }}
-      />
+                    height={25}
+                    width={25}
+                  />
+                )
+              }
+            }}
+          />
 
-    </Navigator>
-  </UserDataProvider>
-  </NavigationContainer>
-)
+          <Screen
+            name="SavedMusicPage"
+            component={SavedMusicPage}
+
+            options={{
+              tabBarLabel: 'Saved Music',
+              tabBarIcon: function icon ({ color, focused }) {
+                return (
+                  <MaterialCommunityIcons
+                    name="file-music-outline"
+                    size={25}
+                    color={focused ? '#1c5ed6' : color}
+                  />
+                )
+              }
+            }}
+          />
+
+          <Screen
+            name="SettingsPage"
+            component={SettingsPage}
+
+            options={{
+              tabBarLabel: 'Settings',
+              tabBarIcon: function icon ({ color, focused }) {
+                return (
+                  <MaterialCommunityIcons
+                    name="account-settings"
+                    size={25}
+                    color={focused ? '#1c5ed6' : color}
+                  />
+                )
+              }
+            }}
+          />
+
+        </Navigator>
+      </UserDataProvider>
+      </NavigationContainer>
+    }
+    {!signed && <LoadingPage />}
+    </>
+  )
+}
 
 export default AppRoutes
