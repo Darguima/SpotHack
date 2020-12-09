@@ -1,34 +1,76 @@
-import React from 'react'
-import { TextInput, View, StyleSheet } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import React, { useState, useEffect, useRef } from 'react'
+import { TextInput, Keyboard, View, StyleSheet } from 'react-native'
+import { RectButton } from 'react-native-gesture-handler'
+import { Entypo } from '@expo/vector-icons'
 
 interface SearchBarHeaderProps {
-  state: string,
   setState: React.Dispatch<React.SetStateAction<string>>,
 
-  backgroundColor?: string,
+  inputPlaceholder: string,
+
+  viewBackgroundColor?: string,
   inputBackgroundColor?: string,
 }
 
-const SearchBarHeader:React.FC<SearchBarHeaderProps> = ({ state, setState, backgroundColor = '#000', inputBackgroundColor = '#fff' }) => {
+const SearchBarHeader:React.FC<SearchBarHeaderProps> = (
+  { setState, inputPlaceholder, viewBackgroundColor = '#000', inputBackgroundColor = '#fff' }) => {
+  const [inputValue, setInputValue] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
+  // eslint-disable-next-line no-undef
+  const inputRef = useRef<TextInput>(null)
+
+  const handleIconPress = () => {
+    if (isFocused) {
+      setInputValue('')
+    }
+    setIsFocused(true)
+    inputRef.current!.focus()
+  }
+
+  const handleShowKeyboard = () => { setIsFocused(true) }
+  const handleHideKeyboard = () => { setIsFocused(false) }
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', handleShowKeyboard)
+    Keyboard.addListener('keyboardDidHide', handleHideKeyboard)
+
+    return () => {
+      Keyboard.removeListener('keyboardDidShow', handleShowKeyboard)
+      Keyboard.removeListener('keyboardDidHide', handleHideKeyboard)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isFocused === false) {
+      setState(inputValue)
+    }
+  }, [isFocused])
+
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, { backgroundColor: viewBackgroundColor }]}>
       <View style={[styles.inputContainer, { backgroundColor: inputBackgroundColor }]}>
         <View style={styles.textInputContainer}>
+
           <TextInput
+            ref={inputRef}
             style={styles.textInput}
-            placeholder="Search a music"
-            value={state}
-            onChangeText={(e) => { setState(e) }}
+            value={inputValue}
+            onChangeText={(e) => { setInputValue(e) }}
+            placeholder={inputPlaceholder}
           />
         </View>
-        <View style={styles.magnifyIconContainer}>
-          <MaterialCommunityIcons
-            name="magnify"
-            style={styles.magnifyIcon}
-            size={25}
-          />
-        </View>
+        <RectButton
+          style={styles.iconButton}
+          onPress={handleIconPress}
+        >
+          <View style={styles.iconContainer}>
+              <Entypo
+                name={isFocused ? 'circle-with-cross' : 'magnifying-glass'}
+                style={styles.magnifyIcon}
+                size={25}
+              />
+          </View>
+        </RectButton>
       </View>
     </View>
   )
@@ -52,26 +94,38 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '70%',
 
+    paddingHorizontal: '2%',
+
     borderRadius: 25
+
   },
 
   textInputContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
 
-    width: '70%',
+    width: '90%',
     height: '90%'
+
   },
 
   textInput: {
+    width: '100%',
+    height: '100%'
   },
 
-  magnifyIconContainer: {
+  iconButton: {
+    width: '10%',
+    height: '90%'
+
+  },
+
+  iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
 
-    width: '10%',
-    height: '90%'
+    width: '100%',
+    height: '100%'
   },
 
   magnifyIcon: {

@@ -10,12 +10,12 @@ const SearchMusicPage:React.FC = () => {
     <KeyboardAvoidingView style={{ flex: 1 }} >
       <ScrollView contentContainerStyle={{ flex: 1 }} >
       <SearchBarHeader
-        state={searchedMusic}
         setState={setSearchedMusic}
+        inputPlaceholder="Search a music"
       />
 
       <View style={styles.container}>
-        <Text style={{ color: 'white' }}>Search Music</Text>
+        <Text style={{ color: 'white' }}>{searchedMusic}</Text>
         <Text style={{ color: 'white' }}>Search Music</Text>
       </View>
     </ScrollView>
