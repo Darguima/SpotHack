@@ -11,20 +11,18 @@ import Home from '../pages/Home'
 import SavedMusicPage from '../pages/SavedMusicPage'
 import SettingsPage from '../pages/SettingsPage'
 
-import { UserDataProvider } from '../contexts/userData'
-import useAuth from '../contexts/auth'
+import useUserData from '../contexts/userData'
 import LoadingPage from '../pages/LoadingPage'
 
 const { Navigator, Screen } = createMaterialTopTabNavigator()
 
 const AppRoutes: React.FC = () => {
-  const { signed } = useAuth()
+  const { userData } = useUserData()
 
   return (
     <>
-    {signed &&
+    { userData.display_name /* the page only can render after have the userData */ &&
       <NavigationContainer>
-      <UserDataProvider>
         <Navigator
           initialRouteName="Home"
           tabBarPosition="bottom"
@@ -144,10 +142,11 @@ const AppRoutes: React.FC = () => {
           />
 
         </Navigator>
-      </UserDataProvider>
       </NavigationContainer>
     }
-    {!signed && <LoadingPage />}
+
+    { !userData && <LoadingPage />}
+
     </>
   )
 }

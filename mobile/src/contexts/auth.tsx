@@ -38,11 +38,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       )
 
       if (oAuthCodeStoraged && accessTokenStoraged && refreshTokenStoraged) {
+        spotifyApi.defaults.headers.Authorization = `Bearer ${accessTokenStoraged}`
+
         setOAuthCode(oAuthCodeStoraged)
         seRefreshToken(refreshTokenStoraged)
         setAccessToken(accessTokenStoraged)
 
-        spotifyApi.defaults.headers.Authorization = `Bearer ${accessTokenStoraged}`
         setErrorOnLogin('')
       }
 
@@ -64,6 +65,7 @@ export const AuthProvider: React.FC = ({ children }) => {
           if (credentials.access_token && credentials.refresh_token) {
             if (credentials.access_token !== 'error' && credentials.refresh_token !== 'error') {
               spotifyApi.defaults.headers.Authorization = `Bearer ${credentials.access_token}`
+
               setAccessToken(credentials.access_token)
               seRefreshToken(credentials.refresh_token)
 
