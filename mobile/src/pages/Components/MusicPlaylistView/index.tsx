@@ -14,6 +14,7 @@ interface SearchBarHeaderProps {
   viewBackgroundColor?: string,
   contentBackgroundColor?: string,
 
+  viewPressAction?: () => void
   entypoIconName?: string,
   iconPressAction?: () => void
 }
@@ -22,30 +23,32 @@ const MusicPlaylistView:React.FC<SearchBarHeaderProps> = (
   {
     imageSource, title, artists,
     style, viewBackgroundColor = '#212121', contentBackgroundColor = '#212121',
-    entypoIconName, iconPressAction = () => {}
+    viewPressAction, entypoIconName, iconPressAction = () => {}
   }) => {
   return (
     <View style={[styles.container, { backgroundColor: viewBackgroundColor }, style || {}]}>
       <View style={[styles.content, { backgroundColor: contentBackgroundColor }]}>
 
-        <View style={styles.leftPart}>
-          <View style={styles.imageContainer}>
-            <Image source={imageSource} style={styles.image}/>
-          </View>
+          <View style={styles.leftPart}>
+            <TouchableOpacity style={styles.leftPartButton} onPress={viewPressAction}>
+              <View style={styles.imageContainer}>
+                <Image source={imageSource} style={styles.image}/>
+              </View>
 
-          <View style={styles.textsContainer}>
-            <Text style={styles.titleText} numberOfLines={2}>{title}</Text>
-            <Text style={styles.artistsText} numberOfLines={1}>{artists}</Text>
-          </View>
-        </View>
-
-        {entypoIconName &&
-          <View style={styles.rightPart}>
-            <TouchableOpacity style={styles.iconButton} onPress={iconPressAction}>
-              <Entypo name={entypoIconName} style={styles.icon} size={30}/>
+              <View style={styles.textsContainer}>
+                <Text style={styles.titleText} numberOfLines={2}>{title}</Text>
+                <Text style={styles.artistsText} numberOfLines={1}>{artists}</Text>
+              </View>
             </TouchableOpacity>
           </View>
-        }
+
+          {entypoIconName &&
+            <View style={styles.rightPart}>
+              <TouchableOpacity style={styles.iconButton} onPress={iconPressAction}>
+                <Entypo name={entypoIconName} style={styles.icon} size={30}/>
+              </TouchableOpacity>
+            </View>
+          }
 
       </View>
     </View>
@@ -70,12 +73,17 @@ const styles = StyleSheet.create({
   },
 
   leftPart: {
+    height: '100%',
+    width: '80%'
+  },
+
+  leftPartButton: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
 
     height: '100%',
-    width: '80%'
+    width: '100%'
   },
 
   imageContainer: {

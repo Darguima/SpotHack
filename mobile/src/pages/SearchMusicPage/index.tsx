@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 import { View, StyleSheet, ScrollView, ImageSourcePropType } from 'react-native'
 
 import SearchBarHeader from '../Components/SearchBarHeader'
@@ -20,6 +21,8 @@ const SearchMusicPage:React.FC = () => {
   const [searchedMusic, setSearchedMusic] = useState('')
   const [musicsSpotifyResponse, setMusicsSpotifyResponse] = useState <Array<musicsSpotifyResponseSchema>>([])
 
+  const { navigate } = useNavigation()
+
   useEffect(() => {
     if (searchedMusic) {
       (async () => {
@@ -34,7 +37,9 @@ const SearchMusicPage:React.FC = () => {
           return {
             spotifyId: item.id,
 
-            image: item.album.images.length > 0 ? { uri: item.album.images[0].url } : require('../../assets/icons/defaultIcon.png'),
+            image: item.album.images.length > 0
+              ? { uri: (item.album.images[1] || item.album.images[0]).url }
+              : require('../../assets/icons/defaultIcon.png'),
 
             title: item.name,
             artists: convertArtistsArrayToString(item.artists)
@@ -51,23 +56,29 @@ const SearchMusicPage:React.FC = () => {
       <SearchBarHeader
         setState={setSearchedMusic}
         inputPlaceholder="Search a music"
+
+        viewBackgroundColor="#1c5ed6"
       />
 
-      <ScrollView style={styles.scroolView}>
+      <ScrollView>
 
         {musicsSpotifyResponse.map((item, index) => {
           return (
             <MusicPlaylistView
               key={index}
 
-              style={styles.musicPlaylistView}
+              style={{
+                marginTop: index === 0 ? '4%' : '2%',
+                marginBottom: index === musicsSpotifyResponse.length - 1 ? '4%' : '2%'
+              }}
 
               imageSource={item.image}
               title={item.title}
               artists={item.artists}
 
+              viewPressAction={() => { navigate('MusicDetailPage', { spotifyId: item.spotifyId }) }}
               entypoIconName="chevron-right"
-              iconPressAction={() => { console.log('pressed') }}
+              iconPressAction={() => { navigate('MusicDetailPage', { spotifyId: item.spotifyId }) }}
             />
           )
         })}
@@ -82,16 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
 
     backgroundColor: '#000'
-  },
-
-  scroolView: {
-    marginTop: 15
-  },
-
-  musicPlaylistView: {
-    marginVertical: '2%'
   }
-
 })
 
 export default SearchMusicPage
