@@ -34,8 +34,8 @@ const MusicPlaylistView:React.FC<SearchBarHeaderProps> = (
           </View>
 
           <View style={styles.textsContainer}>
-            <Text style={styles.titleText}>{title}</Text>
-            <Text style={styles.artistsText}>{artists}</Text>
+            <Text style={styles.titleText} numberOfLines={2}>{title}</Text>
+            <Text style={styles.artistsText} numberOfLines={1}>{artists}</Text>
           </View>
         </View>
 
@@ -57,15 +57,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
 
-    width: '100%',
-    height: '13%'
+    width: '100%'
   },
 
   content: {
     flex: 1,
     flexDirection: 'row',
 
-    width: '95%'
+    width: '95%',
+    minHeight: 75
 
   },
 
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
 
   textsContainer: {
+    flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'space-evenly',
 
@@ -101,12 +102,12 @@ const styles = StyleSheet.create({
 
   titleText: {
     color: '#fff',
-    fontSize: 22
+    fontSize: 18
   },
 
   artistsText: {
     color: '#ccc',
-    fontSize: 15
+    fontSize: 14
   },
 
   rightPart: {

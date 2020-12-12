@@ -1,11 +1,50 @@
-import React, { useState } from 'react'
-import { Text, View, StyleSheet, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, StyleSheet, ScrollView, ImageSourcePropType } from 'react-native'
 
 import SearchBarHeader from '../Components/SearchBarHeader'
 import MusicPlaylistView from '../Components/MusicPlaylistView'
 
+import spotifyApi, { spotifyApiTrackSearchResponseItems } from '../../services/spotifyApi'
+import convertArtistsArrayToString from '../../utils/convertArtistsArrayToString'
+
+interface musicsSpotifyResponseSchema {
+  spotifyId: string,
+
+  image: ImageSourcePropType,
+
+  title: string,
+  artists: string
+}
+
 const SearchMusicPage:React.FC = () => {
   const [searchedMusic, setSearchedMusic] = useState('')
+  const [musicsSpotifyResponse, setMusicsSpotifyResponse] = useState <Array<musicsSpotifyResponseSchema>>([])
+
+  useEffect(() => {
+    if (searchedMusic) {
+      (async () => {
+        const response: spotifyApiTrackSearchResponseItems = (await spotifyApi.get('search', {
+          params: {
+            q: encodeURI(searchedMusic),
+            type: 'track'
+          }
+        })).data
+
+        const musics = response.tracks.items.map(item => {
+          return {
+            spotifyId: item.id,
+
+            image: item.album.images.length > 0 ? { uri: item.album.images[0].url } : require('../../assets/icons/defaultIcon.png'),
+
+            title: item.name,
+            artists: convertArtistsArrayToString(item.artists)
+          }
+        })
+
+        setMusicsSpotifyResponse(musics)
+      })()
+    }
+  }, [searchedMusic])
 
   return (
     <View style={styles.container}>
@@ -14,20 +53,25 @@ const SearchMusicPage:React.FC = () => {
         inputPlaceholder="Search a music"
       />
 
-      <ScrollView style={styles.scroolView} contentContainerStyle={styles.scroolViewContentContainerStyle}>
-        <MusicPlaylistView
-          imageSource={require('../../assets/icons/defaultIcon.png')}
-          title="My Music"
-          artists="My artists"
+      <ScrollView style={styles.scroolView}>
 
-          entypoIconName="cross"
-          iconPressAction={() => { console.log('pressed') }}
-        />
+        {musicsSpotifyResponse.map((item, index) => {
+          return (
+            <MusicPlaylistView
+              key={index}
 
-        <View style={styles.content}>
-          <Text style={{ color: 'white' }}>{searchedMusic}</Text>
-          <Text style={{ color: 'white' }}>Search Music</Text>
-        </View>
+              style={styles.musicPlaylistView}
+
+              imageSource={item.image}
+              title={item.title}
+              artists={item.artists}
+
+              entypoIconName="chevron-right"
+              iconPressAction={() => { console.log('pressed') }}
+            />
+          )
+        })}
+
       </ScrollView>
     </View>
   )
@@ -41,21 +85,13 @@ const styles = StyleSheet.create({
   },
 
   scroolView: {
-    marginTop: 30
+    marginTop: 15
   },
 
-  scroolViewContentContainerStyle: {
-    flex: 1,
-    backgroundColor: '#000'
-  },
-
-  content: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-
-    backgroundColor: '#000'
+  musicPlaylistView: {
+    marginVertical: '2%'
   }
+
 })
 
 export default SearchMusicPage
