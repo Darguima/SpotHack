@@ -5,6 +5,7 @@ import AuthRoutes from './auth.routes'
 
 import useAuth from '../contexts/auth'
 import { UserDataProvider } from '../contexts/userData'
+import { UserHistoryProvider } from '../contexts/userHistory'
 
 import LoadingPage from '../pages/LoadingPage'
 
@@ -15,7 +16,13 @@ const Routes: React.FC = () => {
     return <LoadingPage />
   }
 
-  return signed ? <UserDataProvider><AppRoutes /></UserDataProvider> : <AuthRoutes />
+  return signed
+    ? <UserDataProvider>
+        <UserHistoryProvider>
+          <AppRoutes />
+        </UserHistoryProvider>
+      </UserDataProvider>
+    : <AuthRoutes />
 }
 
 export default Routes
