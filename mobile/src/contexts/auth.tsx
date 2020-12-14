@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 import spotifyOAuth from '../services/spotifyOAuth'
 import spotifyApi from '../services/spotifyApi'
+import Axios from 'axios'
 
 interface AuthContextData {
   loading: boolean,
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
   const [refreshToken, seRefreshToken] = useState<string | undefined>(undefined)
 
+  // Take the saved data from Asyncstorage
   useEffect(() => {
     (async () => {
       const [[, oAuthCodeStoraged], [, accessTokenStoraged], [, refreshTokenStoraged]] = await AsyncStorage.multiGet(
@@ -51,10 +53,59 @@ export const AuthProvider: React.FC = ({ children }) => {
     })()
   }, [])
 
+  // Add Interceptor to the spotifyApi to every time that the token expire
+  useEffect(() => {
+    const refreshAccessToken = async () => {
+      if (refreshToken) {
+        const newAccessToken = await spotifyOAuth.refreshToken(refreshToken)
+
+        if (newAccessToken.access_token === 'error') {
+          return { response: 'error on refresh', refresh: 0 }
+        }
+
+        spotifyApi.defaults.headers.Authorization = `Bearer ${newAccessToken.access_token}`
+
+        AsyncStorage.setItem('@SpotHackAuth:accessToken', newAccessToken.access_token)
+
+        setAccessToken(newAccessToken.access_token)
+        setErrorOnLogin('')
+        return { response: newAccessToken.access_token, refresh: 1 }
+      } else {
+        return { response: 'error on refresh', refresh: 0 }
+      }
+    }
+
+    const refreshTokenInterceptor = spotifyApi.interceptors.response.use(response => {
+      return response
+    }, async (error) => {
+      if (error.response.data.error.status === 401 && error.response.data.error.message === 'The access token expired') {
+        const refreshStatus = await refreshAccessToken()
+
+        if (refreshStatus.refresh === 0) { return error }
+
+        const { config } = error
+
+        config.headers.Authorization = `Bearer ${refreshStatus.response}`
+
+        try {
+          return await Axios.request(config)
+        } catch (err) {
+          return err
+        }
+      }
+
+      return error
+    })
+
+    return () => { spotifyApi.interceptors.response.eject(refreshTokenInterceptor) }
+  }, [refreshToken])
+
   const logIn = async () => {
     await spotifyOAuth.getoAuthCode(setOAuthCode)
     // This will change the value on oAuthCode and fire the next useEffect
   }
+
+  // logIn() continue in this useEffect
 
   useEffect(() => {
     (async () => {

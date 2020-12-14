@@ -73,7 +73,41 @@ export const getOauthCredentials = async (oAuthCode: string) => {
   }
 }
 
+export const refreshToken = async (refreshToken: string) => {
+  try {
+    const oAuthCredentials = await axios.post(
+      'https://accounts.spotify.com/api/token',
+      null,
+      {
+        params: {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+          client_id: spotifyApiCredentials.client_id
+        },
+
+        headers: {
+          Authorization: `Basic ${spotifyApiCredentials.base64_key}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    )
+
+    if (oAuthCredentials.data.access_token) {
+      return { access_token: oAuthCredentials.data.access_token }
+    }
+
+    return {
+      access_token: 'error'
+    }
+  } catch (err) {
+    return {
+      access_token: 'error'
+    }
+  }
+}
+
 export default {
   getoAuthCode,
-  getOauthCredentials
+  getOauthCredentials,
+  refreshToken
 }
