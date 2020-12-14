@@ -2,11 +2,9 @@ import React from 'react'
 import { View, Image, StyleSheet } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
-import { useNavigation } from '@react-navigation/native'
+import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 
-const Home:React.FC = () => {
-  const { navigate } = useNavigation()
-
+const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo } }) => {
   return (
     <View
       style={styles.container}
@@ -19,7 +17,7 @@ const Home:React.FC = () => {
         <View style={[styles.imagesButtonContainer, { marginTop: '10%' }]}>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => navigate('SearchMusicPage')}
+            onPress={() => jumpTo('SearchMusicRoutes')}
           >
             <Image
               source={require('../../assets/searchMusic.png')}
@@ -31,7 +29,7 @@ const Home:React.FC = () => {
         <View style={styles.imagesButtonContainer}>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => navigate('PlaylistsPage')}
+            onPress={() => jumpTo('PlaylistsPage')}
           >
             <Image
               source={require('../../assets/playlists.png')}
@@ -43,7 +41,7 @@ const Home:React.FC = () => {
         <View style={styles.imagesButtonContainer}>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => navigate('SavedMusicPage')}
+            onPress={() => jumpTo('SavedMusicPage')}
           >
             <Image
               source={require('../../assets/savedMusic.png')}
@@ -55,7 +53,7 @@ const Home:React.FC = () => {
         <View style={[styles.imagesButtonContainer, { marginBottom: '10%' }]}>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => navigate('SettingsPage')}
+            onPress={() => jumpTo('SettingsPage')}
           >
             <Image
               source={require('../../assets/settings.png')}

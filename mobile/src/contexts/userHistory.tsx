@@ -34,7 +34,6 @@ export const UserHistoryProvider: React.FC = ({ children }) => {
   }, [])
 
   const addMusicToMusicSearchHistory = (musicData: musicsSpotifyResponseSchema) => {
-    console.log('3')
     const musicsIds = musicSearchHistory.map(item => (item.spotifyId))
     const sameMusicIndex = musicsIds.indexOf(musicData.spotifyId)
 

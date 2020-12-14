@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { Text, View, StyleSheet, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, ScrollView, BackHandler } from 'react-native'
 
 import SearchBarHeader from '../Components/SearchBarHeader'
 import MusicPlaylistView from '../Components/MusicPlaylistView'
 
-import spotifyApi, { spotifyApiTrackSearchResponseItems } from '../../services/spotifyApi'
-import convertArtistsArrayToString from '../../utils/convertArtistsArrayToString'
-import useUserHistory, { musicsSpotifyResponseSchema } from '../../contexts/userHistory'
+import getMusicDataFromSpotify from './getMusicDataFromSpotify'
 
-const SearchMusicPage:React.FC = () => {
+import useUserHistory, { musicsSpotifyResponseSchema } from '../../contexts/userHistory'
+import useAppUtils from '../../contexts/appUtils'
+import { StackScreenProps } from '@react-navigation/stack'
+
+const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
   const [searchedMusic, setSearchedMusic] = useState('')
+  const { changeMusicSearchInputValue, setChangeMusicSearchInputValue } = useAppUtils()
 
   const [errorMessage, setErrorMessage] = useState<Array<string>>([])
   const [musicsSpotifyResponse, setMusicsSpotifyResponse] = useState <Array<musicsSpotifyResponseSchema>>([])
@@ -22,54 +25,52 @@ const SearchMusicPage:React.FC = () => {
   useEffect(() => {
     setMusicsSpotifyResponse([])
     setErrorMessage(['Searching'])
+
     if (searchedMusic) {
       (async () => {
-        try {
-          const response: spotifyApiTrackSearchResponseItems = (await spotifyApi.get('search', {
-            params: {
-              q: encodeURI(searchedMusic),
-              type: 'track'
-            }
-          })).data
+        const response = await getMusicDataFromSpotify(searchedMusic)
 
-          const musics = response.tracks.items.map(item => {
-            return {
-              spotifyId: item.id,
-
-              image: item.album.images.length > 0
-                ? { uri: (item.album.images[1] || item.album.images[0]).url }
-                : require('../../assets/icons/defaultIcon.png'),
-
-              title: item.name,
-              artists: convertArtistsArrayToString(item.artists)
-            }
-          })
-
-          setMusicsSpotifyResponse(musics)
-          if (musics.length === 0) {
-            setErrorMessage(['No tracks found'])
-          } else {
-            setErrorMessage([])
-          }
-        } catch (err) {
-          try {
-            setErrorMessage(['Something went wrong!', `Spotify Api - ${err.response.data.error.message}`])
-            setMusicsSpotifyResponse([])
-          } catch (err) {
-            setErrorMessage(['Something went wrong!'])
-            setMusicsSpotifyResponse([])
-          }
-        }
+        setMusicsSpotifyResponse(response.response)
+        setErrorMessage(response.err)
       })()
     } else {
       setErrorMessage([])
     }
   }, [searchedMusic])
 
+  useEffect(() => {
+    const addListenerBackPress = () => {
+      BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress)
+    }
+    const removeListenerBackPress = () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPress)
+    }
+
+    const handleBackButtonPress = () => {
+      if (searchedMusic === '') {
+        return false
+      } else {
+        changeMusicSearchInputValue('')
+        return true
+      }
+    }
+
+    navigation.addListener('focus', addListenerBackPress)
+    navigation.addListener('blur', removeListenerBackPress)
+
+    return () => {
+      navigation.removeListener('focus', addListenerBackPress)
+      navigation.removeListener('blur', removeListenerBackPress)
+
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPress)
+    }
+  }, [changeMusicSearchInputValue, searchedMusic])
+
   return (
     <View style={styles.container}>
       <SearchBarHeader
         setState={setSearchedMusic}
+        setChangeMusicSearchInputValue={setChangeMusicSearchInputValue}
 
         inputPlaceholder="Search a music"
 

@@ -24,7 +24,7 @@ interface MusicDetailPageProps {
 const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
   route: {
     params:
-  { spotifyId, image = require('../../assets/icons/defaultIcon.png'), title = 'Music', artists = 'Artists' }
+  { spotifyId, image = require('../../assets/graySquare.jpg'), title = 'Music', artists = 'Artists' }
   }
 }) => {
   const [musicInfo, setMusicInfo] = useState({
@@ -45,7 +45,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 
         image: response.album.images.length > 0
           ? { uri: response.album.images[0].url }
-          : require('../../assets/icons/defaultIcon.png'),
+          : require('../../assets/graySquare.jpg'),
 
         title: response.name,
         artists: convertArtistsArrayToString(response.artists)

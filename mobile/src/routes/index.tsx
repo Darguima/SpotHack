@@ -4,6 +4,7 @@ import AppRoutes from './app.routes'
 import AuthRoutes from './auth.routes'
 
 import useAuth from '../contexts/auth'
+import { AppUtilsProvider } from '../contexts/appUtils'
 import { UserDataProvider } from '../contexts/userData'
 import { UserHistoryProvider } from '../contexts/userHistory'
 
@@ -17,11 +18,13 @@ const Routes: React.FC = () => {
   }
 
   return signed
-    ? <UserDataProvider>
-        <UserHistoryProvider>
-          <AppRoutes />
-        </UserHistoryProvider>
-      </UserDataProvider>
+    ? <AppUtilsProvider>
+        <UserDataProvider>
+          <UserHistoryProvider>
+            <AppRoutes />
+         </UserHistoryProvider>
+       </UserDataProvider>
+      </AppUtilsProvider>
     : <AuthRoutes />
 }
 

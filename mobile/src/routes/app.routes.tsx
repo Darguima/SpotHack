@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Dimensions, Image } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'

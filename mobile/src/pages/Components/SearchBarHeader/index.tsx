@@ -5,6 +5,7 @@ import { Entypo } from '@expo/vector-icons'
 
 interface SearchBarHeaderProps {
   setState: React.Dispatch<React.SetStateAction<string>>,
+  setChangeMusicSearchInputValue?: React.Dispatch<React.SetStateAction<() => (newValue: string) => void>>,
 
   inputPlaceholder: string,
 
@@ -13,11 +14,25 @@ interface SearchBarHeaderProps {
 }
 
 const SearchBarHeader:React.FC<SearchBarHeaderProps> = (
-  { setState, inputPlaceholder, viewBackgroundColor = '#000', inputBackgroundColor = '#fff' }) => {
+  {
+    setState, setChangeMusicSearchInputValue,
+    inputPlaceholder, viewBackgroundColor = '#000', inputBackgroundColor = '#fff'
+  }) => {
   const [inputValue, setInputValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   // eslint-disable-next-line no-undef
   const inputRef = useRef<TextInput>(null)
+
+  useEffect(() => {
+    const changeMusicSearchInputValueFromOut = (newValue: string) => {
+      setInputValue(newValue)
+      setState(newValue)
+    }
+
+    if (setChangeMusicSearchInputValue) {
+      setChangeMusicSearchInputValue(() => (changeMusicSearchInputValueFromOut))
+    }
+  }, [])
 
   const handleIconPress = () => {
     if (isFocused) {
