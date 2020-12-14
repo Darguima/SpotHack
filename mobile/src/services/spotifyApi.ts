@@ -159,6 +159,28 @@ export interface spotifyApiPlaylistResponse {
   data: spotifyApiPlaylistResponseItems,
 }
 
+export interface spotifyApiArtistsResponseItems {
+  external_urls: {
+    spotify: string,
+  },
+  followers: {
+    href: any,
+    total: number,
+  },
+  genres: Array <string>,
+  href: string,
+  id: string,
+  images: Array <{ height: number, url: string, width: number}>,
+  name: string,
+  popularity: number,
+  type: string,
+  uri: string,
+}
+
+export interface spotifyApiArtistsResponse {
+  data: spotifyApiArtistsResponseItems,
+}
+
 const spotifyApi = axios.create({
   baseURL: 'https://api.spotify.com/v1'
 })

@@ -1,6 +1,7 @@
 import React from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Text, StyleSheet, Image, View } from 'react-native'
+
+import ContentBox from '../../Components/ContentBox'
 
 import useAuth from '../../../contexts/auth'
 import useUserData from '../../../contexts/userData'
@@ -10,10 +11,13 @@ const SpotifyAccountSettings:React.FC = () => {
   const { userData } = useUserData()
 
   return (
-    <View style={styles.spotifyAccountSettingsContainer}>
-      <Text style={styles.containerTitle}>Spotify Settings</Text>
+    <ContentBox
+      title="Spotify Settings"
 
-      <View style={styles.userDataContainer}>
+      buttonText="Log Out"
+      buttonOnPress={logOut}
+    >
+      <View style={styles.content}>
         <Image
           source={
             userData.images.length !== 0
@@ -25,18 +29,7 @@ const SpotifyAccountSettings:React.FC = () => {
 
         <Text style={styles.userDataUsername}>{userData.display_name}</Text>
       </View>
-
-      <View style={styles.logoutButtonContainer}>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          activeOpacity={0.6}
-          onPress={logOut}
-        >
-          <Text style={styles.logoutButtonText}>Log Out</Text>
-        </TouchableOpacity>
-      </View>
-
-    </View>
+    </ContentBox>
   )
 }
 
@@ -50,6 +43,12 @@ const styles = StyleSheet.create({
     borderColor: '#1c5ed6',
     borderWidth: 3,
     borderRadius: 10
+  },
+
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   },
 
   containerTitle: {

@@ -4,6 +4,11 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
 import { Entypo } from '@expo/vector-icons'
 
+import YoutubeData from './Components/YoutubeData'
+import MusicData from './Components/MusicData'
+import AlbumData from './Components/AlbumData'
+import ArtistsData from './Components/ArtistsData'
+
 import spotifyApi, { spotifyApiTrackResponseItems } from '../../services/spotifyApi'
 import convertArtistsArrayToString from '../../utils/convertArtistsArrayToString'
 import { useNavigation } from '@react-navigation/native'
@@ -31,7 +36,23 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
     spotifyId,
     image,
     title,
-    artists
+    artists,
+
+    duration: 0,
+    explicit: false,
+    spotifyPopularity: 0,
+    trackNumber: 0,
+
+    albumTitle: 'Album Title',
+    albumArtists: 'Album Artists',
+    albumReleaseDate: '00-00-0000',
+    albumTotalTracks: 0,
+
+    artistsArray: [{
+      name: 'Artist',
+      spotifyId: ''
+    }]
+
   })
 
   const { goBack } = useNavigation()
@@ -48,7 +69,19 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
           : require('../../assets/graySquare.jpg'),
 
         title: response.name,
-        artists: convertArtistsArrayToString(response.artists)
+        artists: convertArtistsArrayToString(response.artists),
+
+        duration: response.duration_ms,
+        explicit: response.explicit,
+        spotifyPopularity: response.popularity,
+        trackNumber: response.track_number,
+
+        albumTitle: response.album.name,
+        albumArtists: convertArtistsArrayToString(response.album.artists),
+        albumReleaseDate: response.album.release_date,
+        albumTotalTracks: response.album.total_tracks,
+
+        artistsArray: response.artists.map(item => ({ name: item.name, spotifyId: item.id }))
       }
 
       setMusicInfo(newMusicInfo)
@@ -73,6 +106,30 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
           <Text style={styles.musicTitleText}>{musicInfo.title}</Text>
           <Text style={styles.musicArtistsText}>{musicInfo.artists}</Text>
         </View>
+
+        <YoutubeData
+          youtubeUrl='https://www.youtube.com/aaaaaaaaaaaaaaaaa'
+        />
+
+       <MusicData
+        title={musicInfo.title}
+        artists={musicInfo.artists}
+        duration={musicInfo.duration}
+        explicit={musicInfo.explicit}
+        spotifyPopularity={musicInfo.spotifyPopularity}
+        trackNumber={musicInfo.trackNumber}
+       />
+
+      <AlbumData
+        title={musicInfo.albumTitle}
+        artists={musicInfo.albumArtists}
+        releaseDate={musicInfo.albumReleaseDate}
+        totalTracks={musicInfo.albumTotalTracks}
+       />
+
+       <ArtistsData
+        artistsArray={musicInfo.artistsArray}
+       />
 
       </ScrollView>
     </View>

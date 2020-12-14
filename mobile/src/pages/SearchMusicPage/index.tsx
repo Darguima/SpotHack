@@ -96,7 +96,12 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
                 viewPressAction={() => {
                   addMusicToMusicSearchHistory(item)
-                  navigate('MusicDetailPage', { spotifyId: item.spotifyId })
+                  navigate('MusicDetailPage', {
+                    spotifyId: item.spotifyId,
+                    image: item.image,
+                    title: item.title,
+                    artists: item.artists
+                  })
                 }}
 
                 entypoIconName="cross"
@@ -127,12 +132,22 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
               artists={item.artists}
 
               viewPressAction={() => {
-                navigate('MusicDetailPage', { spotifyId: item.spotifyId })
+                navigate('MusicDetailPage', {
+                  spotifyId: item.spotifyId,
+                  image: item.image,
+                  title: item.title,
+                  artists: item.artists
+                })
                 addMusicToMusicSearchHistory(item)
               }}
               entypoIconName="chevron-right"
               iconPressAction={() => {
-                navigate('MusicDetailPage', { spotifyId: item.spotifyId })
+                navigate('MusicDetailPage', {
+                  spotifyId: item.spotifyId,
+                  image: item.image,
+                  title: item.title,
+                  artists: item.artists
+                })
                 addMusicToMusicSearchHistory(item)
               }}
             />
