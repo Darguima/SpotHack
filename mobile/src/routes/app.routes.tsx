@@ -6,7 +6,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import SearchMusicRoutes from './searchMusic.routes'
-import PlaylistsPage from '../pages/PlaylistsPage'
+import SearchPlaylistRoutes from './searchPlaylist.routes'
 import Home from '../pages/Home'
 import SavedMusicPage from '../pages/SavedMusicPage'
 import SettingsPage from '../pages/SettingsPage'
@@ -44,7 +44,7 @@ const AppRoutes: React.FC = () => {
         >
 
           <Screen
-            name="SearchMusicRoutes"
+            name="SearchMusicStack"
             component={SearchMusicRoutes}
 
             options={{
@@ -62,8 +62,8 @@ const AppRoutes: React.FC = () => {
           />
 
           <Screen
-            name="PlaylistsPage"
-            component={PlaylistsPage}
+            name="SearchPlaylistStack"
+            component={SearchPlaylistRoutes}
 
             options={{
               tabBarLabel: 'Playlists',

@@ -17,7 +17,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
         <View style={[styles.imagesButtonContainer, { marginTop: '10%' }]}>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => jumpTo('SearchMusicRoutes')}
+            onPress={() => jumpTo('SearchMusicStack')}
           >
             <Image
               source={require('../../assets/searchMusic.png')}
@@ -29,7 +29,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
         <View style={styles.imagesButtonContainer}>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => jumpTo('PlaylistsPage')}
+            onPress={() => jumpTo('SearchPlaylistStack')}
           >
             <Image
               source={require('../../assets/playlists.png')}

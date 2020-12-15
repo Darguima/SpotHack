@@ -42,6 +42,7 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
     const addListenerBackPress = () => {
       BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress)
     }
+
     const removeListenerBackPress = () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPress)
     }
@@ -55,7 +56,13 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
       }
     }
 
-    navigation.addListener('focus', addListenerBackPress)
+    if (navigation.isFocused()) {
+      addListenerBackPress()
+      navigation.addListener('focus', addListenerBackPress)
+    } else {
+      navigation.addListener('focus', addListenerBackPress)
+    }
+
     navigation.addListener('blur', removeListenerBackPress)
 
     return () => {
@@ -70,7 +77,7 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
     <View style={styles.container}>
       <SearchBarHeader
         setState={setSearchedMusic}
-        setChangeMusicSearchInputValue={setChangeMusicSearchInputValue}
+        setChangeInputValue={setChangeMusicSearchInputValue}
 
         inputPlaceholder="Search a music"
 
