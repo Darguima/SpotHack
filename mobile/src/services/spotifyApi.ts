@@ -3,6 +3,33 @@ import axios from 'axios'
 
 // spotifyApi interfaces
 
+export interface spotifyApiUserDataResponseItems {
+  country: string,
+  display_name: string,
+  explicit_content: {
+    filter_enabled: boolean,
+    filter_locked: boolean,
+  },
+  external_urls: {
+    spotify: string,
+  },
+  followers: {
+    href: null,
+    total: 0,
+  },
+  href: string,
+  id: string,
+  images: Array<{width: null | any, height: null | any, url: string}>,
+  product: string,
+  type: string,
+  uri: string,
+
+}
+
+export interface spotifyApiUserDataResponse {
+  data: spotifyApiUserDataResponseItems
+}
+
 export interface spotifyApiResponseArtistsArrayItems {
   external_urls: {
     spotify: string
@@ -77,7 +104,7 @@ export interface spotifyApiTrackSearchResponseItems {
     limit: number,
     next: string,
     offset: number,
-    previous: null | any,
+    previous: any | any,
     total: number,
   }
 }
@@ -97,33 +124,33 @@ export interface spotifyApiPlaylistResponseTracksArrayItems {
     type: string,
     uri: string,
   },
-  is_local: false,
-  primary_color: null,
+  is_local: boolean,
+  primary_color: any,
   track: spotifyApiTrackResponseItems,
   video_thumbnail: {
-    url: null
+    url: any
   }
 }
 
 export interface spotifyApiPlaylistResponseTracksArray extends Array<spotifyApiPlaylistResponseTracksArrayItems> {}
 
 export interface spotifyApiPlaylistResponseItems {
-  collaborative: false,
+  collaborative: boolean,
   description: string,
   external_urls: {
     spotify: string
   },
   followers: {
-    href: null,
+    href: any,
     total: number
   },
   href: string,
   id: string,
   images: [
     {
-      height: null,
+      height: any,
       url: string,
-      width: null
+      width: any
     }
   ],
   name: string,
@@ -137,17 +164,17 @@ export interface spotifyApiPlaylistResponseItems {
     type: string,
     uri: string
   },
-  primary_color: null,
-  public: false,
+  primary_color: any,
+  public: boolean,
   snapshot_id: string,
 
   tracks: {
     href: string,
     items: spotifyApiPlaylistResponseTracksArray,
     limit: number,
-    next: null,
+    next: any,
     offset: number,
-    previous: null,
+    previous: any,
     total: number
   },
 
@@ -157,6 +184,56 @@ export interface spotifyApiPlaylistResponseItems {
 
 export interface spotifyApiPlaylistResponse {
   data: spotifyApiPlaylistResponseItems,
+}
+
+export interface spotifyApiPlaylistsResponseItemsArrayItems {
+  collaborative: boolean,
+  description: string,
+  external_urls: {
+    spotify: string,
+  },
+  href: string,
+  id: string,
+  images: Array<{
+    height: any,
+    url: string,
+    width: any
+  }>,
+  name: string,
+  owner: {
+    display_name: string,
+    external_urls: {
+      spotify: string,
+    },
+    href: string,
+    id: string,
+    type: string,
+    uri: string,
+  },
+  primary_color: any,
+  public: boolean,
+  snapshot_id: string,
+  tracks: {
+    href: string,
+    total: number,
+  },
+  type: string,
+  uri: string,
+}
+
+export interface spotifyApiPlaylistsResponseItems {
+  href: string,
+  items: Array<spotifyApiPlaylistsResponseItemsArrayItems>,
+
+  limit: number,
+  next: any,
+  offset: number,
+  previous: any,
+  total: number,
+}
+
+export interface spotifyApiPlaylistsResponse {
+  data: spotifyApiPlaylistsResponseItems,
 }
 
 export interface spotifyApiArtistsResponseItems {

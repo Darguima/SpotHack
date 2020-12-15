@@ -2,49 +2,35 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { Alert } from 'react-native'
 
-import spotifyApi from '../services/spotifyApi'
+import spotifyApi, { spotifyApiUserDataResponseItems, spotifyApiPlaylistsResponseItems, spotifyApiPlaylistsResponseItemsArrayItems } from '../services/spotifyApi'
 
 import useAuth from './auth'
 
 interface UserDataContextData {
-  userData: SpotifyResponseSchema,
+  userData: spotifyApiUserDataResponseItems,
+  refreshUserData: () => void,
 
-  refreshUserData: () => void
-}
-
-interface SpotifyResponseSchema {
-  country: string,
-  display_name: string,
-  explicit_content: {
-    filter_enabled: boolean,
-    filter_locked: boolean,
-  },
-  external_urls: {
-    spotify: string,
-  },
-  followers: {
-    href: null,
-    total: 0,
-  },
-  href: string,
-  id: string,
-  images: Array<{width: null | any, height: null | any, url: string}>,
-  product: string,
-  type: string,
-  uri: string,
-
+  userPlaylists: Array<spotifyApiPlaylistsResponseItemsArrayItems>,
+  refreshUserPlaylists: () => void
 }
 
 const UserDataContext = createContext<UserDataContextData>({} as UserDataContextData)
 
 export const UserDataProvider: React.FC = ({ children }) => {
-  const [userData, setUserData] = useState({} as SpotifyResponseSchema)
   const { logOut } = useAuth()
 
-  const requestSpotifyData = useCallback(() => {
+  /*
+  *
+  * userData
+  *
+  */
+
+  const [userData, setUserData] = useState({} as spotifyApiUserDataResponseItems)
+
+  const requestSpotifyUserData = useCallback(() => {
     (async () => {
       try {
-        const spotifyResponse: SpotifyResponseSchema = (await spotifyApi.get('me')).data
+        const spotifyResponse: spotifyApiUserDataResponseItems = (await spotifyApi.get('me')).data
 
         setUserData(spotifyResponse)
       } catch (err) {
@@ -55,11 +41,48 @@ export const UserDataProvider: React.FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    requestSpotifyData()
-  }, [requestSpotifyData])
+    requestSpotifyUserData()
+  }, [requestSpotifyUserData])
+
+  /*
+  *
+  * userPlaylists
+  *
+  */
+
+  const [userPlaylists, setUserPlaylists] = useState([] as Array<spotifyApiPlaylistsResponseItemsArrayItems>)
+
+  const requestSpotifyUserPlaylistsData = useCallback(() => {
+    (async () => {
+      try {
+        const spotifyResponse: spotifyApiPlaylistsResponseItems = (await spotifyApi.get('me/playlists', {
+          params: {
+            limit: 50
+          }
+        })).data
+
+        console.log(spotifyResponse.items)
+
+        setUserPlaylists(spotifyResponse.items)
+      } catch (err) {
+        Alert.alert('Something went wrong.')
+        logOut()
+      }
+    })()
+  }, [])
+
+  useEffect(() => {
+    requestSpotifyUserPlaylistsData()
+  }, [requestSpotifyUserPlaylistsData])
 
   return (
-    <UserDataContext.Provider value={{ userData, refreshUserData: requestSpotifyData }}>
+    <UserDataContext.Provider value={{
+      userData,
+      refreshUserData: requestSpotifyUserData,
+
+      userPlaylists,
+      refreshUserPlaylists: requestSpotifyUserPlaylistsData
+    }}>
       {children}
     </UserDataContext.Provider>
   )

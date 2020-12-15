@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, BackHandler } from 'react-native'
-
-import { StackScreenProps } from '@react-navigation/stack'
+import { ScrollView } from 'react-native-gesture-handler'
 
 import SearchBarHeader from '../Components/SearchBarHeader'
+import NoSearchContent from './Components/NoSearchContent'
 
 import useAppUtils from '../../contexts/appUtils'
+
+import { StackScreenProps } from '@react-navigation/stack'
 
 const SearchPlaylistPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
   const [searchedPlaylist, setSearchedPlaylist] = useState('')
@@ -18,6 +20,7 @@ const SearchPlaylistPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
   // const { navigate } = useNavigation()
 
+  // BackHandler
   useEffect(() => {
     const addListenerBackPress = () => {
       BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress)
@@ -64,6 +67,12 @@ const SearchPlaylistPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
         viewBackgroundColor="#1c5ed6"
       />
+
+      <ScrollView>
+        {searchedPlaylist === '' &&
+          <NoSearchContent />
+        }
+      </ScrollView>
 
     </View>
   )

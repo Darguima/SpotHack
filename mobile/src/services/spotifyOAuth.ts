@@ -10,7 +10,7 @@ import spotifyApiCredentials from './spotifyApiCredentials.json'
 const redirectUri = Linking.makeUrl('oauthredirect')
 
 export const getoAuthCode = async (setOAuthCode: React.Dispatch<React.SetStateAction<string | undefined>>) => {
-  const scopes = ['user-read-private', 'playlist-read-private']
+  const scopes = ['user-read-private', 'playlist-read-private', 'playlist-read-collaborative']
 
   await openBrowserAsync(
     'https://accounts.spotify.com/authorize' +
