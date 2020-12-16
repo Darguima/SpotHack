@@ -6,11 +6,13 @@ import { useNavigation } from '@react-navigation/native'
 import MusicPlaylistView from '../../../Components/MusicPlaylistView'
 
 import useUserData from '../../../../contexts/userData'
+import useUserHistory from '../../../../contexts/userHistory'
 
 const NoSearchContent:React.FC = () => {
   const [screenIndex, setScreenIndex] = useState<number>(0)
 
   const { userPlaylists } = useUserData()
+  const { playlistSearchHistory, addPlaylistToPlaylistSearchHistory, removePlaylistFromPlaylistSearchHistory } = useUserHistory()
 
   const { navigate } = useNavigation()
 
@@ -32,6 +34,38 @@ const NoSearchContent:React.FC = () => {
           My Playlists
         </Text>
       </View>
+
+      {screenIndex === 0 && playlistSearchHistory.map((item, index) => {
+        return (
+          <MusicPlaylistView
+            key={index}
+
+            style={{
+              marginTop: index === 0 ? '4%' : '2%',
+              marginBottom: index === playlistSearchHistory.length - 1 ? '4%' : '2%'
+            }}
+
+            imageSource={item.image}
+            title={item.name}
+            artists={item.owner}
+
+            viewPressAction={() => {
+              addPlaylistToPlaylistSearchHistory(item)
+              navigate('PlaylistDetailPage', {
+                spotifyId: item.spotifyId,
+                image: item.image,
+                name: item.name,
+                owner: item.owner
+              })
+            }}
+
+            entypoIconName="cross"
+            iconPressAction={() => {
+              removePlaylistFromPlaylistSearchHistory(item.spotifyId)
+            }}
+          />
+        )
+      })}
 
       {screenIndex === 1 && userPlaylists.map((item, index) => (
         <MusicPlaylistView

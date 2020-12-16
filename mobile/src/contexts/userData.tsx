@@ -87,7 +87,6 @@ export const UserDataProvider: React.FC = ({ children }) => {
         setUserPlaylists(spotifyResponseFiltered)
       } catch (err) {
         Alert.alert('Something went wrong getting your playlists.')
-        console.log(err.response.data)
       }
     })()
   }, [])

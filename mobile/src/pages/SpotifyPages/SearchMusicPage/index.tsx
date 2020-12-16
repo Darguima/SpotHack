@@ -22,6 +22,7 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
   const { navigate } = useNavigation()
 
+  // Search musics and save on the state
   useEffect(() => {
     setMusicsSpotifyResponse([])
     setErrorMessage(['Searching'])
@@ -38,6 +39,7 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
     }
   }, [searchedMusic])
 
+  // BackButton handler
   useEffect(() => {
     const addListenerBackPress = () => {
       BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress)
@@ -94,7 +96,7 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
                 style={{
                   marginTop: index === 0 ? '4%' : '2%',
-                  marginBottom: index === musicsSpotifyResponse.length - 1 ? '4%' : '2%'
+                  marginBottom: index === musicSearchHistory.length - 1 ? '4%' : '2%'
                 }}
 
                 imageSource={item.image}
@@ -120,7 +122,7 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
           })}
 
         {errorMessage.length !== 0 &&
-          errorMessage.map((item, index) => (<Text key={index} style={styles.noTrackFounText}>{item}</Text>))
+          errorMessage.map((item, index) => (<Text key={index} style={styles.noTrackFoundText}>{item}</Text>))
 
         }
 
@@ -173,7 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000'
   },
 
-  noTrackFounText: {
+  noTrackFoundText: {
     width: '100%',
     textAlign: 'center',
 

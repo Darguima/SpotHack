@@ -72,6 +72,7 @@ const SearchBarHeader:React.FC<SearchBarHeaderProps> = (
             value={inputValue}
             onChangeText={(e) => { setInputValue(e) }}
             placeholder={inputPlaceholder}
+            autoCorrect={false}
           />
         </View>
         <RectButton

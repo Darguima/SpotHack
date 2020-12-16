@@ -230,6 +230,53 @@ export interface spotifyApiPlaylistsResponse {
   data: spotifyApiPlaylistsResponseItems,
 }
 
+export interface spotifyApiPlaylistSearchResponseItemsArrayItems {
+  collaborative: boolean,
+  description: string,
+  external_urls: {
+    spotify: string,
+  },
+  href: string,
+  id: string,
+  images: Array<{ height: any, url: string, width: any}>,
+  name: string,
+  owner: {
+    display_name: string,
+    external_urls: {
+      spotify: string,
+    },
+    href: string,
+    id: string,
+    type: string,
+    uri: string,
+  },
+  primary_color: any,
+  public: any,
+  snapshot_id: string,
+  tracks: {
+    href: string,
+    total: number
+  },
+  type: string,
+  uri: string,
+}
+
+export interface spotifyApiPlaylistSearchResponseItems {
+  playlists: {
+    href: string,
+    items: Array<spotifyApiPlaylistSearchResponseItemsArrayItems>,
+    limit: number,
+    next: string,
+    offset: number,
+    previous: any,
+    total: number
+  }
+}
+
+export interface spotifyApiPlaylistSearchResponse {
+  data: spotifyApiTrackSearchResponseItems
+}
+
 export interface spotifyApiArtistsResponseItems {
   external_urls: {
     spotify: string,
