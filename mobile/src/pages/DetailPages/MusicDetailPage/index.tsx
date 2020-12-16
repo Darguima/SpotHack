@@ -9,8 +9,8 @@ import MusicData from './Components/MusicData'
 import AlbumData from './Components/AlbumData'
 import ArtistsData from './Components/ArtistsData'
 
-import spotifyApi, { spotifyApiTrackResponseItems } from '../../services/spotifyApi'
-import convertArtistsArrayToString from '../../utils/convertArtistsArrayToString'
+import spotifyApi, { spotifyApiTrackResponseItems } from '../../../services/spotifyApi'
+import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
 import { useNavigation } from '@react-navigation/native'
 
 interface MusicDetailPageProps {
@@ -29,7 +29,7 @@ interface MusicDetailPageProps {
 const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
   route: {
     params:
-  { spotifyId, image = require('../../assets/graySquare.jpg'), title = 'Music', artists = 'Artists' }
+  { spotifyId, image = require('../../../assets/graySquare.jpg'), title = 'Music', artists = 'Artists' }
   }
 }) => {
   const [musicInfo, setMusicInfo] = useState({
@@ -66,7 +66,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 
         image: response.album.images.length > 0
           ? { uri: response.album.images[0].url }
-          : require('../../assets/graySquare.jpg'),
+          : require('../../../assets/graySquare.jpg'),
 
         title: response.name,
         artists: convertArtistsArrayToString(response.artists),

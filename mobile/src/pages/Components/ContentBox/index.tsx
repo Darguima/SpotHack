@@ -25,9 +25,11 @@ const ContentBox:React.FC<ContentBoxProps> = ({
     <View style={[styles.contentBoxContainer, style]}>
       <Text style={[styles.containerTitle, titleStyle]}>{title}</Text>
 
-      <View style={[styles.content, contentStyle]}>
-        {children}
-      </View>
+      {!!children &&
+        <View style={[styles.content, contentStyle]}>
+          {children}
+        </View>
+      }
 
       {!!buttonContent &&
         <View style={[styles.buttonContainer, buttonStyle]}>

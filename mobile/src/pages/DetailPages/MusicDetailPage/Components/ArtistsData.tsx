@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, Image, StyleSheet, ImageSourcePropType } from 'react-native'
-import spotifyApi, { spotifyApiArtistsResponseItems } from '../../../services/spotifyApi'
-import convertArrayToString from '../../../utils/convertArrayToString'
+import spotifyApi, { spotifyApiArtistsResponseItems } from '../../../../services/spotifyApi'
+import convertArrayToString from '../../../../utils/convertArrayToString'
 
-import ContentBox from '../../Components/ContentBox'
+import ContentBox from '../../../Components/ContentBox'
 
 interface ArtistsDataProps {
   artistsArray: Array<{ name: string; spotifyId: string; }>
@@ -21,7 +21,7 @@ interface ArtistsDataSchema {
 const ArtistsData:React.FC<ArtistsDataProps> = ({ artistsArray }) => {
   const [newArtistsArray, setNewArtistsArray] = useState<Array<ArtistsDataSchema>>([{
     spotifyId: '',
-    image: require('../../../assets/graySquare.jpg'),
+    image: require('../../../../assets/graySquare.jpg'),
     name: 'Artist',
     followers: 0,
     genres: 'Music',
@@ -41,7 +41,7 @@ const ArtistsData:React.FC<ArtistsDataProps> = ({ artistsArray }) => {
 
             image: spotifyUserData.images.length > 0
               ? { uri: (spotifyUserData.images[1] || spotifyUserData.images[0]).url }
-              : require('../../../assets/graySquare.jpg'),
+              : require('../../../../assets/graySquare.jpg'),
 
             genres: convertArrayToString(spotifyUserData.genres.length > 0
               ? spotifyUserData.genres
@@ -51,7 +51,7 @@ const ArtistsData:React.FC<ArtistsDataProps> = ({ artistsArray }) => {
         } else {
           return {
             spotifyId: '',
-            image: require('../../../assets/graySquare.jpg'),
+            image: require('../../../../assets/graySquare.jpg'),
             name: 'Artist',
             followers: 0,
             genres: 'Music',

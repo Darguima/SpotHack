@@ -7,12 +7,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import SearchMusicRoutes from './searchMusic.routes'
 import SearchPlaylistRoutes from './searchPlaylist.routes'
-import Home from '../pages/Home'
-import SavedMusicPage from '../pages/SavedMusicPage'
-import SettingsPage from '../pages/SettingsPage'
+import Home from '../pages/SpotHackPages/Home'
+import SavedMusicPage from '../pages/SpotHackPages/SavedMusicStack/SavedMusicPage'
+import SettingsPage from '../pages/SpotHackPages/SettingsPage'
 
 import useUserData from '../contexts/userData'
-import LoadingPage from '../pages/LoadingPage'
+import LoadingPage from '../pages/OtherPages/LoadingPage'
 
 const { Navigator, Screen } = createMaterialTopTabNavigator()
 

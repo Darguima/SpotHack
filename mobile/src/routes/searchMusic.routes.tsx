@@ -3,8 +3,8 @@ import React, { useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 
-import SearchMusicPage from '../pages/SearchMusicPage'
-import MusicDetailPage from '../pages/MusicDetailPage'
+import SearchMusicPage from '../pages/SpotifyPages/SearchMusicPage'
+import MusicDetailPage from '../pages/DetailPages/MusicDetailPage'
 
 import useAppUtils from '../contexts/appUtils'
 

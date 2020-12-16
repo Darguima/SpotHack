@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, BackHandler } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
-import SearchBarHeader from '../Components/SearchBarHeader'
+import SearchBarHeader from '../../Components/SearchBarHeader'
 import NoSearchContent from './Components/NoSearchContent'
 
-import useAppUtils from '../../contexts/appUtils'
+import useAppUtils from '../../../contexts/appUtils'
 
 import { StackScreenProps } from '@react-navigation/stack'
 

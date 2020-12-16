@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Text, View, StyleSheet, ScrollView, BackHandler } from 'react-native'
 
-import SearchBarHeader from '../Components/SearchBarHeader'
-import MusicPlaylistView from '../Components/MusicPlaylistView'
+import SearchBarHeader from '../../Components/SearchBarHeader'
+import MusicPlaylistView from '../../Components/MusicPlaylistView'
 
 import getMusicDataFromSpotify from './getMusicDataFromSpotify'
 
-import useUserHistory, { musicsSpotifyResponseSchema } from '../../contexts/userHistory'
-import useAppUtils from '../../contexts/appUtils'
+import useUserHistory, { musicsSpotifyResponseSchema } from '../../../contexts/userHistory'
+import useAppUtils from '../../../contexts/appUtils'
 import { StackScreenProps } from '@react-navigation/stack'
 
 const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {

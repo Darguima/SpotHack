@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, StyleSheet, Linking } from 'react-native'
 
-import ContentBox from '../../Components/ContentBox'
+import ContentBox from '../../../Components/ContentBox'
 import { Feather } from '@expo/vector-icons'
 
 interface YoutubeDataProps {

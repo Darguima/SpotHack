@@ -20,7 +20,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
             onPress={() => jumpTo('SearchMusicStack')}
           >
             <Image
-              source={require('../../assets/searchMusic.png')}
+              source={require('../../../assets/searchMusic.png')}
               style={styles.images}
             />
           </TouchableOpacity>
@@ -32,7 +32,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
             onPress={() => jumpTo('SearchPlaylistStack')}
           >
             <Image
-              source={require('../../assets/playlists.png')}
+              source={require('../../../assets/playlists.png')}
               style={styles.images}
             />
           </TouchableOpacity>
@@ -44,7 +44,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
             onPress={() => jumpTo('SavedMusicPage')}
           >
             <Image
-              source={require('../../assets/savedMusic.png')}
+              source={require('../../../assets/savedMusic.png')}
               style={styles.images}
             />
           </TouchableOpacity>
@@ -56,7 +56,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
             onPress={() => jumpTo('SettingsPage')}
           >
             <Image
-              source={require('../../assets/settings.png')}
+              source={require('../../../assets/settings.png')}
               style={styles.images}
             />
           </TouchableOpacity>

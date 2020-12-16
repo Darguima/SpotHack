@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 
-import MusicPlaylistView from '../../Components/MusicPlaylistView'
+import { useNavigation } from '@react-navigation/native'
 
-import useUserData from '../../../contexts/userData'
+import MusicPlaylistView from '../../../Components/MusicPlaylistView'
+
+import useUserData from '../../../../contexts/userData'
 
 const NoSearchContent:React.FC = () => {
   const [screenIndex, setScreenIndex] = useState<number>(0)
 
   const { userPlaylists } = useUserData()
+
+  const { navigate } = useNavigation()
 
   return (
     <View style={styles.container}>
@@ -42,10 +46,24 @@ const NoSearchContent:React.FC = () => {
           title={item.name}
           artists={item.owner.display_name}
 
-          viewPressAction={() => {}}
+          viewPressAction={() => {
+            navigate('PlaylistDetailPage', {
+              spotifyId: item.id,
+              image: item.image,
+              name: item.name,
+              owner: item.owner.display_name
+            })
+          }}
 
           entypoIconName="chevron-right"
-          iconPressAction={() => {}}
+          iconPressAction={() => {
+            navigate('PlaylistDetailPage', {
+              spotifyId: item.id,
+              image: item.image,
+              name: item.name,
+              owner: item.owner.display_name
+            })
+          }}
         />
       ))}
     </View>

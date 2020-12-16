@@ -8,7 +8,7 @@ import { AppUtilsProvider } from '../contexts/appUtils'
 import { UserDataProvider } from '../contexts/userData'
 import { UserHistoryProvider } from '../contexts/userHistory'
 
-import LoadingPage from '../pages/LoadingPage'
+import LoadingPage from '../pages/OtherPages/LoadingPage'
 
 const Routes: React.FC = () => {
   const { loading, signed } = useAuth()

@@ -146,13 +146,7 @@ export interface spotifyApiPlaylistResponseItems {
   },
   href: string,
   id: string,
-  images: [
-    {
-      height: any,
-      url: string,
-      width: any
-    }
-  ],
+  images: Array<{ height: any, url: string, width: any }>,
   name: string,
   owner: {
     display_name: string,

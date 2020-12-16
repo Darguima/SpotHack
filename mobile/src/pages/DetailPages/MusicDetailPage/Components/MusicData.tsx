@@ -1,8 +1,8 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import convertMilisecondsToMinutes from '../../../utils/convertMilisecondsToMinutes'
+import convertMilisecondsToMinutes from '../../../../utils/convertMilisecondsToMinutes'
 
-import ContentBox from '../../Components/ContentBox'
+import ContentBox from '../../../Components/ContentBox'
 
 interface MusicDataProps {
   title: string,

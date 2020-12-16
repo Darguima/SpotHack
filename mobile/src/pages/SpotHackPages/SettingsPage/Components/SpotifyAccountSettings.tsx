@@ -1,10 +1,10 @@
 import React from 'react'
 import { Text, StyleSheet, Image, View } from 'react-native'
 
-import ContentBox from '../../Components/ContentBox'
+import ContentBox from '../../../Components/ContentBox'
 
-import useAuth from '../../../contexts/auth'
-import useUserData from '../../../contexts/userData'
+import useAuth from '../../../../contexts/auth'
+import useUserData from '../../../../contexts/userData'
 
 const SpotifyAccountSettings:React.FC = () => {
   const { logOut } = useAuth()

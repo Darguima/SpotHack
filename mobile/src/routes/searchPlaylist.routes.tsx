@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
 
-import SearchPlaylistPage from '../pages/SearchPlaylistPage'
+import SearchPlaylistPage from '../pages/SpotifyPages/SearchPlaylistPage'
+import PlaylistDetailPage from '../pages/DetailPages/PlaylistDetailPage'
+import MusicDetailPage from '../pages/DetailPages/MusicDetailPage'
+import FlatListMusics from '../pages/DetailPages/PlaylistDetailPage/pages/FlatListMusicsPage'
 
 import { createStackNavigator } from '@react-navigation/stack'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
@@ -39,6 +42,12 @@ const SearchPlaylistRoutes: React.FC<MaterialTopTabScreenProps<any>> = ({ naviga
     <Navigator screenOptions={{ headerShown: false }}>
 
       <Screen name="SearchPlaylistPage" component={SearchPlaylistPage}/>
+
+      <Screen name="PlaylistDetailPage" component={PlaylistDetailPage}/>
+
+      <Screen name="MusicDetailPage" component={MusicDetailPage} />
+
+      <Screen name="FlatListMusics" component={FlatListMusics} />
 
     </Navigator>
   )

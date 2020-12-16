@@ -1,5 +1,5 @@
-import spotifyApi, { spotifyApiTrackSearchResponseItems } from '../../services/spotifyApi'
-import convertArtistsArrayToString from '../../utils/convertArtistsArrayToString'
+import spotifyApi, { spotifyApiTrackSearchResponseItems } from '../../../services/spotifyApi'
+import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
 
 export default async (query: string) => {
   try {
@@ -16,7 +16,7 @@ export default async (query: string) => {
 
         image: item.album.images.length > 0
           ? { uri: (item.album.images[1] || item.album.images[0]).url }
-          : require('../../assets/graySquare.jpg'),
+          : require('../../../assets/graySquare.jpg'),
 
         title: item.name,
         artists: convertArtistsArrayToString(item.artists)
