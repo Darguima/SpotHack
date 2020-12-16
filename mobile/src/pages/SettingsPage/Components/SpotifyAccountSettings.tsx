@@ -19,11 +19,7 @@ const SpotifyAccountSettings:React.FC = () => {
     >
       <View style={styles.content}>
         <Image
-          source={
-            userData.images.length !== 0
-              ? { uri: userData.images[0].url }
-              : require('../../../assets/icons/defaultIcon.png')
-          }
+          source={userData.image}
           style={styles.userDataImage}
         />
 

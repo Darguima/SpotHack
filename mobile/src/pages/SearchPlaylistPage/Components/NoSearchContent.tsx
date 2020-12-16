@@ -38,9 +38,7 @@ const NoSearchContent:React.FC = () => {
             marginBottom: index === userPlaylists.length - 1 ? '4%' : '2%'
           }}
 
-          imageSource={item.images.length > 0
-            ? { uri: (item.images[1] || item.images[0]).url }
-            : require('../../../assets/graySquare.jpg')}
+          imageSource={item.image}
           title={item.name}
           artists={item.owner.display_name}
 
