@@ -2,15 +2,15 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { Alert, ImageSourcePropType } from 'react-native'
 
-import spotifyApi, { spotifyApiUserDataResponseItems, spotifyApiPlaylistsResponseItemsArrayItems } from '../services/spotifyApi'
+import spotifyApi from '../services/spotify/spotifyApi'
 
 import useAuth from './auth'
 
-interface userDataSchema extends spotifyApiUserDataResponseItems {
+interface userDataSchema extends SpotifyApi.UserObjectPublic {
   image: ImageSourcePropType
 }
 
-interface userPlaylistsDataSchema extends spotifyApiPlaylistsResponseItemsArrayItems {
+interface userPlaylistDataSchema extends SpotifyApi.PlaylistObjectSimplified {
   image: ImageSourcePropType
 }
 
@@ -18,7 +18,7 @@ interface UserDataContextData {
   userData: userDataSchema,
   refreshUserData: () => void,
 
-  userPlaylists: Array<userPlaylistsDataSchema>,
+  userPlaylists: Array<userPlaylistDataSchema>,
   refreshUserPlaylists: () => void
 }
 
@@ -38,12 +38,12 @@ export const UserDataProvider: React.FC = ({ children }) => {
   const requestSpotifyUserData = useCallback(() => {
     (async () => {
       try {
-        const spotifyResponse: spotifyApiUserDataResponseItems = (await spotifyApi.get('me')).data
+        const spotifyResponse: SpotifyApi.UserObjectPublic = (await spotifyApi.get('me')).data
 
         const spotifyResponseFiltered = {
           ...spotifyResponse,
-          image: spotifyResponse.images.length > 0
-            ? { uri: (spotifyResponse.images[1] || spotifyResponse.images[0]).url }
+          image: (spotifyResponse.images || []).length > 0
+            ? { uri: (spotifyResponse.images![1] || spotifyResponse.images![0]).url }
             : require('../assets/icons/defaultIcon.png')
         }
 
@@ -65,18 +65,18 @@ export const UserDataProvider: React.FC = ({ children }) => {
   *
   */
 
-  const [userPlaylists, setUserPlaylists] = useState([] as Array<userPlaylistsDataSchema>)
+  const [userPlaylists, setUserPlaylists] = useState([] as Array<userPlaylistDataSchema>)
 
   const requestSpotifyUserPlaylistsData = useCallback(() => {
     (async () => {
       try {
-        const spotifyResponse: Array<spotifyApiPlaylistsResponseItemsArrayItems> = (await spotifyApi.get('me/playlists', {
+        const spotifyResponse: SpotifyApi.ListOfCurrentUsersPlaylistsResponse = (await spotifyApi.get('me/playlists', {
           params: {
             limit: 50
           }
-        })).data.items
+        })).data
 
-        const spotifyResponseFiltered = spotifyResponse.map(item => {
+        const spotifyResponseFiltered = spotifyResponse.items.map(item => {
           const image: ImageSourcePropType = item.images.length > 0
             ? { uri: (item.images[1] || item.images[0]).url }
             : require('../assets/graySquare.jpg')

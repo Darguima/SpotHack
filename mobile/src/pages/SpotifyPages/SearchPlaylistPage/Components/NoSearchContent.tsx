@@ -78,7 +78,7 @@ const NoSearchContent:React.FC = () => {
 
           imageSource={item.image}
           title={item.name}
-          artists={item.owner.display_name}
+          artists={item.owner.display_name || 'Owner'}
 
           viewPressAction={() => {
             navigate('PlaylistDetailPage', {

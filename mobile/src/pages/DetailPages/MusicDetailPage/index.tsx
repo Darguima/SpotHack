@@ -9,7 +9,7 @@ import MusicData from './Components/MusicData'
 import AlbumData from './Components/AlbumData'
 import ArtistsData from './Components/ArtistsData'
 
-import spotifyApi, { spotifyApiTrackResponseItems } from '../../../services/spotifyApi'
+import spotifyApi from '../../../services/spotify/spotifyApi'
 import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
 import { useNavigation } from '@react-navigation/native'
 
@@ -59,7 +59,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 
   useEffect(() => {
     (async () => {
-      const response: spotifyApiTrackResponseItems = (await spotifyApi.get(`tracks/${spotifyId}`)).data
+      const response: SpotifyApi.SingleTrackResponse = (await spotifyApi.get(`tracks/${spotifyId}`)).data
 
       const newMusicInfo = {
         spotifyId,
@@ -79,7 +79,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
         albumTitle: response.album.name,
         albumArtists: convertArtistsArrayToString(response.album.artists),
         albumReleaseDate: response.album.release_date,
-        albumTotalTracks: response.album.total_tracks,
+        albumTotalTracks: response.album.total_tracks || 0, // total_tracks don't is recognized by typescript, but it exists (you need add it on the node_modules)
 
         artistsArray: response.artists.map(item => ({ name: item.name, spotifyId: item.id }))
       }

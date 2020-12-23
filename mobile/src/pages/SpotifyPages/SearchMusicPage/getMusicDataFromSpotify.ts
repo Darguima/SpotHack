@@ -1,9 +1,9 @@
-import spotifyApi, { spotifyApiTrackSearchResponseItems } from '../../../services/spotifyApi'
+import spotifyApi from '../../../services/spotify/spotifyApi'
 import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
 
 export default async (query: string) => {
   try {
-    const response: spotifyApiTrackSearchResponseItems = (await spotifyApi.get('search', {
+    const response: SpotifyApi.TrackSearchResponse = (await spotifyApi.get('search', {
       params: {
         q: encodeURI(query),
         type: 'track'

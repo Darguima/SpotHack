@@ -8,7 +8,7 @@ import PlaylistData from './Components/PlaylistData'
 
 import { Entypo } from '@expo/vector-icons'
 
-import spotifyApi, { spotifyApiPlaylistResponseItems, spotifyApiPlaylistResponseTracksArray } from '../../../services/spotifyApi'
+import spotifyApi from '../../../services/spotify/spotifyApi'
 import { useNavigation } from '@react-navigation/native'
 
 interface PlaylistDetailPageProps {
@@ -43,14 +43,14 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
     isPublic: false,
     collaborative: false,
 
-    tracks: [] as spotifyApiPlaylistResponseTracksArray
+    tracks: [] as Array<SpotifyApi.PlaylistTrackObject>
   })
 
   const { goBack } = useNavigation()
 
   useEffect(() => {
     (async () => {
-      const response: spotifyApiPlaylistResponseItems = (await spotifyApi.get(`playlists/${spotifyId}`)).data
+      const response: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${spotifyId}`)).data
 
       const newPlaylistInfo = {
         spotifyId,
@@ -60,13 +60,13 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
           : require('../../../assets/graySquare.jpg'),
 
         name: response.name,
-        owner: response.owner.display_name,
+        owner: response.owner.display_name || 'Owner',
 
-        description: response.description,
+        description: response.description || '',
 
         totalTracks: response.tracks.items.length,
         followers: response.followers.total,
-        isPublic: response.public,
+        isPublic: response.public || true,
         collaborative: response.collaborative,
 
         tracks: response.tracks.items

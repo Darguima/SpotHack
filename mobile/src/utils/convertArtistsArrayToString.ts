@@ -1,6 +1,4 @@
-import { spotifyApiResponseArtistsArray } from '../services/spotifyApi'
-
-export default (artists: spotifyApiResponseArtistsArray) => {
+export default (artists: Array<SpotifyApi.ArtistObjectSimplified>) => {
   try {
     const artistsArray = artists.map(item => {
       return item.name

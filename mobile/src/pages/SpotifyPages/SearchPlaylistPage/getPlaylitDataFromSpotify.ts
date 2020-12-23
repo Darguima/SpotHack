@@ -1,8 +1,8 @@
-import spotifyApi, { spotifyApiPlaylistSearchResponseItems } from '../../../services/spotifyApi'
+import spotifyApi from '../../../services/spotify/spotifyApi'
 
 export default async (query: string) => {
   try {
-    const response: spotifyApiPlaylistSearchResponseItems = (await spotifyApi.get('search', {
+    const response: SpotifyApi.PlaylistSearchResponse = (await spotifyApi.get('search', {
       params: {
         q: encodeURI(query),
         type: 'playlist'

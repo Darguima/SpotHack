@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, Image, StyleSheet, ImageSourcePropType } from 'react-native'
-import spotifyApi, { spotifyApiArtistsResponseItems } from '../../../../services/spotifyApi'
+import spotifyApi from '../../../../services/spotify/spotifyApi'
 import convertArrayToString from '../../../../utils/convertArrayToString'
 
 import ContentBox from '../../../Components/ContentBox'
@@ -32,7 +32,7 @@ const ArtistsData:React.FC<ArtistsDataProps> = ({ artistsArray }) => {
     try {
       const getArtistsData = Promise.all(artistsArray.map(async (item) => {
         if (item.spotifyId) {
-          const spotifyUserData: spotifyApiArtistsResponseItems = (await spotifyApi.get(`artists/${item.spotifyId}`)).data
+          const spotifyUserData: SpotifyApi.ArtistObjectFull = (await spotifyApi.get(`artists/${item.spotifyId}`)).data
 
           return {
             name: spotifyUserData.name,

@@ -4,10 +4,8 @@ import { useNavigation } from '@react-navigation/native'
 
 import ContentBox from '../../../Components/ContentBox'
 
-import { spotifyApiPlaylistResponseTracksArray } from '../../../../services/spotifyApi'
-
 interface MusicsOnPlaylistProps {
-  musicsArray: spotifyApiPlaylistResponseTracksArray,
+  musicsArray: Array<SpotifyApi.PlaylistTrackObject>,
 }
 
 const MusicsOnPlaylist:React.FC<MusicsOnPlaylistProps> = ({ musicsArray }) => {

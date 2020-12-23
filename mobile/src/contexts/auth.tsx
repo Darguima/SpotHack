@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 
-import spotifyOAuth from '../services/spotifyOAuth'
-import spotifyApi from '../services/spotifyApi'
+import spotifyOAuth from '../services/spotify/spotifyOAuth'
+import spotifyApi from '../services/spotify/spotifyApi'
 import Axios from 'axios'
 
 interface AuthContextData {

@@ -7,16 +7,15 @@ import MusicPlaylistView from '../../../Components/MusicPlaylistView'
 
 import { Entypo } from '@expo/vector-icons'
 
-import { spotifyApiPlaylistResponseTracksArray, spotifyApiTrackResponseItems } from '../../../../services/spotifyApi'
 import convertArtistsArrayToString from '../../../../utils/convertArtistsArrayToString'
 
-interface FlatListSpotifyApiTrackResponseFiltered extends spotifyApiTrackResponseItems {
+interface FlatListSpotifyApiTrackResponseFiltered extends SpotifyApi.TrackObjectFull {
   image: ImageSourcePropType,
   index: number
 }
 
 const FlatListMusics:React.FC<StackScreenProps<any>> = ({ route: { params } }) => {
-  const musicsArray: spotifyApiPlaylistResponseTracksArray = params!.musicsArray || []
+  const musicsArray: Array<SpotifyApi.PlaylistTrackObject> = params!.musicsArray || []
 
   const { navigate, goBack } = useNavigation()
 
