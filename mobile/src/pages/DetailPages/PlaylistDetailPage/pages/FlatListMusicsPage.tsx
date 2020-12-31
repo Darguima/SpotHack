@@ -5,7 +5,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 
 import MusicPlaylistView from '../../../Components/MusicPlaylistView'
 
-import { Entypo } from '@expo/vector-icons'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 import convertArtistsArrayToString from '../../../../utils/convertArtistsArrayToString'
 
@@ -53,6 +53,12 @@ const FlatListMusics:React.FC<StackScreenProps<any>> = ({ route: { params } }) =
 
         entypoIconName="chevron-right"
         iconPressAction={() => {
+          navigate('MusicDetailPage', {
+            spotifyId: item.id,
+            image: item.image,
+            title: item.name,
+            artists: convertArtistsArrayToString(item.artists)
+          })
         }}
       />
   )

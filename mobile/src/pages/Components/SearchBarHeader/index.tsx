@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { TextInput, Keyboard, View, StyleSheet } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
-import { Entypo } from '@expo/vector-icons'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 interface SearchBarHeaderProps {
   setState: React.Dispatch<React.SetStateAction<string>>,
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   },
 
   magnifyIcon: {
+    color: '#000'
   }
 })
 

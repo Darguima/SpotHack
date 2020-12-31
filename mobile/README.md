@@ -15,6 +15,6 @@ So you need create this file and save the required data (client_id and `${client
 ```
 {
   "client_id": "",
-  "base64_key": "",
+  "base64_key": ""
 }
 ```

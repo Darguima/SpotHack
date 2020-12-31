@@ -1,19 +1,17 @@
 import React from 'react'
-import { setStatusBarBackgroundColor, StatusBar } from 'expo-status-bar'
-
-import Routes from './src/routes/index'
+import { StatusBar } from 'react-native'
 
 import { AuthProvider } from './src/contexts/auth'
+import Routes from './src/routes/index'
 
-export default function App () {
-  setStatusBarBackgroundColor('#1c5ed6', false)
-
-  /* Also is used the `UserDataProvider` but is defined in the src/routes/app.routes.tsx */
+const mobile:React.FC = () => {
   return (
     <AuthProvider>
-      <StatusBar style="light" translucent={false} />
+      <StatusBar barStyle={'light-content'} translucent={false} backgroundColor={'#1c5ed6'}/>
 
       <Routes />
-    </AuthProvider>
+    </ AuthProvider>
   )
 }
+
+export default mobile

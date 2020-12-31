@@ -6,7 +6,7 @@ import Description from './Components/Description'
 import MusicsOnPlaylist from './Components/MusicsOnPlaylist'
 import PlaylistData from './Components/PlaylistData'
 
-import { Entypo } from '@expo/vector-icons'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 import spotifyApi from '../../../services/spotify/spotifyApi'
 import { useNavigation } from '@react-navigation/native'

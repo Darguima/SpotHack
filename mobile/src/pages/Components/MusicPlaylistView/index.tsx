@@ -1,7 +1,8 @@
 import React from 'react'
 import { Text, View, StyleSheet, Image, ViewStyle, ImageSourcePropType } from 'react-native'
 
-import { Entypo } from '@expo/vector-icons'
+import Entypo from 'react-native-vector-icons/Entypo'
+
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 interface SearchBarHeaderProps {

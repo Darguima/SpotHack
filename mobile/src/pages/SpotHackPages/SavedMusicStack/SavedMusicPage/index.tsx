@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 
-const SavedMusicPage:React.FC = ({}) => {
+const SavedMusicPage:React.FC = () => {
   return (
     <View style={styles.container}>
       <Text>Saved Music</Text>

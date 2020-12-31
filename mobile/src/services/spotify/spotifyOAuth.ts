@@ -1,37 +1,43 @@
 import React from 'react'
-
-import * as Linking from 'expo-linking'
-import { openBrowserAsync } from 'expo-web-browser'
+import { Linking } from 'react-native'
 
 import axios from 'axios'
+import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 
 import spotifyApiCredentials from './spotifyApiCredentials.json'
+import uriQueryParse from '../../utils/uriQueryParse'
 
-const redirectUri = Linking.makeUrl('oauthredirect')
+const redirectUri = 'com.darguima.spothack://oauthredirect'
 
 export const getoAuthCode = async (setOAuthCode: React.Dispatch<React.SetStateAction<string | undefined>>) => {
   const scopes = ['playlist-read-private', 'playlist-read-collaborative']
+  try {
+    const url = 'https://accounts.spotify.com/authorize' +
+      '?response_type=code' +
+      '&client_id=' + spotifyApiCredentials.client_id +
+      '&scope=' + encodeURIComponent(scopes.join(' ')) +
+      '&redirect_uri=' + encodeURIComponent(redirectUri)
 
-  await openBrowserAsync(
-    'https://accounts.spotify.com/authorize' +
-    '?response_type=code' +
-    '&client_id=' + spotifyApiCredentials.client_id +
-    '&scope=' + encodeURIComponent(scopes.join(' ')) +
-    '&redirect_uri=' + encodeURIComponent(redirectUri)
-  )
+    if (await InAppBrowser.isAvailable()) {
+      await InAppBrowser.open(url)
+    } else {
+      await Linking.openURL(url)
+    }
+  } catch (err) {
+    return setOAuthCode('error')
+  }
 
   Linking.addEventListener('url', async (url) => {
-    const { queryParams, path } = Linking.parse(url.url)
-    if (path === 'oauthredirect') {
-      if (queryParams) {
-        if (queryParams.code) {
-          return setOAuthCode(queryParams.code)
-        } else {
-          return setOAuthCode('error')
-        }
+    const params = uriQueryParse(url.url)
+
+    if (params) {
+      if (params.code) {
+        return setOAuthCode(params.code)
       } else {
         return setOAuthCode('error')
       }
+    } else {
+      return setOAuthCode('error')
     }
   })
 }

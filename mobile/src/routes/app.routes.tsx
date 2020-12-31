@@ -3,7 +3,7 @@ import { Dimensions, Image } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import SearchMusicRoutes from './searchMusic.routes'
 import SearchPlaylistRoutes from './searchPlaylist.routes'

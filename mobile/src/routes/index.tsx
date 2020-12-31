@@ -3,12 +3,12 @@ import React from 'react'
 import AppRoutes from './app.routes'
 import AuthRoutes from './auth.routes'
 
-import useAuth from '../contexts/auth'
-import { AppUtilsProvider } from '../contexts/appUtils'
-import { UserDataProvider } from '../contexts/userData'
-import { UserHistoryProvider } from '../contexts/userHistory'
-
 import LoadingPage from '../pages/OtherPages/LoadingPage'
+
+import useAuth from '../contexts/auth'
+import { UserDataProvider } from '../contexts/userData'
+import { AppUtilsProvider } from '../contexts/appUtils'
+import { UserHistoryProvider } from '../contexts/userHistory'
 
 const Routes: React.FC = () => {
   const { loading, signed } = useAuth()
@@ -18,13 +18,13 @@ const Routes: React.FC = () => {
   }
 
   return signed
-    ? <AppUtilsProvider>
-        <UserDataProvider>
+    ? <UserDataProvider>
+        <AppUtilsProvider>
           <UserHistoryProvider>
             <AppRoutes />
-         </UserHistoryProvider>
-       </UserDataProvider>
-      </AppUtilsProvider>
+          </UserHistoryProvider>
+        </AppUtilsProvider>
+      </UserDataProvider>
     : <AuthRoutes />
 }
 

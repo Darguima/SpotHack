@@ -24,7 +24,7 @@ const LoginPage:React.FC = () => {
 
       <TouchableOpacity
         style={styles.bottomContainer}
-        onPress={() => { logIn() }}
+        onPress={logIn}
         activeOpacity={0.5}
       >
         <View style={styles.spotifyLogoContainer}>

@@ -18,7 +18,7 @@ export default async (query: string) => {
           : require('../../../assets/graySquare.jpg'),
 
         name: item.name,
-        owner: item.owner.display_name
+        owner: item.owner.display_name || 'Owner'
       }
     })
 

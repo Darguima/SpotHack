@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, ImageSourcePropType, Image } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
-import { Entypo } from '@expo/vector-icons'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 import YoutubeData from './Components/YoutubeData'
 import MusicData from './Components/MusicData'
