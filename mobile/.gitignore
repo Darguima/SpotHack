@@ -1,4 +1,6 @@
 src/services/spotify/spotifyApiCredentials.json
+src/services/youtube/youtubeApiCredentials.json
+src/services/firebase/firebaseConfig.json
 
 # OSX
 #

@@ -1,14 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, Linking } from 'react-native'
 
 import ContentBox from '../../../Components/ContentBox'
 import Feather from 'react-native-vector-icons/Feather'
 
+import getYoutubeInfo from '../../../../SpotHack_Core/GetYoutubeUrl/getYoutubeInfo'
+
 interface YoutubeDataProps {
-  youtubeUrl: string
+  spotifyId: string
+  title: string,
+  artists: string
 }
 
-const YoutubeData:React.FC<YoutubeDataProps> = ({ youtubeUrl }) => {
+const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) => {
+  const [youtubeUrl, setYoutubeUrl] = useState('Loading ...')
+
+  useEffect(() => {
+    (async () => {
+      const youtubeInfo = await getYoutubeInfo(spotifyId, title, artists)
+      if (youtubeInfo.success === 1) {
+        setYoutubeUrl(youtubeInfo.youtubeUrl)
+      } else {
+        setYoutubeUrl('Error getting Youtube Url')
+      }
+    })()
+  }, [])
+
   return (
     <ContentBox
       title="Youtube"
@@ -22,7 +39,11 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ youtubeUrl }) => {
         <Text
           style={styles.youtubeUrlText}
           numberOfLines={1}
-          onPress={() => { Linking.openURL(youtubeUrl) }}
+          onPress={() => {
+            if (youtubeUrl !== 'Loading ...' && youtubeUrl !== 'Error getting Youtube Url') {
+              Linking.openURL(youtubeUrl)
+            }
+          }}
         >
           {youtubeUrl}
         </Text>

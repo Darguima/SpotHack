@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import spotifyOAuth from '../services/spotify/spotifyOAuth'
 import spotifyApi from '../services/spotify/spotifyApi'

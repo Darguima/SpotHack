@@ -108,7 +108,9 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
         </View>
 
         <YoutubeData
-          youtubeUrl='https://www.youtube.com/aaaaaaaaaaaaaaaaa'
+          spotifyId={musicInfo.spotifyId}
+          title={musicInfo.title}
+          artists={musicInfo.artists}
         />
 
        <MusicData
