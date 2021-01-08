@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "a": "yarn android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
@@ -21,13 +22,15 @@
     "firebase": "^8.2.1",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-inappbrowser-reborn": "^3.5.1",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",
     "react-native-tab-view": "^2.15.2",
-    "react-native-vector-icons": "^7.1.0"
+    "react-native-vector-icons": "^7.1.0",
+    "react-native-ytdl": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -44,6 +47,7 @@
     "eslint": "^7.12.1",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import-helpers": "^1.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.21.5",

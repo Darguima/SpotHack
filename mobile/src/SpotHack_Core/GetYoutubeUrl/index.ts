@@ -2,6 +2,13 @@ import youtubeApi, { youtubeApiResponseItemsArrayItems } from '../../services/yo
 import firebase from '../../services/firebase'
 import youtubeIdsStorage from './youtubeIdsStorage'
 
+export interface getYoutubeUrlReturn {
+  youtubeId: string,
+  youtubeUrl: string,
+  youtubeQuery: string,
+  success: number
+}
+
 const main = async (spotifyId: string, title: string, artists: string) => {
   const youtubeQuery = artists + ' - ' + title
 
@@ -27,7 +34,7 @@ const main = async (spotifyId: string, title: string, artists: string) => {
       youtubeIdsStorage.storeYoutubeId(spotifyId, firebaseResponse.val())
 
       return {
-        youtubeId: firebaseResponse.val(),
+        youtubeId: firebaseResponse.val() as string,
         youtubeUrl: 'https://www.youtube.com/watch?v=' + firebaseResponse.val(),
         youtubeQuery: youtubeQuery,
         success: 1
