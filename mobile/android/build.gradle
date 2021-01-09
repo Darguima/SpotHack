@@ -6,6 +6,8 @@ buildscript {
         minSdkVersion = 21
         compileSdkVersion = 29
         targetSdkVersion = 29
+
+      reactNativeFFmpegPackage = "audio-lts"
     }
     repositories {
         google()

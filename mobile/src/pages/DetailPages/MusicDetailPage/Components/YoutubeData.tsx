@@ -26,10 +26,10 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
 
       if (downloadStatus.code === 200) {
         clearInterval(setIntervalId)
-        setDownloadButtonColorStyle("#0c0")
+        setDownloadButtonColorStyle('#0c0')
       } else if (downloadStatus.code === 0) {
         clearInterval(setIntervalId)
-        setDownloadButtonColorStyle("#f00")
+        setDownloadButtonColorStyle('#f00')
       }
     }, 2500)
 
@@ -50,25 +50,24 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
   useEffect(() => {
     const downloadStatus = downloadMachine.getDownloadStatus(spotifyId)
 
-    if (downloadStatus.message == "spotifyId invalid") {
+    if (downloadStatus.message === 'spotifyId invalid') {
       setDownloadButtonColorStyle(undefined)
     } else if (downloadStatus.code === 200) {
-      setDownloadButtonColorStyle("#0c0")
-    } else if (downloadStatus.code === 0 && downloadStatus.message !== "spotifyId invalid") {
-      setDownloadButtonColorStyle("#f00")
+      setDownloadButtonColorStyle('#0c0')
+    } else if (downloadStatus.code === 0 && downloadStatus.message !== 'spotifyId invalid') {
+      setDownloadButtonColorStyle('#f00')
     } else if (downloadStatus.code !== 0 && downloadStatus.code !== 200) {
-      setDownloadButtonColorStyle("#ff0")
+      setDownloadButtonColorStyle('#ff0')
       const setIntervalId = watchDownloadStatus()
       setIntervales([...intervales, setIntervalId])
-
     }
   }, [])
 
   useEffect(() => {
     return () => {
-      intervales.map(item => {
+      intervales.map(item => (
         clearInterval(item)
-      })
+      ))
     }
   }, [intervales])
 
@@ -82,7 +81,7 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
           name="download"
           style={[
             styles.downloadIcon,
-            (downloadButtonColorStyle ? {color: downloadButtonColorStyle} : {})
+            (downloadButtonColorStyle ? { color: downloadButtonColorStyle } : {})
           ]}
           size={20}
         />
@@ -92,7 +91,7 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
       buttonOnPress={() => {
         if (youtubeInfo.success !== 0) {
           downloadMachine.addTrackToQueue(spotifyId, youtubeInfo.youtubeId, title, artists, `${artists} - ${title}`)
-          setDownloadButtonColorStyle("#ff0")
+          setDownloadButtonColorStyle('#ff0')
 
           const setIntervalId = watchDownloadStatus()
           setIntervales([...intervales, setIntervalId])

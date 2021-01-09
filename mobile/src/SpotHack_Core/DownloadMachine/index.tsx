@@ -1,5 +1,6 @@
 import ytdl from 'react-native-ytdl'
 import * as RNFS from 'react-native-fs'
+import { RNFFmpeg } from 'react-native-ffmpeg'
 import { PermissionsAndroid, PermissionStatus } from 'react-native'
 
 interface musicInfo {
@@ -18,6 +19,7 @@ export interface downloadStatusSchema {
 
 interface queueSchema extends musicInfo {
   temporaryPath?: string,
+  finalPath?: string,
   videoFormats?: ytdl.videoInfo
   video?: ytdl.videoFormat
   permissionGranted?: PermissionStatus
@@ -39,7 +41,8 @@ class DownloadMachine {
 
   private async downloadMusic (spotifyId: string) {
     const musicInfo = this.queue[spotifyId]
-    musicInfo.temporaryPath = `${RNFS.DownloadDirectoryPath}/${musicInfo.youtubeQuery}.mp4`
+    musicInfo.temporaryPath = `${RNFS.CachesDirectoryPath}/${musicInfo.youtubeQuery}.mp4`
+    musicInfo.finalPath = `${RNFS.DownloadDirectoryPath}/${musicInfo.youtubeQuery}.mp3`
 
     // get permission from the user
     try {
@@ -96,7 +99,7 @@ class DownloadMachine {
 
     // Verify if exists the assets
     try {
-      if (!(await RNFS.existsAssets(musicInfo.temporaryPath))) {
+      if (!(await RNFS.exists(musicInfo.temporaryPath))) {
         await RNFS.writeFile(musicInfo.temporaryPath, '')
 
         musicInfo.status = {
@@ -120,11 +123,14 @@ class DownloadMachine {
 
     // Download Video
     try {
-      musicInfo.videoDownloadStatus = RNFS.downloadFile({ fromUrl: musicInfo.video.url, toFile: musicInfo.temporaryPath })
+      musicInfo.videoDownloadStatus = RNFS.downloadFile({
+        fromUrl: musicInfo.video.url,
+        toFile: musicInfo.temporaryPath
+      })
 
       if ((await musicInfo.videoDownloadStatus.promise).statusCode) {
         musicInfo.status = {
-          code: 200,
+          code: 4,
           message: 'downloaded success'
         }
       } else {
@@ -138,6 +144,55 @@ class DownloadMachine {
       musicInfo.status = {
         code: 0,
         message: 'RNFS download video error',
+        jsonErr: JSON.stringify(err)
+      }
+    }
+
+    // Convert Video on Music
+    try {
+      const response = await RNFFmpeg.execute(
+        `-i "${musicInfo.temporaryPath}" "${musicInfo.finalPath}" -y -loglevel error`
+      )
+
+      if (response === 0) {
+        musicInfo.status = {
+          code: 200,
+          message: 'conversion success'
+        }
+      } else {
+        musicInfo.status = {
+          code: 0,
+          message: 'RNFFmpeg conversion error'
+        }
+        return
+      }
+    } catch (err) {
+      musicInfo.status = {
+        code: 0,
+        message: 'RNFFmpeg conversion error',
+        jsonErr: JSON.stringify(err)
+      }
+    }
+
+    // Delete the temporary assets
+    try {
+      if (await RNFS.exists(musicInfo.temporaryPath)) {
+        await RNFS.unlink(musicInfo.temporaryPath)
+
+        musicInfo.status = {
+          code: 200,
+          message: 'RNFS deleted temporary assets success'
+        }
+      } else {
+        musicInfo.status = {
+          code: 200,
+          message: 'RNFS deleted temporary assets not necessary'
+        }
+      }
+    } catch (err) {
+      musicInfo.status = {
+        code: 200,
+        message: 'RNFS deleted temporary assets error',
         jsonErr: JSON.stringify(err)
       }
     }
