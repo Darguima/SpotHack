@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, Linking } from 'react-native'
+import { Text, View, StyleSheet, Linking, ImageSourcePropType } from 'react-native'
 
 import ContentBox from '../../../Components/ContentBox'
 import Feather from 'react-native-vector-icons/Feather'
@@ -11,10 +11,10 @@ interface YoutubeDataProps {
   spotifyId: string
   title: string,
   artists: string
+  imageSource: ImageSourcePropType
 }
 
-
-const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) => {
+const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, imageSource }) => {
   const [youtubeInfo, setYoutubeInfo] = useState<getYoutubeUrlReturn>({ youtubeUrl: 'Loading ...', success: 0 } as getYoutubeUrlReturn)
   const [downloadButtonColorStyle, setDownloadButtonColorStyle] = useState(undefined as undefined | string)
   const [intervales, setIntervales] = useState([] as Array<NodeJS.Timeout>)
@@ -90,7 +90,7 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
       buttonColorTheme={downloadButtonColorStyle}
       buttonOnPress={() => {
         if (youtubeInfo.success !== 0) {
-          downloadMachine.addTrackToQueue(spotifyId, youtubeInfo.youtubeId, title, artists, `${artists} - ${title}`)
+          downloadMachine.addTrackToQueue(spotifyId, youtubeInfo.youtubeId, title, artists, `${artists} - ${title}`, imageSource)
           setDownloadButtonColorStyle('#ff0')
 
           const setIntervalId = watchDownloadStatus()

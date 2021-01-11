@@ -41,7 +41,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
         <View style={styles.imagesButtonContainer}>
           <TouchableOpacity
             style={styles.imageButton}
-            onPress={() => jumpTo('SavedMusicPage')}
+            onPress={() => jumpTo('SavedMusicsRoutes')}
           >
             <Image
               source={require('../../../assets/savedMusic.png')}

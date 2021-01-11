@@ -111,6 +111,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
           spotifyId={musicInfo.spotifyId}
           title={musicInfo.title}
           artists={musicInfo.artists}
+          imageSource={musicInfo.image}
         />
 
        <MusicData
