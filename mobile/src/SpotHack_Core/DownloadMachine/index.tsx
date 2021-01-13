@@ -47,6 +47,13 @@ interface queueSchema extends musicInfo {
 
 class DownloadMachine {
   queue: { [key: string]: queueSchema} = {}
+  private finalPath: string = RNFS.DownloadDirectoryPath
+
+  setFinalPath (newFinalPath: string) {
+    this.finalPath = newFinalPath
+  }
+
+  getFinalPath () { return this.finalPath }
 
   addTrackToQueue (spotifyId: string, youtubeId: string, title: string, artists: string, youtubeQuery: string, imageSource: ImageSourcePropType) {
     this.queue[spotifyId] = {
@@ -69,7 +76,7 @@ class DownloadMachine {
   private async downloadMusic (spotifyId: string) {
     const musicInfo = this.queue[spotifyId]
     musicInfo.temporaryPath = `${RNFS.CachesDirectoryPath}/${musicInfo.youtubeQuery}.mp4`
-    musicInfo.finalPath = `${RNFS.DownloadDirectoryPath}/${musicInfo.youtubeQuery}.mp3`
+    musicInfo.finalPath = `${this.finalPath}/${musicInfo.youtubeQuery}.mp3`
 
     // get permission from the user
     try {

@@ -1,16 +1,18 @@
 import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 import SpotifyAccountSettings from './Components/SpotifyAccountSettings'
+import SpotHackSettings from './Components/SpotHackSettings'
 
 const SettingsPage:React.FC = () => {
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrolViewContentContainerStyle}
+        keyboardShouldPersistTaps={'handled'}
       >
 
         <View style={styles.titleContainer}>
@@ -18,9 +20,10 @@ const SettingsPage:React.FC = () => {
         </View>
 
         <SpotifyAccountSettings />
+        <SpotHackSettings />
 
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
