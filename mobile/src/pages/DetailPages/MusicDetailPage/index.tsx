@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, ImageSourcePropType, Image } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-import { useNavigation } from '@react-navigation/native'
+
 import Entypo from 'react-native-vector-icons/Entypo'
 
 import YoutubeData from './Components/YoutubeData'
@@ -10,8 +10,8 @@ import AlbumData from './Components/AlbumData'
 import ArtistsData from './Components/ArtistsData'
 
 import spotifyApi from '../../../services/spotify/spotifyApi'
-
 import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
+import { useNavigation } from '@react-navigation/native'
 
 interface MusicDetailPageProps {
   route: {
@@ -111,7 +111,6 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
           spotifyId={musicInfo.spotifyId}
           title={musicInfo.title}
           artists={musicInfo.artists}
-          imageSource={musicInfo.image}
         />
 
        <MusicData

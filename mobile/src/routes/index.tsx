@@ -9,7 +9,6 @@ import useAuth from '../contexts/auth'
 import { UserDataProvider } from '../contexts/userData'
 import { AppUtilsProvider } from '../contexts/appUtils'
 import { UserHistoryProvider } from '../contexts/userHistory'
-import { SpotHackSettingsProvider } from '../contexts/spotHackSettings'
 
 const Routes: React.FC = () => {
   const { loading, signed } = useAuth()
@@ -22,11 +21,7 @@ const Routes: React.FC = () => {
     ? <UserDataProvider>
         <AppUtilsProvider>
           <UserHistoryProvider>
-            <SpotHackSettingsProvider>
-
-              <AppRoutes />
-
-            </SpotHackSettingsProvider>
+            <AppRoutes />
           </UserHistoryProvider>
         </AppUtilsProvider>
       </UserDataProvider>

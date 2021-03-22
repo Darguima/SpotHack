@@ -8,11 +8,10 @@ interface ContentBoxProps {
   titleStyle?: TextStyle,
   contentStyle?: ViewStyle,
   buttonStyle?: ViewStyle,
-  
+
   buttonText?: string,
   buttonIcon?: React.ReactNode,
   buttonContent?: React.ReactNode,
-  buttonColorTheme?: string | undefined,
   buttonOnPress?: () => void
 }
 
@@ -20,7 +19,7 @@ const ContentBox:React.FC<ContentBoxProps> = ({
   title,
   style, titleStyle, contentStyle, buttonStyle,
   children,
-  buttonText, buttonIcon, buttonContent, buttonColorTheme, buttonOnPress
+  buttonText, buttonIcon, buttonContent, buttonOnPress
 }) => {
   return (
     <View style={[styles.contentBoxContainer, style]}>
@@ -45,13 +44,13 @@ const ContentBox:React.FC<ContentBoxProps> = ({
       }
 
       {!!buttonText &&
-        <View style={[styles.buttonContainer, buttonStyle, (buttonColorTheme ? {borderColor: buttonColorTheme} : {})]}>
+        <View style={[styles.buttonContainer, buttonStyle]}>
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.6}
             onPress={buttonOnPress}
           >
-            <Text style={[styles.buttonText, (buttonColorTheme ? {color: buttonColorTheme} : {})]}>{buttonText}</Text>
+            <Text style={styles.buttonText}>{buttonText}</Text>
 
             {buttonIcon}
           </TouchableOpacity>
