@@ -1,10 +1,10 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 
-const SavedMusicPage:React.FC = () => {
+const DownloadMusicPage:React.FC = () => {
   return (
     <View style={styles.container}>
-      <Text>Saved Music</Text>
+      <Text>DownloadMusicPage</Text>
     </View>
   )
 }
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SavedMusicPage
+export default DownloadMusicPage
