@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, ImageSourcePropType, Image } from 'react-native
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
 import Description from './Components/Description'
-import MusicsOnPlaylist from './Components/MusicsOnPlaylist'
+import PlaylistOptions from './Components/PlaylistOptions'
 import PlaylistData from './Components/PlaylistData'
 
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -78,7 +78,7 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scroolViewContentContainerStyle}>
+      <ScrollView contentContainerStyle={styles.scrollViewContentContainerStyle}>
 
         <View style={styles.header}>
           <TouchableOpacity style={styles.goBackIconContainer} onPress={goBack}>
@@ -99,7 +99,7 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
           description={playlistInfo.description}
         />
 
-        <MusicsOnPlaylist
+        <PlaylistOptions
           musicsArray={playlistInfo.tracks}
         />
 
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
 
-  scroolViewContentContainerStyle: {
+  scrollViewContentContainerStyle: {
     flexGrow: 1,
     alignItems: 'center'
   },

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, Linking } from 'react-native'
+import { Text, View, StyleSheet, Linking, ToastAndroid } from 'react-native'
 
 import ContentBox from '../../../Components/ContentBox'
-import Feather from 'react-native-vector-icons/Feather'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import getYoutubeInfo from '../../../../SpotHack_Core/GetYoutubeUrl'
 
@@ -31,8 +31,11 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
       title="Youtube"
 
       buttonText="Download"
-      buttonIcon={<Feather name="download" style={styles.downloadIcon} size={20}/>}
+      buttonIcon={<MaterialCommunityIcons name="download" style={styles.downloadIcon} size={17}/>}
       buttonStyle={{ width: '45%' }}
+      buttonOnPress={() => {
+        ToastAndroid.show("Downloading Music", ToastAndroid.LONG)
+      }}
     >
       <View style={styles.youtubeUrlContainer}>
         <Text style={styles.youtubeUrlTitleText}>Youtube Url:</Text>
