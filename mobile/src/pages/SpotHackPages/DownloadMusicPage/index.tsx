@@ -1,22 +1,82 @@
-import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Text, View, StyleSheet, FlatList } from 'react-native'
+import downloadMachine, { queueSchema, musicOnQueueSchema } from '../../../SpotHack_Core/DownloadMachine'
 
 const DownloadMusicPage:React.FC = () => {
-  return (
-    <View style={styles.container}>
-      <Text>DownloadMusicPage</Text>
-    </View>
-  )
+	const [downloadsStatus, setDownloadsStatus] = useState([] as queueSchema)
+	const [errorMessage, setErrorMessage] = useState<string | null>('Wait a moment')
+
+	useEffect(() => {
+		const getDownloadsStatus = setInterval(() => {
+			try {
+				const downloadsStatusReturn = downloadMachine.getDownloadsStatus()
+
+				if (downloadsStatusReturn.length === 0) {
+					setErrorMessage('No downloads at the moment')
+				} else {
+					setErrorMessage(null)
+				}
+				setDownloadsStatus(downloadsStatusReturn)
+			} catch (err) {
+				setErrorMessage(JSON.stringify(err))
+			}
+		}, 500)
+		return () => {
+			clearInterval(getDownloadsStatus)
+		}
+	}, [])
+
+	const renderMusicDownloadStatusBox = ({ item }: {item: musicOnQueueSchema}) => {
+		return (
+			<View
+				style={{
+					backgroundColor: '#555',
+					marginVertical: 20
+				}}
+			>
+				{
+					Object.keys(item).map(key => {
+						const value = item[key]
+
+						return (
+							<Text
+								key={key + value}
+								style={key === 'youtubeQuery' ? { fontWeight: 'bold', color: '#333' } : {}}
+							>
+								{key} - {value}
+							</Text>
+						)
+					})
+				}
+			</View>
+		)
+	}
+
+	return (
+		<View style={styles.container}>
+			{errorMessage && <Text>{errorMessage}</Text>}
+
+			{!errorMessage &&
+			<FlatList
+				style={{ width: '100%' }}
+
+				data={downloadsStatus}
+				renderItem={renderMusicDownloadStatusBox}
+				keyExtractor={item => item.queueNumber.toString()}
+			/>
+			}
+		</View>
+	)
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+	container: {
+		flex: 1,
+		justifyContent: 'space-evenly',
+		alignItems: 'center',
 
-    backgroundColor: '#000'
-  }
+		backgroundColor: '#000'
+	}
 })
 
 export default DownloadMusicPage

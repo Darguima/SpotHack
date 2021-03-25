@@ -25,164 +25,166 @@ interface PlaylistDetailPageProps {
 }
 
 const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
-  route: {
-    params:
+	route: {
+		params:
   { spotifyId, image = require('../../../assets/graySquare.jpg'), name = 'Playlist', owner = 'Owner' }
-  }
+	}
 }) => {
-  const [playlistInfo, setPlaylistInfo] = useState({
-    spotifyId,
-    image,
-    name,
-    owner,
+	const [playlistInfo, setPlaylistInfo] = useState({
+		spotifyId,
+		image,
+		name,
+		owner,
 
-    description: '',
+		description: '',
 
-    totalTracks: 0,
-    followers: 0,
-    isPublic: false,
-    collaborative: false,
+		totalTracks: 0,
+		followers: 0,
+		isPublic: false,
+		collaborative: false,
 
-    tracks: [] as Array<SpotifyApi.PlaylistTrackObject>
-  })
+		tracks: [] as Array<SpotifyApi.PlaylistTrackObject>
+	})
 
-  const { goBack } = useNavigation()
+	const { goBack } = useNavigation()
 
-  useEffect(() => {
-    (async () => {
-      const response: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${spotifyId}`)).data
+	useEffect(() => {
+		(async () => {
+			const response: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${spotifyId}`)).data
 
-      const newPlaylistInfo = {
-        spotifyId,
+			const newPlaylistInfo = {
+				spotifyId,
 
-        image: response.images.length > 0
-          ? { uri: response.images[0].url }
-          : require('../../../assets/graySquare.jpg'),
+				image: response.images.length > 0
+					? { uri: response.images[0].url }
+					: require('../../../assets/graySquare.jpg'),
 
-        name: response.name,
-        owner: response.owner.display_name || 'Owner',
+				name: response.name,
+				owner: response.owner.display_name || 'Owner',
 
-        description: response.description || '',
+				description: response.description || '',
 
-        totalTracks: response.tracks.items.length,
-        followers: response.followers.total,
-        isPublic: response.public || true,
-        collaborative: response.collaborative,
+				totalTracks: response.tracks.items.length,
+				followers: response.followers.total,
+				isPublic: response.public || true,
+				collaborative: response.collaborative,
 
-        tracks: response.tracks.items
-      }
+				tracks: response.tracks.items
+			}
 
-      setPlaylistInfo(newPlaylistInfo)
-    })()
-  }, [])
+			setPlaylistInfo(newPlaylistInfo)
+		})()
+	}, [])
 
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContentContainerStyle}>
+	return (
+		<View style={styles.container}>
+			<ScrollView contentContainerStyle={styles.scrollViewContentContainerStyle}>
 
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.goBackIconContainer} onPress={goBack}>
-            <Entypo name="chevron-left" style={styles.goBackIcon} size={30}/>
-          </TouchableOpacity>
-        </View>
+				<View style={styles.header}>
+					<TouchableOpacity style={styles.goBackIconContainer} onPress={goBack}>
+						<Entypo name="chevron-left" style={styles.goBackIcon} size={30}/>
+					</TouchableOpacity>
+				</View>
 
-        <View style={styles.mainImageContainer}>
-          <Image source={playlistInfo.image} style={styles.mainImage} />
-        </View>
+				<View style={styles.mainImageContainer}>
+					<Image source={playlistInfo.image} style={styles.mainImage} />
+				</View>
 
-        <View style={styles.playlistNameOwnerContainer}>
-          <Text style={styles.playlistNameText}>{playlistInfo.name}</Text>
-          <Text style={styles.playlistOwnerText}>{playlistInfo.owner}</Text>
-        </View>
+				<View style={styles.playlistNameOwnerContainer}>
+					<Text style={styles.playlistNameText}>{playlistInfo.name}</Text>
+					<Text style={styles.playlistOwnerText}>{playlistInfo.owner}</Text>
+				</View>
 
-        <Description
-          description={playlistInfo.description}
-        />
+				<Description
+					description={playlistInfo.description}
+				/>
 
-        <PlaylistOptions
-          musicsArray={playlistInfo.tracks}
-        />
+				<PlaylistOptions
+					musicsArray={playlistInfo.tracks}
+					playlistName={playlistInfo.name}
+					playlistId={playlistInfo.spotifyId}
+				/>
 
-        <PlaylistData
-          totalTracks={playlistInfo.totalTracks}
-          followers={playlistInfo.followers}
-          isPublic={playlistInfo.isPublic}
-          collaborative={playlistInfo.collaborative}
-        />
+				<PlaylistData
+					totalTracks={playlistInfo.totalTracks}
+					followers={playlistInfo.followers}
+					isPublic={playlistInfo.isPublic}
+					collaborative={playlistInfo.collaborative}
+				/>
 
-      </ScrollView>
-    </View>
-  )
+			</ScrollView>
+		</View>
+	)
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+	container: {
+		flex: 1,
 
-    backgroundColor: '#000'
-  },
+		backgroundColor: '#000'
+	},
 
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+	header: {
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
 
-    width: '100%',
-    height: 60,
+		width: '100%',
+		height: 60,
 
-    backgroundColor: '#1c5ed6'
-  },
+		backgroundColor: '#1c5ed6'
+	},
 
-  goBackIconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+	goBackIconContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
 
-    height: '100%',
-    aspectRatio: 1
-  },
+		height: '100%',
+		aspectRatio: 1
+	},
 
-  goBackIcon: {
+	goBackIcon: {
 
-    color: '#fff'
-  },
+		color: '#fff'
+	},
 
-  scrollViewContentContainerStyle: {
-    flexGrow: 1,
-    alignItems: 'center'
-  },
+	scrollViewContentContainerStyle: {
+		flexGrow: 1,
+		alignItems: 'center'
+	},
 
-  mainImageContainer: {
-    width: '50%',
-    aspectRatio: 1,
+	mainImageContainer: {
+		width: '50%',
+		aspectRatio: 1,
 
-    marginTop: 50
-  },
+		marginTop: 50
+	},
 
-  mainImage: {
-    width: '100%',
-    height: '100%'
-  },
+	mainImage: {
+		width: '100%',
+		height: '100%'
+	},
 
-  playlistNameOwnerContainer: {
-    alignItems: 'center',
+	playlistNameOwnerContainer: {
+		alignItems: 'center',
 
-    width: '80%',
-    marginTop: '15%'
-  },
+		width: '80%',
+		marginTop: '15%'
+	},
 
-  playlistNameText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 25,
+	playlistNameText: {
+		color: '#fff',
+		textAlign: 'center',
+		fontSize: 25,
 
-    marginBottom: '4%'
-  },
+		marginBottom: '4%'
+	},
 
-  playlistOwnerText: {
-    color: '#aaa',
-    textAlign: 'center',
-    fontSize: 20
-  }
+	playlistOwnerText: {
+		color: '#aaa',
+		textAlign: 'center',
+		fontSize: 20
+	}
 })
 
 export default PlaylistDetailPage
