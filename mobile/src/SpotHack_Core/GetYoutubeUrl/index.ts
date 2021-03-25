@@ -1,6 +1,8 @@
-import youtubeApi, { youtubeApiResponseItemsArrayItems } from '../../services/youtube'
-import firebase from '../../services/firebase'
 import youtubeIdsStorage from './youtubeIdsStorage'
+import firebase from '../../services/firebase'
+import youtubeApi, { searchYoutubeVideo, youtubeApiResponseItemsArrayItems } from '../../services/youtubeApi'
+import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
+
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
 
 export interface getYoutubeUrlReturn {
@@ -39,41 +41,68 @@ const main = async (spotifyId: string, title: string, artists: string) => {
 				youtubeUrl: 'https://www.youtube.com/watch?v=' + firebaseResponse.val(),
 				youtubeQuery: youtubeQuery,
 				success: 1
-			}
+			} as getYoutubeUrlReturn
 		}
 
 		/*
-     * Search the youtubeId on Youtube Api
+		 * Search for the video on internet
+		*/
+
+		let youtubeInfo: getYoutubeUrlReturn = {
+			youtubeId: '',
+			youtubeUrl: '',
+			youtubeQuery: '',
+			success: 0
+		} as getYoutubeUrlReturn
+
+		/*
+		 * Search the youtubeQuery on Youtube (with scrape-youtube)
+		*/
+
+		try {
+			const youtubeResponse = await scrapeFromYoutubeVideo(youtubeQuery)
+
+			if (youtubeResponse.success === 1) {
+				youtubeInfo = {
+					youtubeId: youtubeResponse.video.id,
+					youtubeQuery: youtubeQuery,
+					youtubeUrl: 'https://www.youtube.com/watch?v=' + youtubeResponse.video.id,
+					success: 1
+				}
+			}
+		} catch (err) {
+		}
+
+		/*
+     * Search the youtubeQuery on Youtube Api
     */
 
-		const youtubeApiResponse: Array<youtubeApiResponseItemsArrayItems> = (await youtubeApi.get('/search', {
-			params: {
-				q: youtubeQuery,
-				maxResults: 1
-			}
-		})).data.items
+		if (!youtubeInfo.success) {
+			const youtubeApiResponse = await searchYoutubeVideo(youtubeQuery)
 
-		if (youtubeApiResponse.length === 0) {
-			return {
-				youtubeId: '',
-				youtubeUrl: '',
-				youtubeQuery: '',
-				success: 0
+			if (youtubeApiResponse.success === 1) {
+				youtubeInfo = {
+					youtubeId: youtubeApiResponse.id.videoId,
+					youtubeQuery: youtubeQuery,
+					youtubeUrl: 'https://www.youtube.com/watch?v=' + youtubeApiResponse.id.videoId,
+					success: 1
+				}
 			}
 		}
 
 		/*
      * Save the youtubeId on Firebase
     */
-		firebase.storeYoutubeId(spotifyId, youtubeApiResponse[0].id.videoId)
-		youtubeIdsStorage.storeYoutubeId(spotifyId, youtubeApiResponse[0].id.videoId)
-
-		return {
-			youtubeId: youtubeApiResponse[0].id.videoId,
-			youtubeUrl: 'https://www.youtube.com/watch?v=' + youtubeApiResponse[0].id.videoId,
-			youtubeQuery: youtubeQuery,
-			success: 1
+		if (youtubeInfo.success === 1) {
+			firebase.storeYoutubeId(spotifyId, youtubeInfo.youtubeId)
+			youtubeIdsStorage.storeYoutubeId(spotifyId, youtubeInfo.youtubeId)
 		}
+
+		/*
+		 * Return (error or success)
+		*/
+
+		return youtubeInfo
 	} catch (err) {
 		return {
 			youtubeId: '',
