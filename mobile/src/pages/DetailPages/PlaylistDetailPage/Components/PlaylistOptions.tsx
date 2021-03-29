@@ -8,6 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import downloadMachine, { musicForQueueSchema } from '../../../../SpotHack_Core/DownloadMachine'
 import createYoutubeQuery from '../../../../utils/createYoutubeQuery'
 import convertArtistsArrayToString from '../../../../utils/convertArtistsArrayToString'
+import useSpotHackSettings from '../../../../contexts/spotHackSettings'
 
 interface PlaylistOptionsProps {
 	musicsArray: Array<SpotifyApi.PlaylistTrackObject>,
@@ -16,6 +17,7 @@ interface PlaylistOptionsProps {
 }
 
 const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistName, playlistId }) => {
+	const { spotHackSettings } = useSpotHackSettings()
 	const { navigate } = useNavigation()
 
 	return (
@@ -46,16 +48,18 @@ const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistN
 					style={styles.button}
 					activeOpacity={0.6}
 					onPress={() => {
-						const playlistInfo = musicsArray.map(item => {
+						const playlistInfo: Array<musicForQueueSchema> = musicsArray.map(item => {
 							return ({
 								spotifyId: item.track.id,
 								youtubeId: '',
 
 								playlistName: playlistName,
 								playlistId: playlistId,
-								youtubeQuery: createYoutubeQuery(convertArtistsArrayToString(item.track.artists), item.track.name)
+								youtubeQuery: createYoutubeQuery(convertArtistsArrayToString(item.track.artists), item.track.name),
+
+								downloadSource: spotHackSettings.defaultDownloadSource
 							})
-						}) as Array<musicForQueueSchema>
+						})
 
 						downloadMachine.addMusicsToDownloadQueue(playlistInfo)
 						ToastAndroid.show('Downloading Playlist', ToastAndroid.LONG)

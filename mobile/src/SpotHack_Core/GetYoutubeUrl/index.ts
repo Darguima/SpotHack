@@ -1,6 +1,6 @@
 import youtubeIdsStorage from './youtubeIdsStorage'
 import firebase from '../../services/firebase'
-import youtubeApi, { searchYoutubeVideo, youtubeApiResponseItemsArrayItems } from '../../services/youtubeApi'
+import { searchYoutubeVideo } from '../../services/youtubeApi'
 import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
 
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
@@ -12,7 +12,7 @@ export interface getYoutubeUrlReturn {
 	success: number
 }
 
-const main = async (spotifyId: string, title: string, artists: string) => {
+const main = async (spotifyId: string, title: string, artists: string, downloadSource: string) => {
 	const youtubeQuery = createYoutubeQuery(artists, title)
 
 	const storedYoutubeId = youtubeIdsStorage.getYoutubeId(spotifyId)

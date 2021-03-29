@@ -13,13 +13,13 @@ const DefaultDownloadSource: React.FC = () => {
 			style={styles.defaultDownloadOptionContainer}
 		>
 
-			<Text style={styles.defaultDownloadOptionDescription}>Where your songs are saved: </Text>
+			<Text style={styles.defaultDownloadOptionDescription}>The default source of your songs:</Text>
 
 			<View style={styles.pickerContainer}>
 				<Picker
 					selectedValue={spotHackSettings.defaultDownloadSource}
 					style={styles.picker}
-					onValueChange={(itemValue) => saveNewSpotHackSettings({ defaultDownloadSource: itemValue })}
+					onValueChange={(itemValue) => saveNewSpotHackSettings({ defaultDownloadSource: itemValue as string })}
 				>
 					<Picker.Item label="Youtube - First Video on Search" value="yt_firstVideoOnSearch" />
 					<Picker.Item label="Youtube - Lyric Video" value="yt_lyricVideo" />
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 	defaultDownloadOptionDescription: {
 		color: '#fff',
 
-		marginVertical: '5%',
+		marginBottom: '5%',
 		fontSize: 15
 	},
 

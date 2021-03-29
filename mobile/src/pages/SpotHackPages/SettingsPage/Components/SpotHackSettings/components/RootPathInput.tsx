@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
 	rootPathDescription: {
 		color: '#fff',
 
-		marginVertical: '5%',
+		marginBottom: '5%',
 		fontSize: 15
 	},
 
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
 		borderColor: '#aaa',
 		borderRadius: 10,
 
-		marginHorizontal: '10%',
+		paddingVertical: '4%',
 		fontSize: 16
 	},
 

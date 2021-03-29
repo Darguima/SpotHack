@@ -22,6 +22,8 @@ export interface musicForQueueSchema {
 	playlistName: string,
 	playlistId: string,
 	youtubeQuery: string,
+
+	downloadSource: string
 }
 
 class DownloadMachine {

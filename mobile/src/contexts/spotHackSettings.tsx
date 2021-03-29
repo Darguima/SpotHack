@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage'
-import { ItemValue } from '@react-native-community/picker/typings/Picker'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import { DownloadDirectoryPath } from 'react-native-fs'
@@ -11,12 +10,12 @@ saveNewSpotHackSettings: (newSpotHackSettings: Partial<spotHackSettingsSchema>) 
 
 interface spotHackSettingsSchema {
 	rootPath: string,
-	defaultDownloadSource: ItemValue
+	defaultDownloadSource: string
 }
 
 const defaultSpotHackSettings: spotHackSettingsSchema = {
 	rootPath: DownloadDirectoryPath,
-	defaultDownloadSource: 'yt_firstVideoOnSearch' as ItemValue
+	defaultDownloadSource: 'yt_firstVideoOnSearch'
 }
 
 const SpotHackSettingsContext = createContext<SpotHackSettingsContextData>({} as SpotHackSettingsContextData)
