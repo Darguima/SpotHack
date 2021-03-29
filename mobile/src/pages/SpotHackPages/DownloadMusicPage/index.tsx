@@ -54,7 +54,7 @@ const DownloadMusicPage:React.FC = () => {
 
 	return (
 		<View style={styles.container}>
-			{errorMessage && <Text>{errorMessage}</Text>}
+			{errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
 
 			{!errorMessage &&
 			<FlatList
@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 
 		backgroundColor: '#000'
+	},
+
+	errorMessage: {
+		color: '#fff'
 	}
 })
 
