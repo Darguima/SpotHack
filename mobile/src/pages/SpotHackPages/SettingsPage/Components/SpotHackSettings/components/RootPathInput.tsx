@@ -1,166 +1,198 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid, PermissionsAndroid, PermissionStatus } from 'react-native'
 
 import useSpotHackSettings from '../../../../../../contexts/spotHackSettings'
 import { exists as existsPath, mkdir as createPath } from 'react-native-fs'
+import ContentBox from '../../../../../Components/ContentBox'
 
 const RootPathInput:React.FC = () => {
-  const { spotHackSettings, saveNewSpotHackSettings } = useSpotHackSettings()
+	const { spotHackSettings, saveNewSpotHackSettings } = useSpotHackSettings()
 
-  const [newRootPath, setNewRootPath] = useState(spotHackSettings.rootPath)
-  const [isNewRootPathValid, setIsNewRootPathValid] = useState(true)
+	const [newRootPath, setNewRootPath] = useState(spotHackSettings.rootPath)
+	const [isNewRootPathValid, setIsNewRootPathValid] = useState(true)
 
-  const [rootPathIsEditable, setRootPathIsEditable] = useState(false)
+	const [rootPathIsEditable, setRootPathIsEditable] = useState(false)
 
-  useEffect(() => {
-    if (newRootPath !== spotHackSettings.rootPath) {
-      setNewRootPath(newRootPath)
-    }
-  }, [spotHackSettings])
+	useEffect(() => {
+		if (newRootPath !== spotHackSettings.rootPath) {
+			setNewRootPath(newRootPath)
+		}
+	}, [spotHackSettings])
 
-  const verifyAndSetNewRootPath = async (possibleNewRootPath: string) => {
-    if (possibleNewRootPath.indexOf("\n") !== -1) {
-      setIsNewRootPathValid(false)
-      ToastAndroid.show('Path Invalid', ToastAndroid.LONG)
-      return 
-    }
+	const verifyAndSetNewRootPath = async (possibleNewRootPath: string) => {
+		// get permission from the user
+		let permissionGranted: PermissionStatus = PermissionsAndroid.RESULTS.DENIED
+		try {
+			permissionGranted = await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
 
-    try {
-      if (!await existsPath(possibleNewRootPath)) {
-        createPath(possibleNewRootPath)
-      }
+				{
+					title: 'SpotHack Storage Permission',
+					message: 'Give access to your Storage to save the music.',
+					buttonNegative: 'Cancel',
+					buttonPositive: 'Ok'
+				}
+			)
+		} catch (err) {
+			setIsNewRootPathValid(false)
+			ToastAndroid.show('Error Getting Storage Permissions', ToastAndroid.LONG)
+			return
+		}
 
-      saveNewSpotHackSettings({rootPath: possibleNewRootPath })
-      setRootPathIsEditable(false)
-      ToastAndroid.show('Root Path Edited', ToastAndroid.LONG)
-    } catch (err) {
-      setIsNewRootPathValid(false)
-      ToastAndroid.show('Path Invalid', ToastAndroid.LONG)
-    }
-  }
+		if (PermissionsAndroid.RESULTS.GRANTED !== permissionGranted) {
+			setIsNewRootPathValid(false)
+			ToastAndroid.show('We need Storage Permissions', ToastAndroid.LONG)
+			return
+		}
 
-  return (
-    <View style={styles.rootPathContainer}>
-      <Text style={styles.rootPathTitle}>Root Path: </Text>
-        <TextInput
-          style={[styles.rootPathInput, isNewRootPathValid ? {} : styles.invalidRootPath]}
+		if (possibleNewRootPath.indexOf('\n') !== -1) {
+			setIsNewRootPathValid(false)
+			ToastAndroid.show('Path Invalid', ToastAndroid.LONG)
+			return
+		}
 
-          value={newRootPath}
-          onChangeText={e => {
-            setIsNewRootPathValid(true)
-            setNewRootPath(e)
-          }}
+		try {
+			if (!await existsPath(possibleNewRootPath)) {
+				createPath(possibleNewRootPath)
+			}
 
-          editable={rootPathIsEditable}
+			saveNewSpotHackSettings({ rootPath: possibleNewRootPath })
+			setRootPathIsEditable(false)
+			setIsNewRootPathValid(true)
+			ToastAndroid.show('Root Path Edited', ToastAndroid.LONG)
+		} catch (err) {
+			setIsNewRootPathValid(false)
+			ToastAndroid.show('Path Invalid', ToastAndroid.LONG)
+		}
+	}
 
-          multiline={true}
-        />
+	return (
+		<ContentBox
+			title={'Root Path'}
+			style={styles.rootPathContainer}
+		>
+			<Text style={styles.rootPathDescription}>Where your songs are saved: </Text>
+			<TextInput
+				style={[styles.rootPathInput, isNewRootPathValid ? {} : styles.invalidRootPath]}
 
-        <View style={styles.buttonsRowContainer}>
-          {!rootPathIsEditable
-            ? <View style={styles.rootPathButtonContainer}>
-                <TouchableOpacity
-                  style={styles.rootPathButtons}
-                  activeOpacity={0.6}
-                  onPress={() => { setRootPathIsEditable(!rootPathIsEditable) }}
-                >
-                  <Text style={styles.rootPathButtonsText}>Edit</Text>
-                </TouchableOpacity>
-              </View>
+				value={newRootPath}
+				onChangeText={e => {
+					setIsNewRootPathValid(true)
+					setNewRootPath(e)
+				}}
 
-            : <>
-                <View style={styles.rootPathButtonContainer}>
-                  <TouchableOpacity
-                    style={styles.rootPathButtons}
-                    activeOpacity={0.6}
-                    onPress={() => {
-                      setNewRootPath(spotHackSettings.rootPath)
-                      setIsNewRootPathValid(true)
-                      setRootPathIsEditable(!rootPathIsEditable)
-                    }}
-                  >
-                    <Text style={styles.rootPathButtonsText}>Cancel</Text>
-                  </TouchableOpacity>
-                </View>
+				editable={rootPathIsEditable}
 
-                <View style={[styles.rootPathButtonContainer, isNewRootPathValid ? {} : styles.invalidRootPath]}>
-                  <TouchableOpacity
-                    style={styles.rootPathButtons}
-                    activeOpacity={0.6}
-                    onPress={() => { verifyAndSetNewRootPath(newRootPath) }}
-                  >
-                    <Text
-                      style={[styles.rootPathButtonsText, isNewRootPathValid ? {} : { ...styles.invalidRootPath, borderWidth: 0 }]}
-                    >
+				multiline={true}
+			/>
+
+			<View style={styles.buttonsRowContainer}>
+				{!rootPathIsEditable
+					? <View style={styles.rootPathButtonContainer}>
+						<TouchableOpacity
+							style={styles.rootPathButtons}
+							activeOpacity={0.6}
+							onPress={() => { setRootPathIsEditable(!rootPathIsEditable) }}
+						>
+							<Text style={styles.rootPathButtonsText}>Edit</Text>
+						</TouchableOpacity>
+					</View>
+
+					: <>
+						<View style={styles.rootPathButtonContainer}>
+							<TouchableOpacity
+								style={styles.rootPathButtons}
+								activeOpacity={0.6}
+								onPress={() => {
+									setNewRootPath(spotHackSettings.rootPath)
+									setIsNewRootPathValid(true)
+									setRootPathIsEditable(!rootPathIsEditable)
+								}}
+							>
+								<Text style={styles.rootPathButtonsText}>Cancel</Text>
+							</TouchableOpacity>
+						</View>
+
+						<View style={[styles.rootPathButtonContainer, isNewRootPathValid ? {} : styles.invalidRootPath]}>
+							<TouchableOpacity
+								style={styles.rootPathButtons}
+								activeOpacity={0.6}
+								onPress={() => { verifyAndSetNewRootPath(newRootPath) }}
+							>
+								<Text
+									style={[styles.rootPathButtonsText, isNewRootPathValid ? {} : { ...styles.invalidRootPath, borderWidth: 0 }]}
+								>
                       Save
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-          }
-      </View>
-    </View>
-  )
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</>
+				}
+			</View>
+		</ContentBox>
+	)
 }
 
 const styles = StyleSheet.create({
-  rootPathContainer: {},
+	rootPathContainer: {
+	},
 
-  rootPathTitle: {
-    color: '#fff',
+	rootPathDescription: {
+		color: '#fff',
 
-    marginHorizontal: '10%',
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
+		marginVertical: '5%',
+		fontSize: 15
+	},
 
-  rootPathInput: {
-    color: '#fff',
-    backgroundColor: '#212121',
+	rootPathInput: {
+		color: '#fff',
+		backgroundColor: '#212121',
 
-    marginHorizontal: '10%',
-    paddingLeft: '5%',
-    fontSize: 16
-  },
+		borderWidth: 1,
+		borderColor: '#aaa',
+		borderRadius: 10,
 
-  buttonsRowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
+		marginHorizontal: '10%',
+		fontSize: 16
+	},
 
-  rootPathButtonContainer: {
-    width: '40%',
-    marginTop: '10%',
+	buttonsRowContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center'
+	},
 
-    borderColor: '#1c5ed6',
-    borderWidth: 1,
-    borderRadius: 10
-  },
+	rootPathButtonContainer: {
+		width: '40%',
+		marginTop: '10%',
 
-  rootPathButtons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+		borderColor: '#1c5ed6',
+		borderWidth: 1,
+		borderRadius: 10
+	},
 
-    width: '100%',
+	rootPathButtons: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
 
-    marginVertical: '10%'
+		width: '100%',
 
-  },
+		marginVertical: '10%'
 
-  rootPathButtonsText: {
-    textAlign: 'center',
-    color: '#1c5ed6',
-    fontSize: 17,
-    fontWeight: 'bold'
-  },
+	},
 
-  invalidRootPath: {
-    borderWidth: 1,
-    borderColor: '#f00',
-    color: '#f00'
-  }
+	rootPathButtonsText: {
+		textAlign: 'center',
+		color: '#1c5ed6',
+		fontSize: 17,
+		fontWeight: 'bold'
+	},
+
+	invalidRootPath: {
+		borderColor: '#f00',
+		color: '#f00'
+	}
 })
 
 export default RootPathInput

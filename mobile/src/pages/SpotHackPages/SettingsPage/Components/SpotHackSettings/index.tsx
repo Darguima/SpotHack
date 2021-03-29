@@ -1,35 +1,28 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
+import DefaultDownloadSource from './components/DefaultDownloadSource'
 
-import ContentBox from '../../../../Components/ContentBox'
 import RootPathInput from './components/RootPathInput'
 
 const SpotifyAccountSettings:React.FC = () => {
-  return (
-    <ContentBox
-      title="SpotHack Settings"
-    >
-      <View style={styles.content}>
+	return (
+		<View style={styles.spotHackContainer}>
 
-        <View style={styles.rootPathContainer}>
-          <RootPathInput />
-        </View>
+			<RootPathInput />
 
-      </View>
-    </ContentBox>
-  )
+			<DefaultDownloadSource />
+
+		</View>
+	)
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  },
-
-  rootPathContainer: {
-    width: '100%'
-  }
+	spotHackContainer: {
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		width: '100%'
+	}
 
 })
 

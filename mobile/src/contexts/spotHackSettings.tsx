@@ -1,58 +1,61 @@
 import AsyncStorage from '@react-native-community/async-storage'
+import { ItemValue } from '@react-native-community/picker/typings/Picker'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import { DownloadDirectoryPath } from 'react-native-fs'
 
 interface SpotHackSettingsContextData {
-  spotHackSettings: spotHackSettingsSchema
-  saveNewSpotHackSettings: (newSpotHackSettings: spotHackSettingsSchema) => void,
+spotHackSettings: spotHackSettingsSchema
+saveNewSpotHackSettings: (newSpotHackSettings: Partial<spotHackSettingsSchema>) => void,
 }
 
 interface spotHackSettingsSchema {
-  rootPath: string
+  rootPath: string,
+  defaultDownloadSource: ItemValue
 }
 
 const defaultSpotHackSettings: spotHackSettingsSchema = {
-  rootPath: DownloadDirectoryPath
+	rootPath: DownloadDirectoryPath,
+	defaultDownloadSource: 'yt_firstVideoOnSearch' as ItemValue
 }
 
 const SpotHackSettingsContext = createContext<SpotHackSettingsContextData>({} as SpotHackSettingsContextData)
 
 export const SpotHackSettingsProvider: React.FC = ({ children }) => {
-  const [spotHackSettings, setSpotHackSettings] = useState(defaultSpotHackSettings)
+	const [spotHackSettings, setSpotHackSettings] = useState(defaultSpotHackSettings)
 
-  useEffect(() => {
-    (async () => {
-      const [[, spotHackSettingsStored]] = await AsyncStorage.multiGet(['spotHackSettings'])
+	useEffect(() => {
+		(async () => {
+			const [[, spotHackSettingsStored]] = await AsyncStorage.multiGet(['spotHackSettings'])
 
-      if (spotHackSettingsStored) {
-        setSpotHackSettings({ ...defaultSpotHackSettings, ...JSON.parse(spotHackSettingsStored) })
+			if (spotHackSettingsStored) {
+				setSpotHackSettings({ ...defaultSpotHackSettings, ...JSON.parse(spotHackSettingsStored) })
 
-        // For create possibles new configurations that aren't yet on the AsyncStorage
-        if ({ ...defaultSpotHackSettings, ...JSON.parse(spotHackSettingsStored) } !== JSON.parse(spotHackSettingsStored)) {
-          saveNewSpotHackSettings({ ...defaultSpotHackSettings, ...JSON.parse(spotHackSettingsStored) })
-        }
-      } else {
-        saveNewSpotHackSettings(defaultSpotHackSettings)
-      }
-    })()
-  }, [])
+				// For create possibles new configurations that aren't yet on the AsyncStorage
+				if ({ ...defaultSpotHackSettings, ...JSON.parse(spotHackSettingsStored) } !== JSON.parse(spotHackSettingsStored)) {
+					saveNewSpotHackSettings({ ...defaultSpotHackSettings, ...JSON.parse(spotHackSettingsStored) })
+				}
+			} else {
+				saveNewSpotHackSettings(defaultSpotHackSettings)
+			}
+		})()
+	}, [])
 
-  const saveNewSpotHackSettings = (newSpotHackSettings: spotHackSettingsSchema) => {
-    // For security reasons "{ ...defaultSpotHackSettings, ...spotHackSettings,"
-    const newSettings = { ...defaultSpotHackSettings, ...spotHackSettings, ...newSpotHackSettings }
-    setSpotHackSettings(newSettings)
-    AsyncStorage.setItem('spotHackSettings', JSON.stringify(newSettings))
-  }
+	const saveNewSpotHackSettings = (newSpotHackSettings: Partial<spotHackSettingsSchema>) => {
+		// For security reasons "{ ...defaultSpotHackSettings, ...spotHackSettings,"
+		const newSettings = { ...defaultSpotHackSettings, ...spotHackSettings, ...newSpotHackSettings }
+		setSpotHackSettings(newSettings)
+		AsyncStorage.setItem('spotHackSettings', JSON.stringify(newSettings))
+	}
 
-  return (
-    <SpotHackSettingsContext.Provider value={{
-      spotHackSettings,
-      saveNewSpotHackSettings
-    }}>
-      {children}
-    </SpotHackSettingsContext.Provider>
-  )
+	return (
+		<SpotHackSettingsContext.Provider value={{
+			spotHackSettings,
+			saveNewSpotHackSettings
+		}}>
+			{children}
+		</SpotHackSettingsContext.Provider>
+	)
 }
 
 export default () => (useContext(SpotHackSettingsContext))
