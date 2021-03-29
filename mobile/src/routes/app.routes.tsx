@@ -17,138 +17,138 @@ import LoadingPage from '../pages/OtherPages/LoadingPage'
 const { Navigator, Screen } = createMaterialTopTabNavigator()
 
 const AppRoutes: React.FC = () => {
-  const { userData } = useUserData()
+	const { userData } = useUserData()
 
-  return (
-    <>
-    { userData.display_name /* the page only can render after have the userData */ &&
-      <NavigationContainer>
-        <Navigator
-          initialRouteName="Home"
-          tabBarPosition="bottom"
+	return (
+		<>
+			{ userData.display_name /* the page only can render after have the userData */ &&
+			<NavigationContainer>
+				<Navigator
+					initialRouteName="Home"
+					tabBarPosition="bottom"
 
-          initialLayout={{ width: Dimensions.get('window').width /* To don't have half the screen white on initial render */ }}
+					initialLayout={{ width: Dimensions.get('window').width /* To don't have half the screen white on initial render */ }}
 
-          tabBarOptions={{
+					tabBarOptions={{
 
-            inactiveTintColor: '#fff',
-            activeTintColor: '#1c5ed6',
-            showIcon: true,
-            showLabel: false,
+						inactiveTintColor: '#fff',
+						activeTintColor: '#1c5ed6',
+						showIcon: true,
+						showLabel: false,
 
-            tabStyle: {
-              backgroundColor: '#212121'
-            }
+						tabStyle: {
+							backgroundColor: '#212121'
+						}
 
-          }}
-        >
+					}}
+				>
 
-          <Screen
-            name="SearchMusicStack"
-            component={SearchMusicRoutes}
+					<Screen
+						name="SearchMusicStack"
+						component={SearchMusicRoutes}
 
-            options={{
-              tabBarLabel: 'Search Music',
-              tabBarIcon: function icon ({ color, focused }) {
-                return (
-                  <MaterialCommunityIcons
-                    name="music-box-outline"
-                    size={25}
-                    color={focused ? '#1c5ed6' : color}
-                  />
-                )
-              }
-            }}
-          />
+						options={{
+							tabBarLabel: 'Search Music',
+							tabBarIcon: function icon ({ color, focused }) {
+								return (
+									<MaterialCommunityIcons
+										name="music-box-outline"
+										size={25}
+										color={focused ? '#1c5ed6' : color}
+									/>
+								)
+							}
+						}}
+					/>
 
-          <Screen
-            name="SearchPlaylistStack"
-            component={SearchPlaylistRoutes}
+					<Screen
+						name="SearchPlaylistStack"
+						component={SearchPlaylistRoutes}
 
-            options={{
-              tabBarLabel: 'Playlists',
-              tabBarIcon: function icon ({ color, focused }) {
-                return (
-                  <MaterialCommunityIcons
-                    name="playlist-music-outline"
-                    size={25}
-                    color={focused ? '#1c5ed6' : color}
-                  />
-                )
-              }
-            }}
-          />
+						options={{
+							tabBarLabel: 'Playlists',
+							tabBarIcon: function icon ({ color, focused }) {
+								return (
+									<MaterialCommunityIcons
+										name="playlist-music-outline"
+										size={25}
+										color={focused ? '#1c5ed6' : color}
+									/>
+								)
+							}
+						}}
+					/>
 
-          <Screen
-            name="Home"
-            component={Home}
+					<Screen
+						name="Home"
+						component={Home}
 
-            options={{
-              tabBarLabel: 'Home',
-              tabBarIcon: function icon ({ focused }) {
-                return (
-                  <Image
+						options={{
+							tabBarLabel: 'Home',
+							tabBarIcon: function icon ({ focused }) {
+								return (
+									<Image
 
-                    source={
-                      focused
-                        ? require('../assets/icons/homeIcon.png')
-                        : require('../assets/icons/homeIconWhite.png')
-                    }
+										source={
+											focused
+												? require('../assets/icons/homeIcon.png')
+												: require('../assets/icons/homeIconWhite.png')
+										}
 
-                    style={{ width: 25, height: 25 }}
+										style={{ width: 25, height: 25 }}
 
-                    height={25}
-                    width={25}
-                  />
-                )
-              }
-            }}
-          />
+										height={25}
+										width={25}
+									/>
+								)
+							}
+						}}
+					/>
 
-          <Screen
-            name="SavedMusicPage"
-            component={SavedMusicRoutes}
+					<Screen
+						name="SavedMusicPage"
+						component={SavedMusicRoutes}
 
-            options={{
-              tabBarLabel: 'Saved Music',
-              tabBarIcon: function icon ({ color, focused }) {
-                return (
-                  <MaterialCommunityIcons
-                    name="file-music-outline"
-                    size={25}
-                    color={focused ? '#1c5ed6' : color}
-                  />
-                )
-              }
-            }}
-          />
+						options={{
+							tabBarLabel: 'Saved Music',
+							tabBarIcon: function icon ({ color, focused }) {
+								return (
+									<MaterialCommunityIcons
+										name="file-music-outline"
+										size={25}
+										color={focused ? '#1c5ed6' : color}
+									/>
+								)
+							}
+						}}
+					/>
 
-          <Screen
-            name="SettingsPage"
-            component={SettingsPage}
+					<Screen
+						name="SettingsPage"
+						component={SettingsPage}
 
-            options={{
-              tabBarLabel: 'Settings',
-              tabBarIcon: function icon ({ color, focused }) {
-                return (
-                  <MaterialCommunityIcons
-                    name="account-settings"
-                    size={25}
-                    color={focused ? '#1c5ed6' : color}
-                  />
-                )
-              }
-            }}
-          />
+						options={{
+							tabBarLabel: 'Settings',
+							tabBarIcon: function icon ({ color, focused }) {
+								return (
+									<MaterialCommunityIcons
+										name="account-settings"
+										size={25}
+										color={focused ? '#1c5ed6' : color}
+									/>
+								)
+							}
+						}}
+					/>
 
-        </Navigator>
-      </NavigationContainer>
-    }
+				</Navigator>
+			</NavigationContainer>
+			}
 
-    { !userData && <LoadingPage />}
+			{ !userData && <LoadingPage />}
 
-    </>
-  )
+		</>
+	)
 }
 
 export default AppRoutes

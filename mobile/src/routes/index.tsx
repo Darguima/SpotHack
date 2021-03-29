@@ -12,25 +12,25 @@ import { UserHistoryProvider } from '../contexts/userHistory'
 import { SpotHackSettingsProvider } from '../contexts/spotHackSettings'
 
 const Routes: React.FC = () => {
-  const { loading, signed } = useAuth()
+	const { loading, signed } = useAuth()
 
-  if (loading) {
-    return <LoadingPage />
-  }
+	if (loading) {
+		return <LoadingPage />
+	}
 
-  return signed
-    ? <UserDataProvider>
-        <AppUtilsProvider>
-          <UserHistoryProvider>
-            <SpotHackSettingsProvider>
+	return signed
+		? <UserDataProvider>
+			<AppUtilsProvider>
+				<UserHistoryProvider>
+					<SpotHackSettingsProvider>
 
-              <AppRoutes />
+						<AppRoutes />
 
-            </SpotHackSettingsProvider>
-          </UserHistoryProvider>
-        </AppUtilsProvider>
-      </UserDataProvider>
-    : <AuthRoutes />
+					</SpotHackSettingsProvider>
+				</UserHistoryProvider>
+			</AppUtilsProvider>
+		</UserDataProvider>
+		: <AuthRoutes />
 }
 
 export default Routes

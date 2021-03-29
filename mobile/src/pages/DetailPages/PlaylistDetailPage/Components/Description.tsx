@@ -4,31 +4,31 @@ import { Text, StyleSheet } from 'react-native'
 import ContentBox from '../../../Components/ContentBox'
 
 interface descriptionProps {
-  description: string,
+	description: string,
 }
 
 const Description:React.FC<descriptionProps> = ({ description }) => {
-  if (description === '') {
-    description = "This playlist hasn't description"
-  }
+	if (description === '') {
+		description = "This playlist hasn't description"
+	}
 
-  return (
-    <ContentBox title="Description">
+	return (
+		<ContentBox title="Description">
 
-      <Text style={styles.infoText}>
-        {description}
-      </Text>
+			<Text style={styles.infoText}>
+				{description}
+			</Text>
 
-    </ContentBox>
-  )
+		</ContentBox>
+	)
 }
 
 const styles = StyleSheet.create({
-  infoText: {
-    color: '#fff',
+	infoText: {
+		color: '#fff',
 
-    fontSize: 17
-  }
+		fontSize: 17
+	}
 })
 
 export default Description

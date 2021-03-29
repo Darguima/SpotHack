@@ -6,10 +6,10 @@ import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
 
 export interface getYoutubeUrlReturn {
-  youtubeId: string,
-  youtubeUrl: string,
-  youtubeQuery: string,
-  success: number
+	youtubeId: string,
+	youtubeUrl: string,
+	youtubeQuery: string,
+	success: number
 }
 
 const main = async (spotifyId: string, title: string, artists: string) => {
@@ -28,8 +28,8 @@ const main = async (spotifyId: string, title: string, artists: string) => {
 
 	try {
 		/*
-     * Search the youtubeId on Firebase
-    */
+		 * Search the youtubeId on Firebase
+		*/
 
 		const firebaseResponse = await firebase.getYoutubeId(spotifyId)
 
@@ -74,8 +74,8 @@ const main = async (spotifyId: string, title: string, artists: string) => {
 		}
 
 		/*
-     * Search the youtubeQuery on Youtube Api
-    */
+		 * Search the youtubeQuery on Youtube Api
+		*/
 
 		if (!youtubeInfo.success) {
 			const youtubeApiResponse = await searchYoutubeVideo(youtubeQuery)
@@ -91,8 +91,8 @@ const main = async (spotifyId: string, title: string, artists: string) => {
 		}
 
 		/*
-     * Save the youtubeId on Firebase
-    */
+		 * Save the youtubeId on Firebase
+		*/
 		if (youtubeInfo.success === 1) {
 			firebase.storeYoutubeId(spotifyId, youtubeInfo.youtubeId)
 			youtubeIdsStorage.storeYoutubeId(spotifyId, youtubeInfo.youtubeId)

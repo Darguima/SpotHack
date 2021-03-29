@@ -12,22 +12,22 @@ import spotifyApi from '../../../services/spotify/spotifyApi'
 import { useNavigation } from '@react-navigation/native'
 
 interface PlaylistDetailPageProps {
-  route: {
-    params: {
-      spotifyId: string,
+	route: {
+		params: {
+			spotifyId: string,
 
-      image?: ImageSourcePropType,
+			image?: ImageSourcePropType,
 
-      name?: string,
-      owner?: string
-    }
-  }
+			name?: string,
+			owner?: string
+		}
+	}
 }
 
 const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
 	route: {
 		params:
-  { spotifyId, image = require('../../../assets/graySquare.jpg'), name = 'Playlist', owner = 'Owner' }
+	{ spotifyId, image = require('../../../assets/graySquare.jpg'), name = 'Playlist', owner = 'Owner' }
 	}
 }) => {
 	const [playlistInfo, setPlaylistInfo] = useState({

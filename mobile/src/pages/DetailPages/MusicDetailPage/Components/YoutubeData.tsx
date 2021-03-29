@@ -8,9 +8,9 @@ import getYoutubeInfo, { getYoutubeUrlReturn } from '../../../../SpotHack_Core/G
 import downloadMachine from '../../../../SpotHack_Core/DownloadMachine'
 
 interface YoutubeDataProps {
-  spotifyId: string
-  title: string,
-  artists: string
+	spotifyId: string
+	title: string,
+	artists: string
 }
 
 const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) => {

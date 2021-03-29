@@ -10,8 +10,8 @@ saveNewSpotHackSettings: (newSpotHackSettings: Partial<spotHackSettingsSchema>) 
 }
 
 interface spotHackSettingsSchema {
-  rootPath: string,
-  defaultDownloadSource: ItemValue
+	rootPath: string,
+	defaultDownloadSource: ItemValue
 }
 
 const defaultSpotHackSettings: spotHackSettingsSchema = {

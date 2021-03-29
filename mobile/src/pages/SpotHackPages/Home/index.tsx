@@ -5,111 +5,111 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 
 const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo } }) => {
-  return (
-    <View
-      style={styles.container}
-    >
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrolViewContentContainerStyle}
-      >
+	return (
+		<View
+			style={styles.container}
+		>
+			<ScrollView
+				style={styles.scrollView}
+				contentContainerStyle={styles.scrolViewContentContainerStyle}
+			>
 
-        <View style={[styles.imagesButtonContainer, { marginTop: '10%' }]}>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => jumpTo('SearchMusicStack')}
-          >
-            <Image
-              source={require('../../../assets/searchMusic.png')}
-              style={styles.images}
-            />
-          </TouchableOpacity>
-        </View>
+				<View style={[styles.imagesButtonContainer, { marginTop: '10%' }]}>
+					<TouchableOpacity
+						style={styles.imageButton}
+						onPress={() => jumpTo('SearchMusicStack')}
+					>
+						<Image
+							source={require('../../../assets/searchMusic.png')}
+							style={styles.images}
+						/>
+					</TouchableOpacity>
+				</View>
 
-        <View style={styles.imagesButtonContainer}>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => jumpTo('SearchPlaylistStack')}
-          >
-            <Image
-              source={require('../../../assets/playlists.png')}
-              style={styles.images}
-            />
-          </TouchableOpacity>
-        </View>
+				<View style={styles.imagesButtonContainer}>
+					<TouchableOpacity
+						style={styles.imageButton}
+						onPress={() => jumpTo('SearchPlaylistStack')}
+					>
+						<Image
+							source={require('../../../assets/playlists.png')}
+							style={styles.images}
+						/>
+					</TouchableOpacity>
+				</View>
 
-        <View style={styles.imagesButtonContainer}>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => jumpTo('SavedMusicPage')}
-          >
-            <Image
-              source={require('../../../assets/savedMusic.png')}
-              style={styles.images}
-            />
-          </TouchableOpacity>
-        </View>
+				<View style={styles.imagesButtonContainer}>
+					<TouchableOpacity
+						style={styles.imageButton}
+						onPress={() => jumpTo('SavedMusicPage')}
+					>
+						<Image
+							source={require('../../../assets/savedMusic.png')}
+							style={styles.images}
+						/>
+					</TouchableOpacity>
+				</View>
 
-        <View style={[styles.imagesButtonContainer, { marginBottom: '10%' }]}>
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() => jumpTo('SettingsPage')}
-          >
-            <Image
-              source={require('../../../assets/settings.png')}
-              style={styles.images}
-            />
-          </TouchableOpacity>
-        </View>
+				<View style={[styles.imagesButtonContainer, { marginBottom: '10%' }]}>
+					<TouchableOpacity
+						style={styles.imageButton}
+						onPress={() => jumpTo('SettingsPage')}
+					>
+						<Image
+							source={require('../../../assets/settings.png')}
+							style={styles.images}
+						/>
+					</TouchableOpacity>
+				</View>
 
-      </ScrollView>
+			</ScrollView>
 
-    </View>
-  )
+		</View>
+	)
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+	container: {
+		flex: 1,
 
-    alignItems: 'center',
+		alignItems: 'center',
 
-    width: '100%',
-    height: '100%',
+		width: '100%',
+		height: '100%',
 
-    backgroundColor: '#000'
-  },
+		backgroundColor: '#000'
+	},
 
-  scrollView: {
-    width: '100%'
-  },
+	scrollView: {
+		width: '100%'
+	},
 
-  scrolViewContentContainerStyle: {
-    flexGrow: 1,
-    alignItems: 'center'
-  },
+	scrolViewContentContainerStyle: {
+		flexGrow: 1,
+		alignItems: 'center'
+	},
 
-  imagesButtonContainer: {
-    width: '80%',
-    aspectRatio: 1.5,
+	imagesButtonContainer: {
+		width: '80%',
+		aspectRatio: 1.5,
 
-    marginVertical: '5%'
-  },
+		marginVertical: '5%'
+	},
 
-  imageButton: {
-    width: '100%',
-    height: '100%'
+	imageButton: {
+		width: '100%',
+		height: '100%'
 
-  },
+	},
 
-  images: {
-    resizeMode: 'stretch',
-    width: '100%',
-    height: '100%',
+	images: {
+		resizeMode: 'stretch',
+		width: '100%',
+		height: '100%',
 
-    borderRadius: 25
+		borderRadius: 25
 
-  }
+	}
 })
 
 export default Home

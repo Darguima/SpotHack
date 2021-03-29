@@ -2,26 +2,26 @@ import axios from 'axios'
 import youtubeApiCredentials from './youtubeApiCredentials.json'
 
 export interface youtubeApiResponseItemsArrayItems {
-  kind: string,
-  etag: string,
-  id: { kind: string, videoId: string }
+	kind: string,
+	etag: string,
+	id: { kind: string, videoId: string }
 }
 
 export interface youtubeApiResponseItems {
-  kind: string,
-  etag: string,
-  nextPageToken: string,
-  regionCode: string,
-  pageInfo: { totalResults: number, resultsPerPage: number },
-  items: Array<youtubeApiResponseItemsArrayItems>
+	kind: string,
+	etag: string,
+	nextPageToken: string,
+	regionCode: string,
+	pageInfo: { totalResults: number, resultsPerPage: number },
+	items: Array<youtubeApiResponseItemsArrayItems>
 }
 
 export interface youtubeApiResponse {
-  data: youtubeApiResponseItems
+	data: youtubeApiResponseItems
 }
 
 export interface searchYoutubeVideoSchema extends youtubeApiResponseItemsArrayItems {
-  success: number
+	success: number
 }
 
 const youtubeApi = axios.create(

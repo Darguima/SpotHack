@@ -122,7 +122,7 @@ const RootPathInput:React.FC = () => {
 								<Text
 									style={[styles.rootPathButtonsText, isNewRootPathValid ? {} : { ...styles.invalidRootPath, borderWidth: 0 }]}
 								>
-                      Save
+											Save
 								</Text>
 							</TouchableOpacity>
 						</View>

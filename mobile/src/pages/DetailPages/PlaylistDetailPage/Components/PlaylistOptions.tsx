@@ -10,8 +10,8 @@ import createYoutubeQuery from '../../../../utils/createYoutubeQuery'
 import convertArtistsArrayToString from '../../../../utils/convertArtistsArrayToString'
 
 interface PlaylistOptionsProps {
-  musicsArray: Array<SpotifyApi.PlaylistTrackObject>,
-  playlistName: string,
+	musicsArray: Array<SpotifyApi.PlaylistTrackObject>,
+	playlistName: string,
 	playlistId: string
 }
 

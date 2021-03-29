@@ -11,38 +11,38 @@ import useAppUtils from '../contexts/appUtils'
 const { Navigator, Screen } = createStackNavigator()
 
 const SearchMusicRoutes: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation }) => {
-  const { changeMusicSearchInputValue } = useAppUtils()
+	const { changeMusicSearchInputValue } = useAppUtils()
 
-  useEffect(() => {
-    const addListenerTabPress = () => {
-      navigation.addListener('tabPress', handleTabPress)
-    }
+	useEffect(() => {
+		const addListenerTabPress = () => {
+			navigation.addListener('tabPress', handleTabPress)
+		}
 
-    const removeListenerTabPress = () => {
-      navigation.removeListener('tabPress', handleTabPress)
-    }
+		const removeListenerTabPress = () => {
+			navigation.removeListener('tabPress', handleTabPress)
+		}
 
-    const handleTabPress = () => {
-      changeMusicSearchInputValue('')
-    }
+		const handleTabPress = () => {
+			changeMusicSearchInputValue('')
+		}
 
-    navigation.addListener('focus', addListenerTabPress)
+		navigation.addListener('focus', addListenerTabPress)
 
-    navigation.addListener('blur', removeListenerTabPress)
+		navigation.addListener('blur', removeListenerTabPress)
 
-    return () => {
-      navigation.removeListener('focus', addListenerTabPress)
-      navigation.removeListener('blur', removeListenerTabPress)
-    }
-  }, [changeMusicSearchInputValue])
+		return () => {
+			navigation.removeListener('focus', addListenerTabPress)
+			navigation.removeListener('blur', removeListenerTabPress)
+		}
+	}, [changeMusicSearchInputValue])
 
-  return (
-    <Navigator screenOptions={{ headerShown: false }}>
-      <Screen name="SearchMusicPage" component={SearchMusicPage}/>
+	return (
+		<Navigator screenOptions={{ headerShown: false }}>
+			<Screen name="SearchMusicPage" component={SearchMusicPage}/>
 
-      <Screen name="MusicDetailPage" component={MusicDetailPage} initialParams={{ spotifyId: '' }}/>
-    </Navigator>
-  )
+			<Screen name="MusicDetailPage" component={MusicDetailPage} initialParams={{ spotifyId: '' }}/>
+		</Navigator>
+	)
 }
 
 export default SearchMusicRoutes

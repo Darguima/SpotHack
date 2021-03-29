@@ -13,44 +13,44 @@ import useAppUtils from '../contexts/appUtils'
 const { Navigator, Screen } = createStackNavigator()
 
 const SearchPlaylistRoutes: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation }) => {
-  const { changePlaylistSearchInputValue } = useAppUtils()
+	const { changePlaylistSearchInputValue } = useAppUtils()
 
-  useEffect(() => {
-    const addListenerTabPress = () => {
-      navigation.addListener('tabPress', handleTabPress)
-    }
+	useEffect(() => {
+		const addListenerTabPress = () => {
+			navigation.addListener('tabPress', handleTabPress)
+		}
 
-    const removeListenerTabPress = () => {
-      navigation.removeListener('tabPress', handleTabPress)
-    }
+		const removeListenerTabPress = () => {
+			navigation.removeListener('tabPress', handleTabPress)
+		}
 
-    const handleTabPress = () => {
-      changePlaylistSearchInputValue('')
-    }
+		const handleTabPress = () => {
+			changePlaylistSearchInputValue('')
+		}
 
-    navigation.addListener('focus', addListenerTabPress)
+		navigation.addListener('focus', addListenerTabPress)
 
-    navigation.addListener('blur', removeListenerTabPress)
+		navigation.addListener('blur', removeListenerTabPress)
 
-    return () => {
-      navigation.removeListener('focus', addListenerTabPress)
-      navigation.removeListener('blur', removeListenerTabPress)
-    }
-  }, [changePlaylistSearchInputValue])
+		return () => {
+			navigation.removeListener('focus', addListenerTabPress)
+			navigation.removeListener('blur', removeListenerTabPress)
+		}
+	}, [changePlaylistSearchInputValue])
 
-  return (
-    <Navigator screenOptions={{ headerShown: false }}>
+	return (
+		<Navigator screenOptions={{ headerShown: false }}>
 
-      <Screen name="SearchPlaylistPage" component={SearchPlaylistPage}/>
+			<Screen name="SearchPlaylistPage" component={SearchPlaylistPage}/>
 
-      <Screen name="PlaylistDetailPage" component={PlaylistDetailPage}/>
+			<Screen name="PlaylistDetailPage" component={PlaylistDetailPage}/>
 
-      <Screen name="MusicDetailPage" component={MusicDetailPage} />
+			<Screen name="MusicDetailPage" component={MusicDetailPage} />
 
-      <Screen name="FlatListMusics" component={FlatListMusics} />
+			<Screen name="FlatListMusics" component={FlatListMusics} />
 
-    </Navigator>
-  )
+		</Navigator>
+	)
 }
 
 export default SearchPlaylistRoutes

@@ -6,150 +6,150 @@ import convertArrayToString from '../../../../utils/convertArrayToString'
 import ContentBox from '../../../Components/ContentBox'
 
 interface ArtistsDataProps {
-  artistsArray: Array<{ name: string; spotifyId: string; }>
+	artistsArray: Array<{ name: string; spotifyId: string; }>
 }
 
 interface ArtistsDataSchema {
-  spotifyId: string,
-  image: ImageSourcePropType,
-  name: string,
-  followers: number
-  genres: string,
-  popularity: number,
+	spotifyId: string,
+	image: ImageSourcePropType,
+	name: string,
+	followers: number
+	genres: string,
+	popularity: number,
 }
 
 const ArtistsData:React.FC<ArtistsDataProps> = ({ artistsArray }) => {
-  const [newArtistsArray, setNewArtistsArray] = useState<Array<ArtistsDataSchema>>([{
-    spotifyId: '',
-    image: require('../../../../assets/graySquare.jpg'),
-    name: 'Artist',
-    followers: 0,
-    genres: 'Music',
-    popularity: 0
-  }])
+	const [newArtistsArray, setNewArtistsArray] = useState<Array<ArtistsDataSchema>>([{
+		spotifyId: '',
+		image: require('../../../../assets/graySquare.jpg'),
+		name: 'Artist',
+		followers: 0,
+		genres: 'Music',
+		popularity: 0
+	}])
 
-  useEffect(() => {
-    try {
-      const getArtistsData = Promise.all(artistsArray.map(async (item) => {
-        if (item.spotifyId) {
-          const spotifyUserData: SpotifyApi.ArtistObjectFull = (await spotifyApi.get(`artists/${item.spotifyId}`)).data
+	useEffect(() => {
+		try {
+			const getArtistsData = Promise.all(artistsArray.map(async (item) => {
+				if (item.spotifyId) {
+					const spotifyUserData: SpotifyApi.ArtistObjectFull = (await spotifyApi.get(`artists/${item.spotifyId}`)).data
 
-          return {
-            name: spotifyUserData.name,
-            popularity: spotifyUserData.popularity,
-            spotifyId: spotifyUserData.id,
+					return {
+						name: spotifyUserData.name,
+						popularity: spotifyUserData.popularity,
+						spotifyId: spotifyUserData.id,
 
-            image: spotifyUserData.images.length > 0
-              ? { uri: (spotifyUserData.images[1] || spotifyUserData.images[0]).url }
-              : require('../../../../assets/graySquare.jpg'),
+						image: spotifyUserData.images.length > 0
+							? { uri: (spotifyUserData.images[1] || spotifyUserData.images[0]).url }
+							: require('../../../../assets/graySquare.jpg'),
 
-            genres: convertArrayToString(spotifyUserData.genres.length > 0
-              ? spotifyUserData.genres
-              : ['Music'], ' & '),
-            followers: spotifyUserData.followers.total
-          }
-        } else {
-          return {
-            spotifyId: '',
-            image: require('../../../../assets/graySquare.jpg'),
-            name: 'Artist',
-            followers: 0,
-            genres: 'Music',
-            popularity: 0
-          }
-        }
-      }))
+						genres: convertArrayToString(spotifyUserData.genres.length > 0
+							? spotifyUserData.genres
+							: ['Music'], ' & '),
+						followers: spotifyUserData.followers.total
+					}
+				} else {
+					return {
+						spotifyId: '',
+						image: require('../../../../assets/graySquare.jpg'),
+						name: 'Artist',
+						followers: 0,
+						genres: 'Music',
+						popularity: 0
+					}
+				}
+			}))
 
-      getArtistsData.then(artistsData => {
-        setNewArtistsArray(artistsData)
-      })
-    } catch (err) {
-    }
-  }, [artistsArray])
+			getArtistsData.then(artistsData => {
+				setNewArtistsArray(artistsData)
+			})
+		} catch (err) {
+		}
+	}, [artistsArray])
 
-  return (
-    <ContentBox title="Artists Info">
+	return (
+		<ContentBox title="Artists Info">
 
-      {newArtistsArray.map((item, index) => (
-        <View key={index} style={[
-          styles.InfoContainer,
-          index === 0 ? { borderTopWidth: 0, paddingTop: 0 } : {},
-          index === artistsArray.length ? { paddingBottom: 0 } : {}
-        ]}>
+			{newArtistsArray.map((item, index) => (
+				<View key={index} style={[
+					styles.InfoContainer,
+					index === 0 ? { borderTopWidth: 0, paddingTop: 0 } : {},
+					index === artistsArray.length ? { paddingBottom: 0 } : {}
+				]}>
 
-          <Image source={item.image} style={styles.artistImage}/>
+					<Image source={item.image} style={styles.artistImage}/>
 
-          <View style={styles.textData}>
-            <Text style={styles.artistName}>{item.name}</Text>
+					<View style={styles.textData}>
+						<Text style={styles.artistName}>{item.name}</Text>
 
-            <Text style={styles.dataContainer}>
-              <Text style={styles.dataTitle}>Genre</Text>
-              <Text style={styles.dataText}> - {item.genres}</Text>
-            </Text>
+						<Text style={styles.dataContainer}>
+							<Text style={styles.dataTitle}>Genre</Text>
+							<Text style={styles.dataText}> - {item.genres}</Text>
+						</Text>
 
-            <Text style={styles.dataContainer}>
-              <Text style={styles.dataTitle}>Followers</Text>
-              <Text style={styles.dataText}> - {item.followers}</Text>
-            </Text>
+						<Text style={styles.dataContainer}>
+							<Text style={styles.dataTitle}>Followers</Text>
+							<Text style={styles.dataText}> - {item.followers}</Text>
+						</Text>
 
-            <Text style={styles.dataContainer}>
-              <Text style={styles.dataTitle}>Spotify Popularity</Text>
-              <Text style={styles.dataText}> - {item.popularity}</Text>
-            </Text>
-          </View>
+						<Text style={styles.dataContainer}>
+							<Text style={styles.dataTitle}>Spotify Popularity</Text>
+							<Text style={styles.dataText}> - {item.popularity}</Text>
+						</Text>
+					</View>
 
-        </View>
-      ))}
+				</View>
+			))}
 
-    </ContentBox>
-  )
+		</ContentBox>
+	)
 }
 
 const styles = StyleSheet.create({
-  InfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+	InfoContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
 
-    borderTopColor: '#aaa',
-    borderTopWidth: 1,
+		borderTopColor: '#aaa',
+		borderTopWidth: 1,
 
-    paddingVertical: '6%'
-  },
+		paddingVertical: '6%'
+	},
 
-  artistImage: {
-    width: '30%',
-    aspectRatio: 1,
+	artistImage: {
+		width: '30%',
+		aspectRatio: 1,
 
-    marginRight: '3%'
-  },
+		marginRight: '3%'
+	},
 
-  textData: {
-    width: '65%'
-  },
+	textData: {
+		width: '65%'
+	},
 
-  artistName: {
-    color: '#1c5ed6',
+	artistName: {
+		color: '#1c5ed6',
 
-    marginBottom: '5%',
+		marginBottom: '5%',
 
-    fontWeight: 'bold',
-    fontSize: 16
-  },
+		fontWeight: 'bold',
+		fontSize: 16
+	},
 
-  dataContainer: {
-    flexDirection: 'row'
-  },
+	dataContainer: {
+		flexDirection: 'row'
+	},
 
-  dataTitle: {
-    color: '#fff',
+	dataTitle: {
+		color: '#fff',
 
-    fontWeight: 'bold',
-    fontSize: 15
-  },
+		fontWeight: 'bold',
+		fontSize: 15
+	},
 
-  dataText: {
-    color: '#fff'
-  }
+	dataText: {
+		color: '#fff'
+	}
 
 })
 

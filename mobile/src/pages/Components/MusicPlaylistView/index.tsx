@@ -6,135 +6,135 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 interface SearchBarHeaderProps {
-  imageSource: ImageSourcePropType,
-  title: string,
-  artists: string,
+	imageSource: ImageSourcePropType,
+	title: string,
+	artists: string,
 
-  style?: ViewStyle
+	style?: ViewStyle
 
-  viewBackgroundColor?: string,
-  contentBackgroundColor?: string,
+	viewBackgroundColor?: string,
+	contentBackgroundColor?: string,
 
-  viewPressAction?: () => void
-  entypoIconName?: string,
-  iconPressAction?: () => void
+	viewPressAction?: () => void
+	entypoIconName?: string,
+	iconPressAction?: () => void
 }
 
 const MusicPlaylistView:React.FC<SearchBarHeaderProps> = (
-  {
-    imageSource, title, artists,
-    style, viewBackgroundColor = '#212121', contentBackgroundColor = '#212121',
-    viewPressAction, entypoIconName, iconPressAction = () => {}
-  }) => {
-  return (
-    <View style={[styles.container, { backgroundColor: viewBackgroundColor }, style || {}]}>
-      <View style={[styles.content, { backgroundColor: contentBackgroundColor }]}>
+	{
+		imageSource, title, artists,
+		style, viewBackgroundColor = '#212121', contentBackgroundColor = '#212121',
+		viewPressAction, entypoIconName, iconPressAction = () => {}
+	}) => {
+	return (
+		<View style={[styles.container, { backgroundColor: viewBackgroundColor }, style || {}]}>
+			<View style={[styles.content, { backgroundColor: contentBackgroundColor }]}>
 
-          <View style={styles.leftPart}>
-            <TouchableOpacity style={styles.leftPartButton} onPress={viewPressAction}>
-              <View style={styles.imageContainer}>
-                <Image source={imageSource} style={styles.image}/>
-              </View>
+					<View style={styles.leftPart}>
+						<TouchableOpacity style={styles.leftPartButton} onPress={viewPressAction}>
+							<View style={styles.imageContainer}>
+								<Image source={imageSource} style={styles.image}/>
+							</View>
 
-              <View style={styles.textsContainer}>
-                <Text style={styles.titleText} numberOfLines={2}>{title}</Text>
-                <Text style={styles.artistsText} numberOfLines={1}>{artists}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+							<View style={styles.textsContainer}>
+								<Text style={styles.titleText} numberOfLines={2}>{title}</Text>
+								<Text style={styles.artistsText} numberOfLines={1}>{artists}</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
 
-          {entypoIconName &&
-            <View style={styles.rightPart}>
-              <TouchableOpacity style={styles.iconButton} onPress={iconPressAction}>
-                <Entypo name={entypoIconName} style={styles.icon} size={30}/>
-              </TouchableOpacity>
-            </View>
-          }
+					{entypoIconName &&
+						<View style={styles.rightPart}>
+							<TouchableOpacity style={styles.iconButton} onPress={iconPressAction}>
+								<Entypo name={entypoIconName} style={styles.icon} size={30}/>
+							</TouchableOpacity>
+						</View>
+					}
 
-      </View>
-    </View>
-  )
+			</View>
+		</View>
+	)
 }
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+	container: {
+		justifyContent: 'center',
+		alignItems: 'flex-end',
 
-    width: '100%'
-  },
+		width: '100%'
+	},
 
-  content: {
-    flex: 1,
-    flexDirection: 'row',
+	content: {
+		flex: 1,
+		flexDirection: 'row',
 
-    width: '95%',
-    minHeight: 75
+		width: '95%',
+		minHeight: 75
 
-  },
+	},
 
-  leftPart: {
-    height: '100%',
-    width: '80%'
-  },
+	leftPart: {
+		height: '100%',
+		width: '80%'
+	},
 
-  leftPartButton: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+	leftPartButton: {
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
 
-    height: '100%',
-    width: '100%'
-  },
+		height: '100%',
+		width: '100%'
+	},
 
-  imageContainer: {
-    height: '80%',
-    aspectRatio: 1
+	imageContainer: {
+		height: '80%',
+		aspectRatio: 1
 
-  },
+	},
 
-  image: {
-    resizeMode: 'contain',
-    height: '100%',
-    width: '100%'
-  },
+	image: {
+		resizeMode: 'contain',
+		height: '100%',
+		width: '100%'
+	},
 
-  textsContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'space-evenly',
+	textsContainer: {
+		flex: 1,
+		alignItems: 'flex-start',
+		justifyContent: 'space-evenly',
 
-    height: '100%',
+		height: '100%',
 
-    marginLeft: '7%'
-  },
+		marginLeft: '7%'
+	},
 
-  titleText: {
-    color: '#fff',
-    fontSize: 18
-  },
+	titleText: {
+		color: '#fff',
+		fontSize: 18
+	},
 
-  artistsText: {
-    color: '#ccc',
-    fontSize: 14
-  },
+	artistsText: {
+		color: '#ccc',
+		fontSize: 14
+	},
 
-  rightPart: {
-    height: '100%',
-    width: '20%'
-  },
+	rightPart: {
+		height: '100%',
+		width: '20%'
+	},
 
-  iconButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+	iconButton: {
+		justifyContent: 'center',
+		alignItems: 'center',
 
-    height: '100%',
-    width: '100%'
-  },
+		height: '100%',
+		width: '100%'
+	},
 
-  icon: {
-    color: '#fff'
-  }
+	icon: {
+		color: '#fff'
+	}
 })
 
 export default MusicPlaylistView
