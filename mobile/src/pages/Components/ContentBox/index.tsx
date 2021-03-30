@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity, ViewStyle, TextStyle } from '
 
 interface ContentBoxProps {
 	title: string,
+	titleIcon?: React.ReactNode,
 
 	style?: ViewStyle,
 	titleStyle?: TextStyle,
@@ -16,14 +17,17 @@ interface ContentBoxProps {
 }
 
 const ContentBox:React.FC<ContentBoxProps> = ({
-	title,
+	title, titleIcon,
 	style, titleStyle, contentStyle, buttonStyle,
 	children,
 	buttonText, buttonIcon, buttonContent, buttonOnPress
 }) => {
 	return (
 		<View style={[styles.contentBoxContainer, style]}>
-			<Text style={[styles.containerTitle, titleStyle]}>{title}</Text>
+			<View style={styles.containerTitle}>
+				<Text style={[styles.title, titleStyle]}>{title}</Text>
+				{titleIcon}
+			</View>
 
 			{!!children &&
 				<View style={[styles.content, contentStyle]}>
@@ -74,12 +78,17 @@ const styles = StyleSheet.create({
 	},
 
 	containerTitle: {
-		color: '#aaa',
-		fontSize: 18,
-		fontWeight: 'bold',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 
 		borderBottomColor: '#aaa',
 		borderWidth: 2
+	},
+
+	title: {
+		color: '#aaa',
+		fontSize: 18,
+		fontWeight: 'bold'
 	},
 
 	content: {

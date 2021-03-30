@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Linking, ToastAndroid } from 'react-native'
 
 import ContentBox from '../../../Components/ContentBox'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 import getYoutubeInfo, { getYoutubeUrlReturn } from '../../../../SpotHack_Core/GetYoutubeUrl'
 import downloadMachine from '../../../../SpotHack_Core/DownloadMachine'
@@ -15,7 +16,16 @@ interface YoutubeDataProps {
 	artists: string
 }
 
-const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) => {
+const statusIcons: {[key: string]: React.ReactNode} = {
+	loading: <MaterialCommunityIcons name="clock-time-three-outline" size={17} color="#aaa" />,
+	asyncStorage: <MaterialCommunityIcons name="safe" size={20} color="green" />,
+	firebase: <MaterialCommunityIcons name="firebase" size={17} color="yellow" />,
+	ytScrape: <MaterialCommunityIcons name="web" size={18} color="blue" />,
+	ytApi: <MaterialCommunityIcons name="youtube" size={17} color="red" />,
+	error: <Entypo name="cross" size={20} color="red" />
+}
+
+const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) => {
 	const [youtubeInfo, setYoutubeInfo] = useState({ success: 0 } as getYoutubeUrlReturn)
 	const [ytFirstVideoOnSearch, setYtFirstVideoOnSearch] = useState({ url: 'Loading ...', id: '' })
 	const [ytLyricsVideo, setYtLyricsVideo] = useState({ url: 'Loading ...', id: '' })
@@ -65,7 +75,8 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
 
 	return (
 		<ContentBox
-			title="Youtube"
+			title={'Youtube'}
+			titleIcon={statusIcons[youtubeInfo.infoSourceIcon]}
 		>
 			<View style={[styles.downloadOption, { borderBottomWidth: 0 }]}>
 				<Text style={styles.youtubeUrlTitleText}>Youtube - First Video on Search</Text>

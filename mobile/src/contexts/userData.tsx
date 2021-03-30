@@ -50,6 +50,7 @@ export const UserDataProvider: React.FC = ({ children }) => {
 				setUserData(spotifyResponseFiltered)
 			} catch (err) {
 				Alert.alert('Something went wrong.')
+				console.warn(err)
 				logOut()
 			}
 		})()
@@ -87,6 +88,7 @@ export const UserDataProvider: React.FC = ({ children }) => {
 				setUserPlaylists(spotifyResponseFiltered)
 			} catch (err) {
 				Alert.alert('Something went wrong getting your playlists.')
+				console.warn(err)
 			}
 		})()
 	}, [])
