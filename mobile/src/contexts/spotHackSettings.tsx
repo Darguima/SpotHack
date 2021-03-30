@@ -15,7 +15,7 @@ interface spotHackSettingsSchema {
 
 const defaultSpotHackSettings: spotHackSettingsSchema = {
 	rootPath: DownloadDirectoryPath,
-	defaultDownloadSource: 'yt_firstVideoOnSearch'
+	defaultDownloadSource: 'ytFirstVideoOnSearch'
 }
 
 const SpotHackSettingsContext = createContext<SpotHackSettingsContextData>({} as SpotHackSettingsContextData)

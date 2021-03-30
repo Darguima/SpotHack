@@ -33,25 +33,31 @@ const youtubeApi = axios.create(
 	}
 )
 
-export const searchYoutubeVideo = async (q: string) => {
+export const searchYoutubeVideo = async (q: string, ignoreId?: string) => {
 	const youtubeApiResponse: Array<youtubeApiResponseItemsArrayItems> = (await youtubeApi.get('/search', {
 		params: {
 			q,
-			maxResults: 1
+			maxResults: 2,
+			type: 'video',
+			videoCategoryId: '10'
 		}
 	})).data.items
 
-	if (youtubeApiResponse.length === 0) {
+	if (youtubeApiResponse.length !== 0) {
+		const video = youtubeApiResponse[0].id.videoId !== ignoreId ? youtubeApiResponse[0] : youtubeApiResponse[1]
+
 		return {
-			success: 0
+			...video,
+			success: 1
 		} as searchYoutubeVideoSchema
 	} else {
 		return {
-			...youtubeApiResponse[0],
-			success: 1
+			success: 0
 		} as searchYoutubeVideoSchema
 	}
 }
+
+export const youtubeBaseUrl = 'https://www.youtube.com/watch?v='
 
 export default youtubeApi
 

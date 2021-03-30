@@ -21,8 +21,8 @@ const DefaultDownloadSource: React.FC = () => {
 					style={styles.picker}
 					onValueChange={(itemValue) => saveNewSpotHackSettings({ defaultDownloadSource: itemValue as string })}
 				>
-					<Picker.Item label="Youtube - First Video on Search" value="yt_firstVideoOnSearch" />
-					<Picker.Item label="Youtube - Lyric Video" value="yt_lyricVideo" />
+					<Picker.Item label="Youtube - First Video on Search" value="ytFirstVideoOnSearch" />
+					<Picker.Item label="Youtube - Lyrics Video" value="ytLyricsVideo" />
 				</Picker>
 			</View>
 		</ContentBox>

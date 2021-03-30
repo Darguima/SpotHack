@@ -5,40 +5,44 @@ import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
 
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
 
+export interface youtubeIdsSchema {
+	ytFirstVideoOnSearch: string,
+	ytLyricsVideo: string
+}
+
 export interface getYoutubeUrlReturn {
-	youtubeId: string,
-	youtubeUrl: string,
+	youtubeId: youtubeIdsSchema,
 	youtubeQuery: string,
 	success: number
 }
 
-const main = async (spotifyId: string, title: string, artists: string, downloadSource: string) => {
+const main = async (spotifyId: string, title: string, artists: string) => {
 	const youtubeQuery = createYoutubeQuery(artists, title)
 
-	const storedYoutubeId = youtubeIdsStorage.getYoutubeId(spotifyId)
+	const storedYoutubeIds = youtubeIdsStorage.getYoutubeId(spotifyId)
 
-	if (storedYoutubeId) {
+	if (storedYoutubeIds) {
 		return {
-			youtubeId: storedYoutubeId,
-			youtubeUrl: 'https://www.youtube.com/watch?v=' + storedYoutubeId,
+			youtubeId: storedYoutubeIds,
 			youtubeQuery: youtubeQuery,
 			success: 1
 		}
 	}
 
-	try {
-		/*
-		 * Search the youtubeId on Firebase
-		*/
+	/*
+	* Search the youtubeId on Firebase
+	*/
 
+	try {
 		const firebaseResponse = await firebase.getYoutubeId(spotifyId)
 
 		if (firebaseResponse.val()) {
-			youtubeIdsStorage.storeYoutubeId(spotifyId, firebaseResponse.val())
+			const firebaseMusicInfo = JSON.parse(firebaseResponse.val()) as youtubeIdsSchema
+
+			youtubeIdsStorage.storeYoutubeId(spotifyId, firebaseMusicInfo)
 
 			return {
-				youtubeId: firebaseResponse.val() as string,
-				youtubeUrl: 'https://www.youtube.com/watch?v=' + firebaseResponse.val(),
+				youtubeId: firebaseMusicInfo,
 				youtubeQuery: youtubeQuery,
 				success: 1
 			} as getYoutubeUrlReturn
@@ -49,8 +53,10 @@ const main = async (spotifyId: string, title: string, artists: string, downloadS
 		*/
 
 		let youtubeInfo: getYoutubeUrlReturn = {
-			youtubeId: '',
-			youtubeUrl: '',
+			youtubeId: {
+				ytFirstVideoOnSearch: '',
+				ytLyricsVideo: ''
+			},
 			youtubeQuery: '',
 			success: 0
 		} as getYoutubeUrlReturn
@@ -60,13 +66,16 @@ const main = async (spotifyId: string, title: string, artists: string, downloadS
 		*/
 
 		try {
-			const youtubeResponse = await scrapeFromYoutubeVideo(youtubeQuery)
+			const ytResponse1stVideoOnSearch = await scrapeFromYoutubeVideo(youtubeQuery)
+			const ytResponseLyricsVideo = await scrapeFromYoutubeVideo(youtubeQuery + ' lyrics', ytResponse1stVideoOnSearch.video.id || '')
 
-			if (youtubeResponse.success === 1) {
+			if (ytResponse1stVideoOnSearch.success === 0 && ytResponseLyricsVideo.success === 0) {
 				youtubeInfo = {
-					youtubeId: youtubeResponse.video.id,
+					youtubeId: {
+						ytFirstVideoOnSearch: ytResponse1stVideoOnSearch.video.id,
+						ytLyricsVideo: ytResponseLyricsVideo.video.id
+					},
 					youtubeQuery: youtubeQuery,
-					youtubeUrl: 'https://www.youtube.com/watch?v=' + youtubeResponse.video.id,
 					success: 1
 				}
 			}
@@ -78,23 +87,26 @@ const main = async (spotifyId: string, title: string, artists: string, downloadS
 		*/
 
 		if (!youtubeInfo.success) {
-			const youtubeApiResponse = await searchYoutubeVideo(youtubeQuery)
+			const ytApiResponse1stVideoOnSearch = await searchYoutubeVideo(youtubeQuery)
+			const ytApiResponseLyricsVideo = await searchYoutubeVideo(youtubeQuery + ' lyrics', ytApiResponse1stVideoOnSearch.id.videoId || '')
 
-			if (youtubeApiResponse.success === 1) {
+			if (ytApiResponse1stVideoOnSearch.success === 1 && ytApiResponseLyricsVideo.success === 1) {
 				youtubeInfo = {
-					youtubeId: youtubeApiResponse.id.videoId,
+					youtubeId: {
+						ytFirstVideoOnSearch: ytApiResponse1stVideoOnSearch.id.videoId,
+						ytLyricsVideo: ytApiResponseLyricsVideo.id.videoId
+					},
 					youtubeQuery: youtubeQuery,
-					youtubeUrl: 'https://www.youtube.com/watch?v=' + youtubeApiResponse.id.videoId,
 					success: 1
 				}
 			}
 		}
 
 		/*
-		 * Save the youtubeId on Firebase
+		 * Save the youtubeId on Firebase and Async Storage
 		*/
 		if (youtubeInfo.success === 1) {
-			firebase.storeYoutubeId(spotifyId, youtubeInfo.youtubeId)
+			firebase.storeYoutubeId(spotifyId, JSON.stringify(youtubeInfo.youtubeId))
 			youtubeIdsStorage.storeYoutubeId(spotifyId, youtubeInfo.youtubeId)
 		}
 
@@ -105,11 +117,13 @@ const main = async (spotifyId: string, title: string, artists: string, downloadS
 		return youtubeInfo
 	} catch (err) {
 		return {
-			youtubeId: '',
-			youtubeUrl: '',
+			youtubeId: {
+				ytFirstVideoOnSearch: '',
+				ytLyricsVideo: ''
+			},
 			youtubeQuery: '',
 			success: 0
-		}
+		} as getYoutubeUrlReturn
 	}
 }
 

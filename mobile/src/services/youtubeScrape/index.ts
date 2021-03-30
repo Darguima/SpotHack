@@ -29,7 +29,7 @@ const youtubeScrape = axios.create(
 	}
 )
 
-export const scrapeFromYoutubeVideo = async (q: string) => {
+export const scrapeFromYoutubeVideo = async (q: string, ignoreId?: string) => {
 	const { data } = await youtubeScrape.get('search', {
 		params: {
 			q
@@ -38,14 +38,16 @@ export const scrapeFromYoutubeVideo = async (q: string) => {
 
 	const { results } : {results: Array<searchYoutubeVideoResponse>} = data
 
-	if (results.length === 0) {
+	if (results.length !== 0) {
+		const video = results[0].video.id !== ignoreId ? results[0] : results[1]
+
 		return {
-			success: 0
+			...video,
+			success: 1
 		} as searchYoutubeVideoSchema
 	} else {
 		return {
-			...results[0],
-			success: 1
+			success: 0
 		} as searchYoutubeVideoSchema
 	}
 }

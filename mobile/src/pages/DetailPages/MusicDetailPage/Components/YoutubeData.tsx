@@ -7,6 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import getYoutubeInfo, { getYoutubeUrlReturn } from '../../../../SpotHack_Core/GetYoutubeUrl'
 import downloadMachine from '../../../../SpotHack_Core/DownloadMachine'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { youtubeBaseUrl } from '../../../../services/youtubeApi'
 
 interface YoutubeDataProps {
 	spotifyId: string
@@ -15,39 +16,47 @@ interface YoutubeDataProps {
 }
 
 const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) => {
-	const [youtube1stVideoOnSearchInfo, setYoutube1stVideoOnSearchInfo] = useState({ youtubeUrl: 'Loading ...' } as getYoutubeUrlReturn)
-	const [youtubeLyricVideoInfo, setYoutubeLyricVideoInfo] = useState({ youtubeUrl: 'Loading ...' } as getYoutubeUrlReturn)
+	const [youtubeInfo, setYoutubeInfo] = useState({ success: 0 } as getYoutubeUrlReturn)
+	const [ytFirstVideoOnSearch, setYtFirstVideoOnSearch] = useState({ url: 'Loading ...', id: '' })
+	const [ytLyricsVideo, setYtLyricsVideo] = useState({ url: 'Loading ...', id: '' })
 
 	useEffect(() => {
 		(async () => {
-			const youtube1stVideoOnSearchInfo = await getYoutubeInfo(spotifyId, title, artists, 'yt_firstVideoOnSearch')
-			if (youtube1stVideoOnSearchInfo.success === 1) {
-				setYoutube1stVideoOnSearchInfo(youtube1stVideoOnSearchInfo)
+			const youtubeInfo = await getYoutubeInfo(spotifyId, title, artists)
+			setYoutubeInfo(youtubeInfo)
+
+			if (youtubeInfo.success === 1) {
+				setYtFirstVideoOnSearch({
+					url: youtubeBaseUrl + youtubeInfo.youtubeId.ytFirstVideoOnSearch,
+					id: youtubeInfo.youtubeId.ytFirstVideoOnSearch
+				})
+
+				setYtLyricsVideo({
+					url: youtubeBaseUrl + youtubeInfo.youtubeId.ytLyricsVideo,
+					id: youtubeInfo.youtubeId.ytLyricsVideo
+				})
 			} else {
-				setYoutube1stVideoOnSearchInfo({ ...youtube1stVideoOnSearchInfo, youtubeUrl: 'Error getting Youtube Url', success: 0 } as getYoutubeUrlReturn)
+				setYtFirstVideoOnSearch({
+					url: 'Error getting Youtube Url',
+					id: ''
+				})
+
+				setYtLyricsVideo({
+					url: 'Error getting Youtube Url',
+					id: ''
+				})
 			}
 		})()
 	}, [])
 
-	useEffect(() => {
-		(async () => {
-			const youtubeLyricVideoInfo = await getYoutubeInfo(spotifyId, title, artists, 'yt_lyricVideo')
-			if (youtubeLyricVideoInfo.success === 1) {
-				setYoutubeLyricVideoInfo(youtubeLyricVideoInfo)
-			} else {
-				setYoutubeLyricVideoInfo({ ...youtubeLyricVideoInfo, youtubeUrl: 'Error getting Youtube Url', success: 0 } as getYoutubeUrlReturn)
-			}
-		})()
-	}, [])
-
-	const onDownloadButtonPress = (youtubeInfo: getYoutubeUrlReturn, downloadSource: string) => {
+	const onDownloadButtonPress = (youtubeId: string, youtubeQuery: string, downloadSource: string) => {
 		downloadMachine.addMusicsToDownloadQueue([{
 			spotifyId: spotifyId,
-			youtubeId: youtubeInfo.youtubeId,
+			youtubeId: youtubeId,
 
 			playlistName: 'SpotHack_Music',
 			playlistId: '0',
-			youtubeQuery: youtubeInfo.youtubeQuery,
+			youtubeQuery: youtubeQuery,
 
 			downloadSource: downloadSource
 		}])
@@ -64,18 +73,24 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
 					style={styles.youtubeUrlText}
 					numberOfLines={1}
 					onPress={() => {
-						if (youtube1stVideoOnSearchInfo.youtubeUrl !== 'Loading ...' && youtube1stVideoOnSearchInfo.youtubeUrl !== 'Error getting Youtube Url') {
-							Linking.openURL(youtube1stVideoOnSearchInfo.youtubeUrl)
+						if (youtubeInfo.success !== 0) {
+							Linking.openURL(ytFirstVideoOnSearch.url)
 						}
 					}}
 				>
-					{youtube1stVideoOnSearchInfo.youtubeUrl}
+					{ytFirstVideoOnSearch.url}
 				</Text>
 				<View style={styles.downloadButtonContainer}>
 					<TouchableOpacity
 						style={styles.downloadButton}
 						activeOpacity={0.6}
-						onPress={() => { onDownloadButtonPress(youtube1stVideoOnSearchInfo, 'yt_firstVideoOnSearch') }}
+						onPress={() => {
+							onDownloadButtonPress(
+								youtubeInfo.youtubeId.ytFirstVideoOnSearch,
+								youtubeInfo.youtubeQuery,
+								'ytFirstVideoOnSearch'
+							)
+						}}
 					>
 						<Text style={styles.downloadText}>Download</Text>
 
@@ -85,23 +100,29 @@ const YoutubeData:React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) =
 			</View>
 
 			<View style={styles.downloadOption}>
-				<Text style={styles.youtubeUrlTitleText}>Youtube - Lyric Video</Text>
+				<Text style={styles.youtubeUrlTitleText}>Youtube - Lyrics Video</Text>
 				<Text
 					style={styles.youtubeUrlText}
 					numberOfLines={1}
 					onPress={() => {
-						if (youtubeLyricVideoInfo.youtubeUrl !== 'Loading ...' && youtubeLyricVideoInfo.youtubeUrl !== 'Error getting Youtube Url') {
-							Linking.openURL(youtubeLyricVideoInfo.youtubeUrl)
+						if (youtubeInfo.success !== 0) {
+							Linking.openURL(ytLyricsVideo.url)
 						}
 					}}
 				>
-					{youtubeLyricVideoInfo.youtubeUrl}
+					{ytLyricsVideo.url}
 				</Text>
 				<View style={styles.downloadButtonContainer}>
 					<TouchableOpacity
 						style={styles.downloadButton}
 						activeOpacity={0.6}
-						onPress={() => { onDownloadButtonPress(youtubeLyricVideoInfo, 'yt_lyricVideo') }}
+						onPress={() => {
+							onDownloadButtonPress(
+								youtubeInfo.youtubeId.ytLyricsVideo,
+								youtubeInfo.youtubeQuery,
+								'ytLyricsVideo'
+							)
+						}}
 					>
 						<Text style={styles.downloadText}>Download</Text>
 
