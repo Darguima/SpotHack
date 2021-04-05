@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, FlatList } from 'react-native'
-import downloadMachine, { queueSchema, musicOnQueueSchema } from '../../../SpotHack_Core/DownloadMachine'
+import downloadMachine, { queueSchema, musicOnQueueSchema, urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
 
 const DownloadMusicPage:React.FC = () => {
 	const [downloadsStatus, setDownloadsStatus] = useState([] as queueSchema)
+	const [urlsSourcesCount, setUrlsSourcesCount] = useState({ totalRequests: 0, counts: {} } as urlsSourcesCountSchema)
 	const [errorMessage, setErrorMessage] = useState<string | null>('Wait a moment')
 
 	useEffect(() => {
@@ -21,10 +22,47 @@ const DownloadMusicPage:React.FC = () => {
 				setErrorMessage(JSON.stringify(err))
 			}
 		}, 500)
+
+		const getUrlsSourcesCount = setInterval(() => {
+			try {
+				const urlsSourcesCountReturn = downloadMachine.getUrlsSourcesCount()
+
+				setUrlsSourcesCount(urlsSourcesCountReturn)
+			} catch (err) {
+				setUrlsSourcesCount({ totalRequests: 0, counts: {} })
+			}
+		}, 3000)
+
 		return () => {
 			clearInterval(getDownloadsStatus)
+			clearInterval(getUrlsSourcesCount)
 		}
 	}, [])
+
+	const renderHeader = () => {
+		return (
+			<View
+				style={{
+					backgroundColor: '#333',
+					marginVertical: 20
+				}}
+			>
+				<Text>totalRequests: {urlsSourcesCount.totalRequests}</Text>
+
+				{Object.keys(urlsSourcesCount.counts).map(key => {
+					const value = urlsSourcesCount.counts[key]
+
+					return (
+						<Text
+							key={key}
+						>
+							{key} - {value}
+						</Text>
+					)
+				})}
+			</View>
+		)
+	}
 
 	const renderMusicDownloadStatusBox = ({ item }: {item: musicOnQueueSchema}) => {
 		return (
@@ -60,9 +98,11 @@ const DownloadMusicPage:React.FC = () => {
 			<FlatList
 				style={{ width: '100%' }}
 
+				ListHeaderComponent={renderHeader}
+
 				data={downloadsStatus}
 				renderItem={renderMusicDownloadStatusBox}
-				keyExtractor={item => item.queueNumber.toString()}
+				keyExtractor={item => item.queueIndex.toString()}
 			/>
 			}
 		</View>

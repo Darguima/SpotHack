@@ -6,6 +6,7 @@ import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
 
 export interface youtubeIdsSchema {
+	[key: string]: string,
 	ytFirstVideoOnSearch: string,
 	ytLyricsVideo: string
 }
@@ -17,8 +18,8 @@ export interface getYoutubeUrlReturn {
 	infoSourceIcon: 'error' | 'asyncStorage' | 'firebase' | 'ytScrape' | 'ytApi'
 }
 
-const main = async (spotifyId: string, title: string, artists: string) => {
-	const youtubeQuery = createYoutubeQuery(artists, title)
+const main = async (spotifyId: string, title: string, artists: string, youtubeQuery?: string) => {
+	if (!youtubeQuery) { youtubeQuery = createYoutubeQuery(artists, title) }
 
 	const storedYoutubeIds = youtubeIdsStorage.getYoutubeId(spotifyId)
 

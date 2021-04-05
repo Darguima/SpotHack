@@ -1,5 +1,7 @@
 import createQueueId from '../../utils/createQueueId'
 
+import getYoutubeUrls from './getYoutubeUrls'
+
 export interface queueSchema extends Array<musicOnQueueSchema> {}
 
 export interface musicOnQueueSchema {
@@ -9,10 +11,16 @@ export interface musicOnQueueSchema {
 	playlistName: string,
 	youtubeQuery: string,
 
-	queueNumber: number,
+	queueIndex: number,
 	queueId: string,
 
-	success: 0 | 1 | 2 | 3;
+	downloadSource: string,
+
+	stage: string,
+	progress: number,
+	// progress - stage:
+	// 0 - error
+	// 1 - start
 }
 
 export interface musicForQueueSchema {
@@ -26,10 +34,16 @@ export interface musicForQueueSchema {
 	downloadSource: string
 }
 
-class DownloadMachine {
-	private queue = [] as queueSchema
-	private queueIds = [] as Array<string>
-	private lastQueueNumber = 0
+export interface urlsSourcesCountSchema {
+	totalRequests: number,
+	counts: {
+		[key: string]: number
+	}
+}
+
+export class DownloadMachine {
+	protected queue = [] as queueSchema
+	protected queueIds = [] as Array<string>
 
 	addMusicsToDownloadQueue (playlist: Array<musicForQueueSchema>) {
 		playlist.map(item => {
@@ -38,23 +52,31 @@ class DownloadMachine {
 				return 0
 			}
 
-			const musicInfo = {
+			const musicInfo: musicOnQueueSchema = {
 				...item,
 
-				success: 1,
+				queueIndex: this.queue.length,
+				queueId: createQueueId(item.spotifyId, item.playlistId),
 
-				queueNumber: this.lastQueueNumber,
-				queueId: createQueueId(item.spotifyId, item.playlistId)
-			} as musicOnQueueSchema
-
-			this.lastQueueNumber += 1
+				stage: 'start',
+				progress: 1
+			}
 
 			this.queue.push(musicInfo)
 			this.queueIds.push(musicInfo.queueId)
+			this.youtubeUrlQueue.push(musicInfo.queueIndex)
 
 			return 1
 		})
+
+		if (this.isGetYoutubeUrlsActive === false) this.getYoutubeUrls()
 	}
+
+	protected youtubeUrlQueue = [] as Array<number>
+	protected isGetYoutubeUrlsActive = false
+	protected urlsSourcesCount: urlsSourcesCountSchema = { totalRequests: 0, counts: {} }
+	getUrlsSourcesCount () { return { ...this.urlsSourcesCount } }
+	protected getYoutubeUrls = getYoutubeUrls
 
 	getDownloadsStatus () {
 		return [...this.queue]
