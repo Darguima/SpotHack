@@ -1,28 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, FlatList } from 'react-native'
-import downloadMachine, { queueSchema, musicOnQueueSchema, urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
+import { Text, View, StyleSheet } from 'react-native'
+import downloadMachine, { urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
 
 const DownloadMusicPage:React.FC = () => {
-	const [downloadsStatus, setDownloadsStatus] = useState([] as queueSchema)
 	const [urlsSourcesCount, setUrlsSourcesCount] = useState({ totalRequests: 0, counts: {} } as urlsSourcesCountSchema)
-	const [errorMessage, setErrorMessage] = useState<string | null>('Wait a moment')
 
 	useEffect(() => {
-		const getDownloadsStatus = setInterval(() => {
-			try {
-				const downloadsStatusReturn = downloadMachine.getDownloadsStatus()
-
-				if (downloadsStatusReturn.length === 0) {
-					setErrorMessage('No downloads at the moment')
-				} else {
-					setErrorMessage(null)
-				}
-				setDownloadsStatus(downloadsStatusReturn)
-			} catch (err) {
-				setErrorMessage(JSON.stringify(err))
-			}
-		}, 500)
-
 		const getUrlsSourcesCount = setInterval(() => {
 			try {
 				const urlsSourcesCountReturn = downloadMachine.getUrlsSourcesCount()
@@ -34,18 +17,14 @@ const DownloadMusicPage:React.FC = () => {
 		}, 3000)
 
 		return () => {
-			clearInterval(getDownloadsStatus)
 			clearInterval(getUrlsSourcesCount)
 		}
 	}, [])
 
-	const renderHeader = () => {
-		return (
+	return (
+		<View style={styles.container}>
 			<View
-				style={{
-					backgroundColor: '#333',
-					marginVertical: 20
-				}}
+				style={styles.urlsSourcesCountContainer}
 			>
 				<Text>totalRequests: {urlsSourcesCount.totalRequests}</Text>
 
@@ -61,50 +40,6 @@ const DownloadMusicPage:React.FC = () => {
 					)
 				})}
 			</View>
-		)
-	}
-
-	const renderMusicDownloadStatusBox = ({ item }: {item: musicOnQueueSchema}) => {
-		return (
-			<View
-				style={{
-					backgroundColor: '#555',
-					marginVertical: 20
-				}}
-			>
-				{
-					Object.keys(item).map(key => {
-						const value = item[key]
-
-						return (
-							<Text
-								key={key + value}
-								style={key === 'youtubeQuery' ? { fontWeight: 'bold', color: '#333' } : {}}
-							>
-								{key} - {value}
-							</Text>
-						)
-					})
-				}
-			</View>
-		)
-	}
-
-	return (
-		<View style={styles.container}>
-			{errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
-
-			{!errorMessage &&
-			<FlatList
-				style={{ width: '100%' }}
-
-				ListHeaderComponent={renderHeader}
-
-				data={downloadsStatus}
-				renderItem={renderMusicDownloadStatusBox}
-				keyExtractor={item => item.queueIndex.toString()}
-			/>
-			}
 		</View>
 	)
 }
@@ -118,8 +53,9 @@ const styles = StyleSheet.create({
 		backgroundColor: '#000'
 	},
 
-	errorMessage: {
-		color: '#fff'
+	urlsSourcesCountContainer: {
+		backgroundColor: '#333',
+		marginVertical: 20
 	}
 })
 
