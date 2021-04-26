@@ -1,24 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import downloadMachine, { urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
+import { StackScreenProps } from '@react-navigation/stack'
+import downloadMachine, { queueChangesListenerFunction, urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
 
-const DownloadMusicPage:React.FC = () => {
+const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 	const [urlsSourcesCount, setUrlsSourcesCount] = useState({ totalRequests: 0, counts: {} } as urlsSourcesCountSchema)
+	let queueChangesListenerIdentifier: number | undefined
+
+	const onQueueChange: queueChangesListenerFunction = (index, newMusicInfo, prevMusicInfo, name) => {
+		console.log(`Updated - ${newMusicInfo.youtubeQuery}`)
+		refreshDownloadMachineInfo()
+	}
+
+	const refreshDownloadMachineInfo = () => {
+		try {
+			const urlsSourcesCountReturn = downloadMachine.getUrlsSourcesCount()
+			setUrlsSourcesCount(urlsSourcesCountReturn)
+		} catch (err) {
+			setUrlsSourcesCount({ totalRequests: 0, counts: { 'Unknown error': 1 } })
+		}
+	}
+
+	const onFocus = useCallback(() => {
+		refreshDownloadMachineInfo()
+		if (queueChangesListenerIdentifier === undefined) {
+			const identifier = downloadMachine.addQueueChangesListener(onQueueChange)
+
+			queueChangesListenerIdentifier = identifier
+		} else {
+			downloadMachine.changeQueueChangesListener(queueChangesListenerIdentifier, onQueueChange)
+		}
+	}, [])
+
+	const onBlur = useCallback(() => {
+		if (queueChangesListenerIdentifier !== undefined) {
+			downloadMachine.changeQueueChangesListener(queueChangesListenerIdentifier, () => {})
+		}
+	}, [queueChangesListenerIdentifier])
 
 	useEffect(() => {
-		const getUrlsSourcesCount = setInterval(() => {
-			try {
-				const urlsSourcesCountReturn = downloadMachine.getUrlsSourcesCount()
-
-				setUrlsSourcesCount(urlsSourcesCountReturn)
-			} catch (err) {
-				setUrlsSourcesCount({ totalRequests: 0, counts: {} })
-			}
-		}, 3000)
-
-		return () => {
-			clearInterval(getUrlsSourcesCount)
-		}
+		navigation.addListener('focus', onFocus)
+		navigation.addListener('blur', onBlur)
 	}, [])
 
 	return (
