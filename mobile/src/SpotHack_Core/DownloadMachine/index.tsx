@@ -37,7 +37,7 @@ export interface musicForQueueSchema {
 	downloadSource: string
 }
 
-export type queueChangesListenerFunction = (index: string, newMusicInfo: musicOnQueueSchema, prevMusicInfo: unknown, name: string) => void;
+type queueChangesListenerFunction = (index: string, newMusicInfo: musicOnQueueSchema, prevMusicInfo: unknown, name: string) => void;
 type queueChangesListenerFunctionsSchema = Array<queueChangesListenerFunction>
 
 export interface urlsSourcesCountSchema {

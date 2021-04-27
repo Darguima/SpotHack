@@ -1,18 +1,30 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, FlatList } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import downloadMachine, { queueChangesListenerFunction, urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
+import downloadMachine, { queueSchema, urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
+import MusicDownloadStatusBox from './components/MusicDownloadStatusBox'
+import ApiRequestsInfoBox from './components/ApiRequestsInfoBox'
 
 const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
+	const [downloadsStatus, setDownloadsStatus] = useState([] as queueSchema)
 	const [urlsSourcesCount, setUrlsSourcesCount] = useState({ totalRequests: 0, counts: {} } as urlsSourcesCountSchema)
+	const [errorMessage, setErrorMessage] = useState<string | null>('Wait a moment')
 	let queueChangesListenerIdentifier: number | undefined
 
-	const onQueueChange: queueChangesListenerFunction = (index, newMusicInfo, prevMusicInfo, name) => {
-		console.log(`Updated - ${newMusicInfo.youtubeQuery}`)
-		refreshDownloadMachineInfo()
-	}
-
 	const refreshDownloadMachineInfo = () => {
+		try {
+			const downloadsStatusReturn = downloadMachine.getDownloadsStatus()
+
+			if (downloadsStatusReturn.length === 0) {
+				setErrorMessage('No downloads at the moment')
+			} else {
+				setErrorMessage(null)
+			}
+			setDownloadsStatus(downloadsStatusReturn)
+		} catch (err) {
+			setErrorMessage(JSON.stringify(err))
+		}
+
 		try {
 			const urlsSourcesCountReturn = downloadMachine.getUrlsSourcesCount()
 			setUrlsSourcesCount(urlsSourcesCountReturn)
@@ -24,11 +36,11 @@ const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 	const onFocus = useCallback(() => {
 		refreshDownloadMachineInfo()
 		if (queueChangesListenerIdentifier === undefined) {
-			const identifier = downloadMachine.addQueueChangesListener(onQueueChange)
+			const identifier = downloadMachine.addQueueChangesListener(refreshDownloadMachineInfo)
 
 			queueChangesListenerIdentifier = identifier
 		} else {
-			downloadMachine.changeQueueChangesListener(queueChangesListenerIdentifier, onQueueChange)
+			downloadMachine.changeQueueChangesListener(queueChangesListenerIdentifier, refreshDownloadMachineInfo)
 		}
 	}, [])
 
@@ -45,23 +57,20 @@ const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<View
-				style={styles.urlsSourcesCountContainer}
-			>
-				<Text>totalRequests: {urlsSourcesCount.totalRequests}</Text>
+			{errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
 
-				{Object.keys(urlsSourcesCount.counts).map(key => {
-					const value = urlsSourcesCount.counts[key]
+			{!errorMessage &&
 
-					return (
-						<Text
-							key={key}
-						>
-							{key} - {value}
-						</Text>
-					)
-				})}
-			</View>
+					<FlatList
+						style={{ width: '100%' }}
+
+						ListHeaderComponent={<ApiRequestsInfoBox urlsSourcesCount={urlsSourcesCount}/>}
+
+						data={downloadsStatus}
+						renderItem={({ item }) => <MusicDownloadStatusBox item={item}/>}
+						keyExtractor={item => item.queueIndex.toString()}
+					/>
+			}
 		</View>
 	)
 }
@@ -75,9 +84,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#000'
 	},
 
-	urlsSourcesCountContainer: {
-		backgroundColor: '#333',
-		marginVertical: 20
+	errorMessage: {
+		color: '#fff'
 	}
 })
 
