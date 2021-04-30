@@ -1,5 +1,7 @@
-import { DownloadMachine, queueSchema } from './index'
 import * as RNFS from 'react-native-fs'
+
+import { DownloadMachine, queueSchema } from './index'
+import { createAssetsOnPath, deleteAssetsOnPath } from './utils'
 
 export default async function downloadMusicsVideos (this: DownloadMachine) {
 	if (this.isDownloadMusicsVideosActive === true) return 0
@@ -14,7 +16,7 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 		let downloadSuccess: any = 1
 
 		try {
-			downloadSuccess = createAssetsOnTemporaryPath(temporaryPathWithFile)
+			downloadSuccess = await createAssetsOnPath(temporaryPathWithFile)
 			if (downloadSuccess === 0) throw new Error('downloadVideo')
 
 			downloadSuccess = await downloadVideo(downloadUrl, temporaryPathWithFile, queue, queueIndex)
@@ -29,6 +31,9 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 				progress: 4,
 				stage: 'downloadedMusicsVideos'
 			}
+
+			this.convertVideosToMusicsQueue.push(queueIndex)
+			if (this.isConvertVideosToMusicsActive === false) this.convertVideosToMusics()
 		} catch (err) {
 			queue[queueIndex] = {
 				...queue[queueIndex],
@@ -37,7 +42,7 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 				stage: 'error - downloadedMusicsVideos'
 			}
 
-			deleteAssetsOnTemporaryPath(temporaryPathWithFile)
+			deleteAssetsOnPath(temporaryPathWithFile)
 		}
 
 		this.downloadMusicsVideosQueue.shift()
@@ -45,32 +50,6 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 
 	this.isDownloadMusicsVideosActive = false
 	return 1
-}
-
-const createAssetsOnTemporaryPath = async (temporaryPathWithFile: string) => {
-	try {
-		if (temporaryPathWithFile.endsWith('/')) {
-			temporaryPathWithFile = temporaryPathWithFile.substring(0, temporaryPathWithFile.length - 1)
-		}
-
-		const temporaryPath = temporaryPathWithFile.substring(0, temporaryPathWithFile.lastIndexOf('/'))
-
-		if (!await RNFS.exists(temporaryPathWithFile)) {
-			RNFS.mkdir(temporaryPath)
-			await RNFS.writeFile(temporaryPathWithFile, '')
-		}
-
-		return 1
-	} catch (err) {
-		return 0
-	}
-}
-
-const deleteAssetsOnTemporaryPath = async (temporaryPathWithFile: string) => {
-	try {
-		RNFS.unlink(temporaryPathWithFile)
-	} catch (err) {
-	}
 }
 
 const downloadVideo = async (url: string, temporaryPathWithFile: string, queue: queueSchema, queueIndex: number

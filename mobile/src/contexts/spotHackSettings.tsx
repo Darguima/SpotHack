@@ -3,6 +3,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import { DownloadDirectoryPath } from 'react-native-fs'
 
+import downloadMachine from '../SpotHack_Core/DownloadMachine'
+
 interface SpotHackSettingsContextData {
 spotHackSettings: spotHackSettingsSchema
 saveNewSpotHackSettings: (newSpotHackSettings: Partial<spotHackSettingsSchema>) => void,
@@ -39,6 +41,11 @@ export const SpotHackSettingsProvider: React.FC = ({ children }) => {
 			}
 		})()
 	}, [])
+
+	useEffect(() => {
+		// Change on the downloadMachine the rootPath
+		downloadMachine.setFinalPath(spotHackSettings.rootPath)
+	}, [spotHackSettings])
 
 	const saveNewSpotHackSettings = (newSpotHackSettings: Partial<spotHackSettingsSchema>) => {
 		// For security reasons "{ ...defaultSpotHackSettings, ...spotHackSettings,"

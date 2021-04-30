@@ -6,6 +6,7 @@ import createQueueId from '../../utils/createQueueId'
 import getYoutubeIds from './getYoutubeIds'
 import getDownloadUrls from './getDownloadUrls'
 import downloadMusicsVideos from './downloadMusicsVideos'
+import convertVideosToMusics from './convertVideosToMusics'
 
 import { getExternalStoragePermissions } from '../../utils/getStoragePermissions'
 
@@ -35,6 +36,7 @@ export interface musicOnQueueSchema {
 	// 2 - gotten_youtubeId
 	// 3 - gotten_downloadUrl
 	// 4 - downloadedMusicVideo
+	// 5 - convertedVideoToMusic
 }
 
 export interface musicForQueueSchema {
@@ -71,11 +73,15 @@ export class DownloadMachine {
 	protected queueIds: Array<string> = []
 	private storagePermissions = false
 	// End the path with "/"
-	// protected temporaryPath = `${RNFS.CachesDirectoryPath}/`
-	protected temporaryPath = `${RNFS.DownloadDirectoryPath}/spothack/`
+	protected temporaryPath = `${RNFS.CachesDirectoryPath}/musicsVideos/`
+	protected finalPath = `${RNFS.DownloadDirectoryPath}/spothack/`
+	setFinalPath (newFinalPath: string) {
+		if (!newFinalPath.endsWith('/')) newFinalPath += '/'
+
+		this.finalPath = newFinalPath
+	}
 
 	async addMusicsToDownloadQueue (playlist: Array<musicForQueueSchema>) {
-		// get External Storage Permissions
 		if (!this.storagePermissions) {
 			this.storagePermissions = await getExternalStoragePermissions()
 
@@ -140,6 +146,10 @@ export class DownloadMachine {
 	protected downloadMusicsVideosQueue = [] as Array<number>
 	protected isDownloadMusicsVideosActive = false
 	protected downloadMusicsVideos = downloadMusicsVideos
+
+	protected convertVideosToMusicsQueue = [] as Array<number>
+	protected isConvertVideosToMusicsActive = false
+	protected convertVideosToMusics = convertVideosToMusics
 
 	protected urlsSourcesCount: urlsSourcesCountSchema = { totalRequests: 0, counts: {} }
 	getUrlsSourcesCount () { return { ...this.urlsSourcesCount } }
