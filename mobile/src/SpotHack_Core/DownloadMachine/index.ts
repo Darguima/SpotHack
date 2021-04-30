@@ -1,9 +1,13 @@
+import * as RNFS from 'react-native-fs'
+import onChange from 'on-change'
+
 import createQueueId from '../../utils/createQueueId'
 
 import getYoutubeIds from './getYoutubeIds'
 import getDownloadUrls from './getDownloadUrls'
+import downloadMusicsVideos from './downloadMusicsVideos'
 
-import onChange from 'on-change'
+import { getExternalStoragePermissions } from '../../utils/getStoragePermissions'
 
 export interface queueSchema extends Array<musicOnQueueSchema> {}
 
@@ -13,6 +17,7 @@ export interface musicOnQueueSchema {
 
 	downloadUrl: string,
 	approxDurationMs: number,
+	stageProgress: number,
 
 	playlistName: string,
 	youtubeQuery: string,
@@ -25,10 +30,11 @@ export interface musicOnQueueSchema {
 	stage: string,
 	progress: number,
 	// progress - stage:
-	// 0 - error
+	// 0 - error - ${stage where error ocurred}
 	// 1 - start
-	// 2 - gotten_youtubeUrl
+	// 2 - gotten_youtubeId
 	// 3 - gotten_downloadUrl
+	// 4 - downloadedMusicVideo
 }
 
 export interface musicForQueueSchema {
@@ -63,9 +69,20 @@ export class DownloadMachine {
 	)
 
 	protected queueIds: Array<string> = []
+	private storagePermissions = false
+	// End the path with "/"
+	// protected temporaryPath = `${RNFS.CachesDirectoryPath}/`
+	protected temporaryPath = `${RNFS.DownloadDirectoryPath}/spothack/`
 
-	addMusicsToDownloadQueue (playlist: Array<musicForQueueSchema>) {
-		playlist.map(item => {
+	async addMusicsToDownloadQueue (playlist: Array<musicForQueueSchema>) {
+		// get External Storage Permissions
+		if (!this.storagePermissions) {
+			this.storagePermissions = await getExternalStoragePermissions()
+
+			if (!this.storagePermissions) return 0
+		}
+
+		playlist.forEach(item => {
 			// Ignore repeated downloads
 			if (this.queueIds.indexOf(createQueueId(item.spotifyId, item.playlistId)) !== -1) {
 				return 0
@@ -75,6 +92,7 @@ export class DownloadMachine {
 				...item,
 				downloadUrl: '',
 				approxDurationMs: 0,
+				stageProgress: 0,
 
 				queueIndex: this.queue.length,
 				queueId: createQueueId(item.spotifyId, item.playlistId),
@@ -91,11 +109,10 @@ export class DownloadMachine {
 			this.queue[this.queue.length] = musicInfo
 			this.queueIds.push(musicInfo.queueId)
 			this.youtubeIdsQueue.push(musicInfo.queueIndex)
-
-			return 1
 		})
 
 		if (this.isGetYoutubeIdsActive === false) this.getYoutubeIds()
+		return 1
 	}
 
 	private queueChangesListenerFunctions: queueChangesListenerFunctionsSchema = []
@@ -119,6 +136,10 @@ export class DownloadMachine {
 	protected downloadUrlsQueue = [] as Array<number>
 	protected isGetDownloadUrlsActive = false
 	protected getDownloadUrls = getDownloadUrls
+
+	protected downloadMusicsVideosQueue = [] as Array<number>
+	protected isDownloadMusicsVideosActive = false
+	protected downloadMusicsVideos = downloadMusicsVideos
 
 	protected urlsSourcesCount: urlsSourcesCountSchema = { totalRequests: 0, counts: {} }
 	getUrlsSourcesCount () { return { ...this.urlsSourcesCount } }

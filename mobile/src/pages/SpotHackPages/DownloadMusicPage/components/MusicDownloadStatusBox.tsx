@@ -37,7 +37,10 @@ const styles = StyleSheet.create({
 export default React.memo(
 	MusicDownloadStatusBox,
 	(prevProps, nextProps) => {
-		if (nextProps.item.progress !== prevProps.item.progress) return false
+		if (
+			nextProps.item.progress !== prevProps.item.progress ||
+			nextProps.item.stageProgress !== prevProps.item.stageProgress
+		) return false
 		else return true
 	}
 )

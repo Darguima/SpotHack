@@ -31,6 +31,8 @@ export default async function getDownloadUrls (this: DownloadMachine) {
 			}
 		}
 
+		this.downloadMusicsVideosQueue.push(queueIndex)
+		if (this.isDownloadMusicsVideosActive === false) this.downloadMusicsVideos()
 		this.downloadUrlsQueue.shift()
 	}
 

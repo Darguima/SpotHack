@@ -47,7 +47,7 @@ const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistN
 				<TouchableOpacity
 					style={styles.button}
 					activeOpacity={0.6}
-					onPress={() => {
+					onPress={async () => {
 						const playlistInfo: Array<musicForQueueSchema> = musicsArray.map(item => {
 							return ({
 								spotifyId: item.track.id,
@@ -61,8 +61,8 @@ const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistN
 							})
 						})
 
-						downloadMachine.addMusicsToDownloadQueue(playlistInfo)
-						ToastAndroid.show('Downloading Playlist', ToastAndroid.LONG)
+						const downloadStatus = await downloadMachine.addMusicsToDownloadQueue(playlistInfo)
+						if (downloadStatus) ToastAndroid.show('Downloading Playlist', ToastAndroid.LONG)
 					}}
 				>
 					<Text style={styles.buttonText}>Download</Text>

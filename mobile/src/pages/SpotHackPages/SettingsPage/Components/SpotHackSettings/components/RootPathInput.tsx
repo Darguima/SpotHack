@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid, PermissionsAndroid, PermissionStatus } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid } from 'react-native'
 
 import useSpotHackSettings from '../../../../../../contexts/spotHackSettings'
 import { exists as existsPath, mkdir as createPath } from 'react-native-fs'
 import ContentBox from '../../../../../Components/ContentBox'
+import { getExternalStoragePermissions } from '../../../../../../utils/getStoragePermissions'
 
 const RootPathInput:React.FC = () => {
 	const { spotHackSettings, saveNewSpotHackSettings } = useSpotHackSettings()
@@ -20,28 +21,10 @@ const RootPathInput:React.FC = () => {
 	}, [spotHackSettings])
 
 	const verifyAndSetNewRootPath = async (possibleNewRootPath: string) => {
-		// get permission from the user
-		let permissionGranted: PermissionStatus = PermissionsAndroid.RESULTS.DENIED
-		try {
-			permissionGranted = await PermissionsAndroid.request(
-				PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+		const storagePermissions = await getExternalStoragePermissions(() => { setIsNewRootPathValid(false) })
 
-				{
-					title: 'SpotHack Storage Permission',
-					message: 'Give access to your Storage to save the music.',
-					buttonNegative: 'Cancel',
-					buttonPositive: 'Ok'
-				}
-			)
-		} catch (err) {
+		if (!storagePermissions) {
 			setIsNewRootPathValid(false)
-			ToastAndroid.show('Error Getting Storage Permissions', ToastAndroid.LONG)
-			return
-		}
-
-		if (PermissionsAndroid.RESULTS.GRANTED !== permissionGranted) {
-			setIsNewRootPathValid(false)
-			ToastAndroid.show('We need Storage Permissions', ToastAndroid.LONG)
 			return
 		}
 
