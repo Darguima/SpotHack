@@ -1,12 +1,12 @@
 import { DownloadMachine } from './index'
 import getYoutubeUrl from '../GetYoutubeUrl'
 
-export default async function getYoutubeUrls (this: DownloadMachine) {
-	if (this.isGetYoutubeUrlsActive === true) return 0
-	this.isGetYoutubeUrlsActive = true
+export default async function getYoutubeIds (this: DownloadMachine) {
+	if (this.isGetYoutubeIdsActive === true) return 0
+	this.isGetYoutubeIdsActive = true
 
-	while (this.youtubeUrlQueue.length > 0) {
-		const queueIndex = this.youtubeUrlQueue[0]
+	while (this.youtubeIdsQueue.length > 0) {
+		const queueIndex = this.youtubeIdsQueue[0]
 
 		if (this.queue[queueIndex].youtubeId === '') {
 			const { youtubeId, infoSourceIcon, success } = await getYoutubeUrl(this.queue[queueIndex].spotifyId, '', '', this.queue[queueIndex].youtubeQuery)
@@ -35,10 +35,12 @@ export default async function getYoutubeUrls (this: DownloadMachine) {
 			}
 		}
 
-		this.youtubeUrlQueue.shift()
+		this.downloadUrlsQueue.push(queueIndex)
+		if (this.isGetDownloadUrlsActive === false) this.getDownloadUrls()
+		this.youtubeIdsQueue.shift()
 	}
 
-	this.isGetYoutubeUrlsActive = false
+	this.isGetYoutubeIdsActive = false
 
 	return 1
 }

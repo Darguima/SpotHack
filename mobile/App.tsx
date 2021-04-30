@@ -7,7 +7,8 @@ import Routes from './src/routes/index'
 const mobile:React.FC = () => {
 	useEffect(() => {
 		LogBox.ignoreLogs([
-			'react-native-ytdl is out of date! If the latest port is available, update with "npm install react-native-ytdl@latest".'
+			'react-native-ytdl is out of date! If the latest port is available, update with "npm install react-native-ytdl@latest".',
+			'react-native-ytdl: miniget: will not use specified encoding since request has already been made. Currently using utf8 encoding.'
 		])
 	}, [])
 

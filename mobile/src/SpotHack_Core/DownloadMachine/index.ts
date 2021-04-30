@@ -1,6 +1,7 @@
 import createQueueId from '../../utils/createQueueId'
 
-import getYoutubeUrls from './getYoutubeUrls'
+import getYoutubeIds from './getYoutubeIds'
+import getDownloadUrls from './getDownloadUrls'
 
 import onChange from 'on-change'
 
@@ -9,6 +10,9 @@ export interface queueSchema extends Array<musicOnQueueSchema> {}
 export interface musicOnQueueSchema {
 	spotifyId: string,
 	youtubeId: string,
+
+	downloadUrl: string,
+	approxDurationMs: number,
 
 	playlistName: string,
 	youtubeQuery: string,
@@ -24,6 +28,7 @@ export interface musicOnQueueSchema {
 	// 0 - error
 	// 1 - start
 	// 2 - gotten_youtubeUrl
+	// 3 - gotten_downloadUrl
 }
 
 export interface musicForQueueSchema {
@@ -68,6 +73,8 @@ export class DownloadMachine {
 
 			const musicInfo: musicOnQueueSchema = {
 				...item,
+				downloadUrl: '',
+				approxDurationMs: 0,
 
 				queueIndex: this.queue.length,
 				queueId: createQueueId(item.spotifyId, item.playlistId),
@@ -83,12 +90,12 @@ export class DownloadMachine {
 
 			this.queue[this.queue.length] = musicInfo
 			this.queueIds.push(musicInfo.queueId)
-			this.youtubeUrlQueue.push(musicInfo.queueIndex)
+			this.youtubeIdsQueue.push(musicInfo.queueIndex)
 
 			return 1
 		})
 
-		if (this.isGetYoutubeUrlsActive === false) this.getYoutubeUrls()
+		if (this.isGetYoutubeIdsActive === false) this.getYoutubeIds()
 	}
 
 	private queueChangesListenerFunctions: queueChangesListenerFunctionsSchema = []
@@ -105,9 +112,13 @@ export class DownloadMachine {
 		this.queueChangesListenerFunctions[functionIdentifier] = () => {}
 	}
 
-	protected youtubeUrlQueue = [] as Array<number>
-	protected isGetYoutubeUrlsActive = false
-	protected getYoutubeUrls = getYoutubeUrls
+	protected youtubeIdsQueue = [] as Array<number>
+	protected isGetYoutubeIdsActive = false
+	protected getYoutubeIds = getYoutubeIds
+
+	protected downloadUrlsQueue = [] as Array<number>
+	protected isGetDownloadUrlsActive = false
+	protected getDownloadUrls = getDownloadUrls
 
 	protected urlsSourcesCount: urlsSourcesCountSchema = { totalRequests: 0, counts: {} }
 	getUrlsSourcesCount () { return { ...this.urlsSourcesCount } }
