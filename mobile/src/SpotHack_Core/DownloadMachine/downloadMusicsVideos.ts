@@ -2,6 +2,7 @@ import * as RNFS from 'react-native-fs'
 
 import { DownloadMachine, queueSchema } from './index'
 import { createAssetsOnPath, deleteAssetsOnPath } from './utils'
+import removeSpecialChars from '../../utils/removeSpecialChars'
 
 export default async function downloadMusicsVideos (this: DownloadMachine) {
 	if (this.isDownloadMusicsVideosActive === true) return 0
@@ -10,7 +11,7 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 	while (this.downloadMusicsVideosQueue.length > 0) {
 		const queue = this.queue
 		const queueIndex = this.downloadMusicsVideosQueue[0]
-		const temporaryPathWithFile = this.temporaryPath + queue[queueIndex].youtubeQuery + '.mp4'
+		const temporaryPathWithFile = removeSpecialChars(this.temporaryPath + queue[queueIndex].youtubeQuery + '.mp4')
 		const { approxDurationMs, downloadUrl } = queue[queueIndex]
 
 		let downloadSuccess: any = 1
