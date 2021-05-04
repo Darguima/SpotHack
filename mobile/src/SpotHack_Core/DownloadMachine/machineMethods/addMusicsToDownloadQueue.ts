@@ -36,6 +36,9 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 		this.queue[this.queue.length] = musicInfo
 		this.queueIds.push(musicInfo.queueId)
 		this.youtubeIdsQueue.push(musicInfo.queueIndex)
+		// downloadsStatistics
+		this.downloadsStatistics.queueLength += 1
+		// =
 	})
 
 	if (this.isGetYoutubeIdsActive === false) this.getYoutubeIds()

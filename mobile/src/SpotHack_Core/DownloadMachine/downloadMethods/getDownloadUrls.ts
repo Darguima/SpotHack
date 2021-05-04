@@ -22,6 +22,13 @@ export default async function getDownloadUrls (this: DownloadMachine) {
 				progress: 3,
 				stage: 'gotten_downloadUrl'
 			}
+
+			// downloadsStatistics
+			this.downloadsStatistics.musicsWithDownloadUrl += 1
+			// =
+
+			this.downloadMusicsVideosQueue.push(queueIndex)
+			if (this.isDownloadMusicsVideosActive === false) this.downloadMusicsVideos()
 		} catch (err) {
 			queue[queueIndex] = {
 				...queue[queueIndex],
@@ -29,10 +36,12 @@ export default async function getDownloadUrls (this: DownloadMachine) {
 				progress: 0,
 				stage: 'error'
 			}
+
+			// downloadsStatistics
+			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
+			// =
 		}
 
-		this.downloadMusicsVideosQueue.push(queueIndex)
-		if (this.isDownloadMusicsVideosActive === false) this.downloadMusicsVideos()
 		this.downloadUrlsQueue.shift()
 	}
 

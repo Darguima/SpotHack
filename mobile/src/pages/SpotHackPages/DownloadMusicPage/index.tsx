@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Text, View, StyleSheet, FlatList } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import downloadMachine, { queueSchema, urlsSourcesCountSchema } from '../../../SpotHack_Core/DownloadMachine'
+import downloadMachine, { queueSchema, defaultStatistics } from '../../../SpotHack_Core/DownloadMachine'
 import MusicDownloadStatusBox from './components/MusicDownloadStatusBox'
-import ApiRequestsInfoBox from './components/ApiRequestsInfoBox'
+import StatisticsInfoBox from './components/StatisticsInfoBox'
 
 const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 	const [downloadsStatus, setDownloadsStatus] = useState([] as queueSchema)
-	const [urlsSourcesCount, setUrlsSourcesCount] = useState({ totalRequests: 0, counts: {} } as urlsSourcesCountSchema)
+	const [downloadStatistics, setDownloadStatistics] = useState(defaultStatistics)
 	const [errorMessage, setErrorMessage] = useState<string | null>('Wait a moment')
 	let queueChangesListenerIdentifier: number | undefined
 
@@ -15,21 +15,16 @@ const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 		try {
 			const downloadsStatusReturn = downloadMachine.getDownloadsStatus()
 
-			if (downloadsStatusReturn.length === 0) {
+			if (downloadsStatusReturn.musicsStatus.length === 0) {
 				setErrorMessage('No downloads at the moment')
 			} else {
 				setErrorMessage(null)
 			}
-			setDownloadsStatus(downloadsStatusReturn)
+			setDownloadsStatus(downloadsStatusReturn.musicsStatus)
+			setDownloadStatistics(downloadsStatusReturn.statistics)
 		} catch (err) {
 			setErrorMessage(JSON.stringify(err))
-		}
-
-		try {
-			const urlsSourcesCountReturn = downloadMachine.getUrlsSourcesCount()
-			setUrlsSourcesCount(urlsSourcesCountReturn)
-		} catch (err) {
-			setUrlsSourcesCount({ totalRequests: 0, counts: { 'Unknown error': 1 } })
+			setDownloadStatistics(defaultStatistics)
 		}
 	}
 
@@ -61,15 +56,15 @@ const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
 			{!errorMessage &&
 
-					<FlatList
-						style={{ width: '100%' }}
+				<FlatList
+					style={{ width: '100%' }}
 
-						ListHeaderComponent={<ApiRequestsInfoBox urlsSourcesCount={urlsSourcesCount}/>}
+					ListHeaderComponent={<StatisticsInfoBox downloadStatistics={downloadStatistics}/>}
 
-						data={downloadsStatus}
-						renderItem={({ item }) => <MusicDownloadStatusBox item={item}/>}
-						keyExtractor={item => item.queueIndex.toString()}
-					/>
+					data={downloadsStatus}
+					renderItem={({ item }) => <MusicDownloadStatusBox item={item}/>}
+					keyExtractor={item => item.queueIndex.toString()}
+				/>
 			}
 		</View>
 	)

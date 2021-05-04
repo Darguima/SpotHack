@@ -33,6 +33,10 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 				stage: 'downloadedMusicsVideos'
 			}
 
+			// downloadsStatistics
+			this.downloadsStatistics.downloadedMusicVideos += 1
+			// =
+
 			this.convertVideosToMusicsQueue.push(queueIndex)
 			if (this.isConvertVideosToMusicsActive === false) this.convertVideosToMusics()
 		} catch (err) {
@@ -42,6 +46,10 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 				progress: 0,
 				stage: 'error - downloadedMusicsVideos'
 			}
+
+			// downloadsStatistics
+			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
+			// =
 
 			deleteAssetsOnPath(temporaryPathWithFile)
 		}

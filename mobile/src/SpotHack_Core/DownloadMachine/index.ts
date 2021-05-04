@@ -3,7 +3,6 @@ import onChange from 'on-change'
 
 import addMusicsToDownloadQueue from './machineMethods/addMusicsToDownloadQueue'
 import setFinalPath from './machineMethods/setFinalPath'
-import getUrlsSourcesCount from './machineMethods/getUrlsSourcesCount'
 import getDownloadsStatus from './machineMethods/getDownloadsStatus'
 
 import getYoutubeIds from './downloadMethods/getYoutubeIds'
@@ -55,11 +54,26 @@ export interface musicOnQueueSchema extends musicForQueueSchema {
 type queueChangesListenerFunction = (index: string, newMusicInfo: musicOnQueueSchema, prevMusicInfo: unknown, name: string) => void;
 type queueChangesListenerFunctionsSchema = Array<queueChangesListenerFunction>
 
-export interface urlsSourcesCountSchema {
-	totalRequests: number,
-	counts: {
+export interface statisticsSchema {
+	queueLength: number
+	musicsWithYoutubeId: number,
+	youtubeIdsSources: {
 		[key: string]: number
-	}
+	},
+	musicsWithDownloadUrl: number,
+	downloadedMusicVideos: number,
+	convertedVideos: number,
+	errors: Array<string>
+}
+
+export const defaultStatistics: statisticsSchema = {
+	queueLength: 0,
+	musicsWithYoutubeId: 0,
+	youtubeIdsSources: {},
+	musicsWithDownloadUrl: 0,
+	downloadedMusicVideos: 0,
+	convertedVideos: 0,
+	errors: []
 }
 
 export class DownloadMachine {
@@ -113,8 +127,7 @@ export class DownloadMachine {
 
 	protected finishDownload = finishDownload
 
-	protected urlsSourcesCount: urlsSourcesCountSchema = { totalRequests: 0, counts: {} }
-	public getUrlsSourcesCount = getUrlsSourcesCount
+	protected downloadsStatistics = defaultStatistics
 
 	public getDownloadsStatus = getDownloadsStatus
 }

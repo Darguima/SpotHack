@@ -40,6 +40,10 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 				stage: 'convertedVideoToMusic'
 			}
 
+			// downloadsStatistics
+			this.downloadsStatistics.convertedVideos += 1
+			// =
+
 			this.finishDownload(queueIndex)
 		} catch (err) {
 			queue[queueIndex] = {
@@ -49,13 +53,16 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 				stage: 'error - convertedVideoToMusic'
 			}
 
+			// downloadsStatistics
+			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
+			// =
+
 			deleteAssetsOnPath(finalPathWithFile)
 		}
 
 		try {
 			deleteAssetsOnPath(temporaryPathWithFile)
-		} catch (err) {
-		}
+		} catch (err) {}
 
 		this.convertVideosToMusicsQueue.shift()
 	}
