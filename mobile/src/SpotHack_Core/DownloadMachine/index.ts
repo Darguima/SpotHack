@@ -12,21 +12,32 @@ import { getExternalStoragePermissions } from '../../utils/getStoragePermissions
 
 export interface queueSchema extends Array<musicOnQueueSchema> {}
 
-export interface musicOnQueueSchema {
-	spotifyId: string,
-	youtubeId: string,
+export interface musicForQueueSchema {
+	spotifyId: string, // metadata
+	youtubeId: string, // metadata
 
-	downloadUrl: string,
-	approxDurationMs: number,
-	stageProgress: number,
+	musicName: string, // metadata
+	artists: string, // metadata
+	albumName: string, // thumbnail
+	thumbnail: string, // thumbnail
 
 	playlistName: string,
+	playlistId: string, // metadata
+	youtubeQuery: string,
+
+	downloadSource: string, // metadata
+
+}
+
+export interface musicOnQueueSchema extends musicForQueueSchema {
+	downloadUrl: string,
+	approxDurationMs: number, // metadata
+	stageProgress: number,
+
 	youtubeQuery: string,
 
 	queueIndex: number,
 	queueId: string,
-
-	downloadSource: string,
 
 	stage: string,
 	progress: number,
@@ -37,17 +48,6 @@ export interface musicOnQueueSchema {
 	// 3 - gotten_downloadUrl
 	// 4 - downloadedMusicVideo
 	// 5 - convertedVideoToMusic
-}
-
-export interface musicForQueueSchema {
-	spotifyId: string,
-	youtubeId: string,
-
-	playlistName: string,
-	playlistId: string,
-	youtubeQuery: string,
-
-	downloadSource: string
 }
 
 type queueChangesListenerFunction = (index: string, newMusicInfo: musicOnQueueSchema, prevMusicInfo: unknown, name: string) => void;

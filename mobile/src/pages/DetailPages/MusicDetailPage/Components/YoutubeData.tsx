@@ -14,6 +14,8 @@ interface YoutubeDataProps {
 	spotifyId: string
 	title: string,
 	artists: string
+	thumbnail: string
+	albumName: string
 }
 
 const statusIcons: {[key: string]: React.ReactNode} = {
@@ -25,7 +27,7 @@ const statusIcons: {[key: string]: React.ReactNode} = {
 	error: <Entypo name="cross" size={20} color="red" />
 }
 
-const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) => {
+const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, thumbnail, albumName }) => {
 	const [youtubeInfo, setYoutubeInfo] = useState({ success: 0 } as getYoutubeUrlReturn)
 	const [ytFirstVideoOnSearch, setYtFirstVideoOnSearch] = useState({ url: 'Loading ...', id: '' })
 	const [ytLyricsVideo, setYtLyricsVideo] = useState({ url: 'Loading ...', id: '' })
@@ -63,6 +65,11 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists }) 
 		downloadMachine.addMusicsToDownloadQueue([{
 			spotifyId: spotifyId,
 			youtubeId: youtubeId,
+
+			musicName: title,
+			artists: artists,
+			thumbnail: thumbnail,
+			albumName: albumName,
 
 			playlistName: 'SpotHack_Music',
 			playlistId: '0',

@@ -13,7 +13,7 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 		const queueIndex = this.convertVideosToMusicsQueue[0]
 		const temporaryPathWithFile = removeSpecialChars(this.temporaryPath + queue[queueIndex].youtubeQuery + '.mp4')
 		const finalPathWithFile = removeSpecialChars(this.finalPath + queue[queueIndex].playlistName + '/' + queue[queueIndex].youtubeQuery + '.mp3')
-		const { approxDurationMs } = queue[queueIndex]
+		const { thumbnail, musicName, artists, albumName, spotifyId, youtubeId, approxDurationMs, playlistId, downloadSource } = queue[queueIndex]
 
 		try {
 			await createAssetsOnPath(finalPathWithFile)
@@ -26,7 +26,7 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 			})
 
 			const response = await RNFFmpeg.execute(
-				`-i "${temporaryPathWithFile}" "${finalPathWithFile}" -y -loglevel error`
+				`-i "${temporaryPathWithFile}" ${thumbnail ? '-i "' + (thumbnail).replace('https', 'http') + '" -c:v copy -map 0:a:0 -map 1:v:0 ' : ''} -acodec libmp3lame -metadata title="${musicName}" -metadata artist="${artists}" -metadata album="${albumName}" -metadata spotifyId="${spotifyId}" -metadata youtubeId="${youtubeId}" -metadata approxDurationMs="${approxDurationMs}" -metadata playlistSpotifyId="${playlistId}" -metadata downloadSource="${downloadSource}" "${finalPathWithFile}" -y -loglevel error`
 			)
 
 			if (response !== 0) throw new Error('convertVideo')

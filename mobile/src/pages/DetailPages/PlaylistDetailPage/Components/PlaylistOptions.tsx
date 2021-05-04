@@ -13,7 +13,7 @@ import useSpotHackSettings from '../../../../contexts/spotHackSettings'
 interface PlaylistOptionsProps {
 	musicsArray: Array<SpotifyApi.PlaylistTrackObject>,
 	playlistName: string,
-	playlistId: string
+	playlistId: string,
 }
 
 const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistName, playlistId }) => {
@@ -52,6 +52,13 @@ const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistN
 							return ({
 								spotifyId: item.track.id,
 								youtubeId: '',
+
+								musicName: item.track.name,
+								artists: convertArtistsArrayToString(item.track.artists),
+								thumbnail: item.track.album.images.length > 0
+									? (item.track.album.images[0].url)
+									: '',
+								albumName: item.track.album.name,
 
 								playlistName: playlistName,
 								playlistId: playlistId,

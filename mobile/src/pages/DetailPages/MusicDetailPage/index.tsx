@@ -42,6 +42,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 		explicit: false,
 		spotifyPopularity: 0,
 		trackNumber: 0,
+		thumbnail: '',
 
 		albumTitle: 'Album Title',
 		albumArtists: 'Album Artists',
@@ -75,6 +76,9 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 				explicit: response.explicit,
 				spotifyPopularity: response.popularity,
 				trackNumber: response.track_number,
+				thumbnail: response.album.images.length > 0
+					? (response.album.images[0].url)
+					: '',
 
 				albumTitle: response.album.name,
 				albumArtists: convertArtistsArrayToString(response.album.artists),
@@ -90,7 +94,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 
 	return (
 		<View style={styles.container}>
-			<ScrollView contentContainerStyle={styles.scroolViewContentContainerStyle}>
+			<ScrollView contentContainerStyle={styles.scrollViewContentContainerStyle}>
 
 				<View style={styles.header}>
 					<TouchableOpacity style={styles.goBackIconContainer} onPress={goBack}>
@@ -111,27 +115,29 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 					spotifyId={musicInfo.spotifyId}
 					title={musicInfo.title}
 					artists={musicInfo.artists}
+					thumbnail={musicInfo.thumbnail}
+					albumName={musicInfo.albumTitle}
 				/>
 
-			 <MusicData
-				title={musicInfo.title}
-				artists={musicInfo.artists}
-				duration={musicInfo.duration}
-				explicit={musicInfo.explicit}
-				spotifyPopularity={musicInfo.spotifyPopularity}
-				trackNumber={musicInfo.trackNumber}
-			 />
+				<MusicData
+					title={musicInfo.title}
+					artists={musicInfo.artists}
+					duration={musicInfo.duration}
+					explicit={musicInfo.explicit}
+					spotifyPopularity={musicInfo.spotifyPopularity}
+					trackNumber={musicInfo.trackNumber}
+				/>
 
-			<AlbumData
-				title={musicInfo.albumTitle}
-				artists={musicInfo.albumArtists}
-				releaseDate={musicInfo.albumReleaseDate}
-				totalTracks={musicInfo.albumTotalTracks}
-			 />
+				<AlbumData
+					title={musicInfo.albumTitle}
+					artists={musicInfo.albumArtists}
+					releaseDate={musicInfo.albumReleaseDate}
+					totalTracks={musicInfo.albumTotalTracks}
+				/>
 
-			 <ArtistsData
-				artistsArray={musicInfo.artistsArray}
-			 />
+				<ArtistsData
+					artistsArray={musicInfo.artistsArray}
+				/>
 
 			</ScrollView>
 		</View>
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
 		color: '#fff'
 	},
 
-	scroolViewContentContainerStyle: {
+	scrollViewContentContainerStyle: {
 		flexGrow: 1,
 		alignItems: 'center'
 	},
