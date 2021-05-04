@@ -1,5 +1,5 @@
-import { DownloadMachine } from './index'
-import getYoutubeUrl from '../GetYoutubeUrl'
+import { DownloadMachine } from '../index'
+import getYoutubeUrl from '../../GetYoutubeUrl'
 
 export default async function getYoutubeIds (this: DownloadMachine) {
 	if (this.isGetYoutubeIdsActive === true) return 0

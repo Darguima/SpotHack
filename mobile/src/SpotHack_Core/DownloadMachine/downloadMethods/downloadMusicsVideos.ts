@@ -1,8 +1,8 @@
 import * as RNFS from 'react-native-fs'
 
-import { DownloadMachine, queueSchema } from './index'
-import { createAssetsOnPath, deleteAssetsOnPath } from './utils'
-import removeSpecialChars from '../../utils/removeSpecialChars'
+import { DownloadMachine, queueSchema } from '../index'
+import { createAssetsOnPath, deleteAssetsOnPath } from '../utils'
+import removeSpecialChars from '../../../utils/removeSpecialChars'
 
 export default async function downloadMusicsVideos (this: DownloadMachine) {
 	if (this.isDownloadMusicsVideosActive === true) return 0

@@ -1,4 +1,4 @@
-import { DownloadMachine } from './index'
+import { DownloadMachine } from '../index'
 import ytdl from 'react-native-ytdl'
 
 export default async function getDownloadUrls (this: DownloadMachine) {

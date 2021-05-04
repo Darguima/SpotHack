@@ -1,14 +1,16 @@
 import * as RNFS from 'react-native-fs'
 import onChange from 'on-change'
 
-import createQueueId from '../../utils/createQueueId'
+import addMusicsToDownloadQueue from './machineMethods/addMusicsToDownloadQueue'
+import setFinalPath from './machineMethods/setFinalPath'
+import getUrlsSourcesCount from './machineMethods/getUrlsSourcesCount'
+import getDownloadsStatus from './machineMethods/getDownloadsStatus'
 
-import getYoutubeIds from './getYoutubeIds'
-import getDownloadUrls from './getDownloadUrls'
-import downloadMusicsVideos from './downloadMusicsVideos'
-import convertVideosToMusics from './convertVideosToMusics'
-
-import { getExternalStoragePermissions } from '../../utils/getStoragePermissions'
+import getYoutubeIds from './downloadMethods/getYoutubeIds'
+import getDownloadUrls from './downloadMethods/getDownloadUrls'
+import downloadMusicsVideos from './downloadMethods/downloadMusicsVideos'
+import convertVideosToMusics from './downloadMethods/convertVideosToMusics'
+import finishDownload from './downloadMethods/finishDownload'
 
 export interface queueSchema extends Array<musicOnQueueSchema> {}
 
@@ -71,55 +73,13 @@ export class DownloadMachine {
 	)
 
 	protected queueIds: Array<string> = []
-	private storagePermissions = false
+	protected storagePermissions = false
 	// End the path with "/"
 	protected temporaryPath = `${RNFS.CachesDirectoryPath}/musicsVideos/`
 	protected finalPath = `${RNFS.DownloadDirectoryPath}/spothack/`
-	setFinalPath (newFinalPath: string) {
-		if (!newFinalPath.endsWith('/')) newFinalPath += '/'
+	public setFinalPath = setFinalPath
 
-		this.finalPath = newFinalPath
-	}
-
-	async addMusicsToDownloadQueue (playlist: Array<musicForQueueSchema>) {
-		if (!this.storagePermissions) {
-			this.storagePermissions = await getExternalStoragePermissions()
-
-			if (!this.storagePermissions) return 0
-		}
-
-		playlist.forEach(item => {
-			// Ignore repeated downloads
-			if (this.queueIds.indexOf(createQueueId(item.spotifyId, item.playlistId)) !== -1) {
-				return 0
-			}
-
-			const musicInfo: musicOnQueueSchema = {
-				...item,
-				downloadUrl: '',
-				approxDurationMs: 0,
-				stageProgress: 0,
-
-				queueIndex: this.queue.length,
-				queueId: createQueueId(item.spotifyId, item.playlistId),
-
-				stage: 'start',
-				progress: 1
-			}
-
-			/*
-			* We don't use `this.queue.push(musicInfo)` because in `queue` the proxy is trigged returning all
-			* the array instead of only musicInfo
-			*/
-
-			this.queue[this.queue.length] = musicInfo
-			this.queueIds.push(musicInfo.queueId)
-			this.youtubeIdsQueue.push(musicInfo.queueIndex)
-		})
-
-		if (this.isGetYoutubeIdsActive === false) this.getYoutubeIds()
-		return 1
-	}
+	public addMusicsToDownloadQueue = addMusicsToDownloadQueue
 
 	private queueChangesListenerFunctions: queueChangesListenerFunctionsSchema = []
 	public addQueueChangesListener = (eventFunction: queueChangesListenerFunction) => {
@@ -151,12 +111,12 @@ export class DownloadMachine {
 	protected isConvertVideosToMusicsActive = false
 	protected convertVideosToMusics = convertVideosToMusics
 
-	protected urlsSourcesCount: urlsSourcesCountSchema = { totalRequests: 0, counts: {} }
-	getUrlsSourcesCount () { return { ...this.urlsSourcesCount } }
+	protected finishDownload = finishDownload
 
-	getDownloadsStatus () {
-		return [...this.queue]
-	}
+	protected urlsSourcesCount: urlsSourcesCountSchema = { totalRequests: 0, counts: {} }
+	public getUrlsSourcesCount = getUrlsSourcesCount
+
+	public getDownloadsStatus = getDownloadsStatus
 }
 
 const downloadMachine = new DownloadMachine()

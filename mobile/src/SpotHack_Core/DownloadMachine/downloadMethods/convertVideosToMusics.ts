@@ -1,8 +1,8 @@
 import { RNFFmpeg, RNFFmpegConfig } from 'react-native-ffmpeg'
 
-import { DownloadMachine } from './index'
-import { createAssetsOnPath, deleteAssetsOnPath } from './utils'
-import removeSpecialChars from '../../utils/removeSpecialChars'
+import { DownloadMachine } from '../index'
+import { createAssetsOnPath, deleteAssetsOnPath } from '../utils'
+import removeSpecialChars from '../../../utils/removeSpecialChars'
 
 export default async function convertVideosToMusics (this: DownloadMachine) {
 	if (this.isConvertVideosToMusicsActive === true) return 0
@@ -39,6 +39,8 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 				progress: 5,
 				stage: 'convertedVideoToMusic'
 			}
+
+			this.finishDownload(queueIndex)
 		} catch (err) {
 			queue[queueIndex] = {
 				...queue[queueIndex],
@@ -53,7 +55,6 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 		try {
 			deleteAssetsOnPath(temporaryPathWithFile)
 		} catch (err) {
-			deleteAssetsOnPath(finalPathWithFile)
 		}
 
 		this.convertVideosToMusicsQueue.shift()
