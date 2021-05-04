@@ -14,14 +14,12 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 		const temporaryPathWithFile = this.temporaryPath + removeSpecialChars(queue[queueIndex].youtubeQuery) + '.mp4'
 		const { approxDurationMs, downloadUrl } = queue[queueIndex]
 
-		let downloadSuccess: any = 1
-
 		try {
-			downloadSuccess = await createAssetsOnPath(temporaryPathWithFile)
-			if (downloadSuccess === 0) throw new Error('downloadVideo')
+			const assetsCreation = await createAssetsOnPath(temporaryPathWithFile)
+			if (assetsCreation === 0) throw new Error('error creating asset on temp path')
 
-			downloadSuccess = await downloadVideo(downloadUrl, temporaryPathWithFile, queue, queueIndex)
-			if (downloadSuccess === 0) throw new Error('downloadVideo')
+			const downloadSuccess = await downloadVideo(downloadUrl, temporaryPathWithFile, queue, queueIndex)
+			if (downloadSuccess.statusCode !== 200) throw new Error(`error on downloading video - ${downloadSuccess.statusCode}`)
 
 			queue[queueIndex] = {
 				...queue[queueIndex],
@@ -44,7 +42,7 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 				...queue[queueIndex],
 
 				progress: 0,
-				stage: 'error - downloadedMusicsVideos'
+				stage: `downloadedMusicVideo - ${err}`
 			}
 
 			// downloadsStatistics
@@ -63,28 +61,24 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 
 const downloadVideo = async (url: string, temporaryPathWithFile: string, queue: queueSchema, queueIndex: number
 ) => {
-	try {
-		const download = RNFS.downloadFile({
-			fromUrl: url,
-			toFile: temporaryPathWithFile,
-			progress: (progress) => {
-				queue[queueIndex] = {
-					...queue[queueIndex],
-					stageProgress: (progress.bytesWritten / progress.contentLength) * 100
-				}
-			},
-			progressInterval: 500
-		})
+	const download = RNFS.downloadFile({
+		fromUrl: url,
+		toFile: temporaryPathWithFile,
+		progress: (progress) => {
+			queue[queueIndex] = {
+				...queue[queueIndex],
+				stageProgress: (progress.bytesWritten / progress.contentLength) * 100
+			}
+		},
+		progressDivider: 5
+	})
 
-		const downloadStatus = await download.promise
+	const downloadStatus = await download.promise
 
-		queue[queueIndex] = {
-			...queue[queueIndex],
-			stageProgress: 100
-		}
-
-		return downloadStatus
-	} catch (err) {
-		return 0
+	queue[queueIndex] = {
+		...queue[queueIndex],
+		stageProgress: 100
 	}
+
+	return downloadStatus
 }

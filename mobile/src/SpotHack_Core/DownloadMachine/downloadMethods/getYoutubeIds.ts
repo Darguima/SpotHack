@@ -35,7 +35,7 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 				queue[queueIndex] = {
 					...queue[queueIndex],
 					progress: 0,
-					stage: 'error - gotten_youtubeId'
+					stage: 'gotten_youtubeId - error'
 				}
 
 				// downloadsStatistics

@@ -25,11 +25,13 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 				}
 			})
 
+			RNFFmpegConfig.disableLogs()
+
 			const response = await RNFFmpeg.execute(
-				`-i "${temporaryPathWithFile}" ${thumbnail ? '-i "' + (thumbnail).replace('https', 'http') + '" -c:v copy -map 0:a:0 -map 1:v:0 ' : ''} -acodec libmp3lame -metadata title="${musicName}" -metadata artist="${artists}" -metadata album="${albumName}" -metadata spotifyId="${spotifyId}" -metadata youtubeId="${youtubeId}" -metadata approxDurationMs="${approxDurationMs}" -metadata playlistSpotifyId="${playlistId}" -metadata downloadSource="${downloadSource}" "${finalPathWithFile}" -y -loglevel error`
+				`-i "${temporaryPathWithFile}" ${thumbnail ? '-i "' + (thumbnail).replace('https', 'http') + '" -c:v copy -map 0:a:0 -map 1:v:0 ' : ''} -acodec libmp3lame -metadata title="${musicName}" -metadata artist="${artists}" -metadata album="${albumName}" -metadata spotifyId="${spotifyId}" -metadata youtubeId="${youtubeId}" -metadata approxDurationMs="${approxDurationMs}" -metadata playlistSpotifyId="${playlistId}" -metadata downloadSource="${downloadSource}" "${finalPathWithFile}" -y`
 			)
 
-			if (response !== 0) throw new Error('convertVideo')
+			if (response !== 0) throw new Error('ffmpeg response != 0')
 
 			queue[queueIndex] = {
 				...queue[queueIndex],
@@ -50,7 +52,7 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 				...queue[queueIndex],
 
 				progress: 0,
-				stage: 'error - convertedVideoToMusic'
+				stage: `convertedVideoToMusic - ${err} - ${(await RNFFmpegConfig.getLastCommandOutput()) || 'no output from ffmpeg'}`
 			}
 
 			// downloadsStatistics

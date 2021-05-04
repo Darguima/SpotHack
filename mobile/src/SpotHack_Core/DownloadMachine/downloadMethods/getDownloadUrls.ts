@@ -34,7 +34,7 @@ export default async function getDownloadUrls (this: DownloadMachine) {
 				...queue[queueIndex],
 
 				progress: 0,
-				stage: 'error'
+				stage: `gotten_downloadUrl - ${err}`
 			}
 
 			// downloadsStatistics
