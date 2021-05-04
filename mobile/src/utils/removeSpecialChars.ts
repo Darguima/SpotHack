@@ -1,4 +1,4 @@
-export default (sentence: string, specialChars = ['|', '\\', '?', '*', '<', '"', ':', '>']) => {
+export default (sentence: string, specialChars = ['|', '\\', '/', '?', '*', '<', '"', ':', '>']) => {
 	const finalSentence = [...sentence]
 
 	for (let i = 0; i < finalSentence.length; i++) {

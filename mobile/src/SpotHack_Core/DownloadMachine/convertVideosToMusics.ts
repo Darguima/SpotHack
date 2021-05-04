@@ -11,8 +11,8 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 	while (this.convertVideosToMusicsQueue.length > 0) {
 		const queue = this.queue
 		const queueIndex = this.convertVideosToMusicsQueue[0]
-		const temporaryPathWithFile = removeSpecialChars(this.temporaryPath + queue[queueIndex].youtubeQuery + '.mp4')
-		const finalPathWithFile = removeSpecialChars(this.finalPath + queue[queueIndex].playlistName + '/' + queue[queueIndex].youtubeQuery + '.mp3')
+		const temporaryPathWithFile = this.temporaryPath + removeSpecialChars(queue[queueIndex].youtubeQuery) + '.mp4'
+		const finalPathWithFile = this.finalPath + queue[queueIndex].playlistName + '/' + removeSpecialChars(queue[queueIndex].youtubeQuery) + '.mp3'
 		const { thumbnail, musicName, artists, albumName, spotifyId, youtubeId, approxDurationMs, playlistId, downloadSource } = queue[queueIndex]
 
 		try {

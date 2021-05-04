@@ -11,7 +11,7 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 	while (this.downloadMusicsVideosQueue.length > 0) {
 		const queue = this.queue
 		const queueIndex = this.downloadMusicsVideosQueue[0]
-		const temporaryPathWithFile = removeSpecialChars(this.temporaryPath + queue[queueIndex].youtubeQuery + '.mp4')
+		const temporaryPathWithFile = this.temporaryPath + removeSpecialChars(queue[queueIndex].youtubeQuery) + '.mp4'
 		const { approxDurationMs, downloadUrl } = queue[queueIndex]
 
 		let downloadSuccess: any = 1
