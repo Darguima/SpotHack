@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { DownloadDirectoryPath } from 'react-native-fs'
 
@@ -16,14 +16,20 @@ interface spotHackSettingsSchema {
 }
 
 const defaultSpotHackSettings: spotHackSettingsSchema = {
-	rootPath: DownloadDirectoryPath,
+	rootPath: `${DownloadDirectoryPath}/`,
 	defaultDownloadSource: 'ytFirstVideoOnSearch'
+}
+
+const voidSpotHackSettings: spotHackSettingsSchema = {
+	rootPath: '',
+	defaultDownloadSource: ''
 }
 
 const SpotHackSettingsContext = createContext<SpotHackSettingsContextData>({} as SpotHackSettingsContextData)
 
 export const SpotHackSettingsProvider: React.FC = ({ children }) => {
 	const [spotHackSettings, setSpotHackSettings] = useState(defaultSpotHackSettings)
+	const prevSpotHackSettingsRef = useRef(voidSpotHackSettings)
 
 	useEffect(() => {
 		(async () => {
@@ -44,7 +50,11 @@ export const SpotHackSettingsProvider: React.FC = ({ children }) => {
 
 	useEffect(() => {
 		// Change on the downloadMachine the rootPath
-		downloadMachine.setFinalPath(spotHackSettings.rootPath)
+		if (prevSpotHackSettingsRef.current.rootPath !== spotHackSettings.rootPath) {
+			downloadMachine.setFinalPath(spotHackSettings.rootPath)
+		}
+
+		prevSpotHackSettingsRef.current = spotHackSettings
 	}, [spotHackSettings])
 
 	const saveNewSpotHackSettings = (newSpotHackSettings: Partial<spotHackSettingsSchema>) => {

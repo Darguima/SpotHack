@@ -34,6 +34,8 @@ const RootPathInput:React.FC = () => {
 			return
 		}
 
+		if (!possibleNewRootPath.endsWith('/')) possibleNewRootPath += '/'
+
 		try {
 			if (!await existsPath(possibleNewRootPath)) {
 				createPath(possibleNewRootPath)
@@ -42,6 +44,7 @@ const RootPathInput:React.FC = () => {
 			saveNewSpotHackSettings({ rootPath: possibleNewRootPath })
 			setRootPathIsEditable(false)
 			setIsNewRootPathValid(true)
+			setNewRootPath(possibleNewRootPath)
 			ToastAndroid.show('Root Path Edited', ToastAndroid.LONG)
 		} catch (err) {
 			setIsNewRootPathValid(false)

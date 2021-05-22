@@ -90,7 +90,7 @@ export class DownloadMachine {
 	protected storagePermissions = false
 	// End the path with "/"
 	protected temporaryPath = `${RNFS.CachesDirectoryPath}/musicsVideos/`
-	protected finalPath = `${RNFS.DownloadDirectoryPath}/spothack/`
+	protected finalPath = `${RNFS.DownloadDirectoryPath}/`
 	public setFinalPath = setFinalPath
 
 	public addMusicsToDownloadQueue = addMusicsToDownloadQueue
