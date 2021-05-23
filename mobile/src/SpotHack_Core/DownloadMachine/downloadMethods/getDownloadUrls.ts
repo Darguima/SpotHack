@@ -13,6 +13,10 @@ export default async function getDownloadUrls (this: DownloadMachine) {
 			const videoFormats = await ytdl.getInfo(queue[queueIndex].youtubeId)
 			const { approxDurationMs, url } = ytdl.chooseFormat(videoFormats.formats, { quality: 'highestaudio' })
 
+			// downloadsStatistics
+			this.downloadsStatistics.musicsWithDownloadUrl += 1
+			// =
+
 			queue[queueIndex] = {
 				...queue[queueIndex],
 
@@ -23,23 +27,19 @@ export default async function getDownloadUrls (this: DownloadMachine) {
 				stage: 'gotten_downloadUrl'
 			}
 
-			// downloadsStatistics
-			this.downloadsStatistics.musicsWithDownloadUrl += 1
-			// =
-
 			this.downloadMusicsVideosQueue.push(queueIndex)
 			if (this.isDownloadMusicsVideosActive === false) this.downloadMusicsVideos()
 		} catch (err) {
+			// downloadsStatistics
+			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
+			// =
+
 			queue[queueIndex] = {
 				...queue[queueIndex],
 
 				progress: 0,
 				stage: `gotten_downloadUrl - ${err}`
 			}
-
-			// downloadsStatistics
-			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
-			// =
 		}
 
 		this.downloadUrlsQueue.shift()

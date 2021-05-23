@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import spotifyOAuth from '../services/spotify/spotifyOAuth'
 import spotifyApi from '../services/spotify/spotifyApi'
 import Axios from 'axios'
+import { unlink as removeFile, CachesDirectoryPath } from 'react-native-fs'
 
 interface AuthContextData {
 	loading: boolean,
@@ -148,10 +149,11 @@ export const AuthProvider: React.FC = ({ children }) => {
 				setErrorOnLogin('')
 
 				AsyncStorage.clear()
+				removeFile(CachesDirectoryPath + '/downloadedPlaylistsInfo.json')
 
 				spotifyApi.defaults.headers.Authorization = ''
 
-				return { response: 'sucess on logout', logout: 1 }
+				return { response: 'success on logout', logout: 1 }
 			} catch (err) {
 				return { response: 'error on logout', logout: 0 }
 			}

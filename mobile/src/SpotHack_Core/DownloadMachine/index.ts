@@ -49,6 +49,7 @@ export interface musicOnQueueSchema extends musicForQueueSchema {
 	// 3 - gotten_downloadUrl
 	// 4 - downloadedMusicVideo
 	// 5 - convertedVideoToMusic
+	// 6 - downloadedMusic / alreadyDownloaded
 }
 
 type queueChangesListenerFunction = (index: string, newMusicInfo: musicOnQueueSchema, prevMusicInfo: unknown, name: string) => void;
@@ -63,6 +64,8 @@ export interface statisticsSchema {
 	musicsWithDownloadUrl: number,
 	downloadedMusicVideos: number,
 	convertedVideos: number,
+	downloadedMusics: number,
+	alreadyDownloadedMusics: number,
 	errors: Array<string>
 }
 
@@ -73,6 +76,8 @@ export const defaultStatistics: statisticsSchema = {
 	musicsWithDownloadUrl: 0,
 	downloadedMusicVideos: 0,
 	convertedVideos: 0,
+	downloadedMusics: 0,
+	alreadyDownloadedMusics: 0,
 	errors: []
 }
 

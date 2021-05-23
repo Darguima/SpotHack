@@ -33,6 +33,10 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 
 			if (response !== 0) throw new Error('ffmpeg response != 0')
 
+			// downloadsStatistics
+			this.downloadsStatistics.convertedVideos += 1
+			// =
+
 			queue[queueIndex] = {
 				...queue[queueIndex],
 
@@ -42,22 +46,18 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 				stage: 'convertedVideoToMusic'
 			}
 
-			// downloadsStatistics
-			this.downloadsStatistics.convertedVideos += 1
-			// =
-
 			this.finishDownload(queueIndex)
 		} catch (err) {
+			// downloadsStatistics
+			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
+			// =
+
 			queue[queueIndex] = {
 				...queue[queueIndex],
 
 				progress: 0,
 				stage: `convertedVideoToMusic - ${err} - ${(await RNFFmpegConfig.getLastCommandOutput()) || 'no output from ffmpeg'}`
 			}
-
-			// downloadsStatistics
-			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
-			// =
 
 			deleteAssetsOnPath(finalPathWithFile)
 		}

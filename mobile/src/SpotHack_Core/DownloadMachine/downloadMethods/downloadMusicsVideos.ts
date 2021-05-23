@@ -21,6 +21,10 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 			const downloadSuccess = await downloadVideo(downloadUrl, temporaryPathWithFile, queue, queueIndex)
 			if (downloadSuccess.statusCode !== 200) throw new Error(`error on downloading video - ${downloadSuccess.statusCode}`)
 
+			// downloadsStatistics
+			this.downloadsStatistics.downloadedMusicVideos += 1
+			// =
+
 			queue[queueIndex] = {
 				...queue[queueIndex],
 
@@ -31,23 +35,19 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 				stage: 'downloadedMusicsVideos'
 			}
 
-			// downloadsStatistics
-			this.downloadsStatistics.downloadedMusicVideos += 1
-			// =
-
 			this.convertVideosToMusicsQueue.push(queueIndex)
 			if (this.isConvertVideosToMusicsActive === false) this.convertVideosToMusics()
 		} catch (err) {
+			// downloadsStatistics
+			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
+			// =
+
 			queue[queueIndex] = {
 				...queue[queueIndex],
 
 				progress: 0,
 				stage: `downloadedMusicVideo - ${err}`
 			}
-
-			// downloadsStatistics
-			this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
-			// =
 
 			deleteAssetsOnPath(temporaryPathWithFile)
 		}
