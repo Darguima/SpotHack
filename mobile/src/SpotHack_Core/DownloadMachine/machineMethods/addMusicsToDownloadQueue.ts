@@ -5,12 +5,19 @@ import downloadManager from '../../DownloadManager'
 import createQueueId from '../../../utils/createQueueId'
 import { getExternalStoragePermissions } from '../../../utils/getStoragePermissions'
 
-export default async function addMusicsToDownloadQueue (this: DownloadMachine, playlist: Array<musicForQueueSchema>) {
+interface addMusicsToDownloadQueueReturnSchema {
+	successCode: 0 | 1,
+	msg: 'success' | 'Storage Permissions missing' | 'Updating playlists - wait a moment'
+}
+
+export default async function addMusicsToDownloadQueue (this: DownloadMachine, playlist: Array<musicForQueueSchema>): Promise<addMusicsToDownloadQueueReturnSchema> {
 	if (!this.storagePermissions) {
 		this.storagePermissions = await getExternalStoragePermissions()
 
-		if (!this.storagePermissions) return 0
+		if (!this.storagePermissions) return { successCode: 0, msg: 'Storage Permissions missing' }
 	}
+
+	if (!downloadManager.arePlaylistsUpdated) return { successCode: 0, msg: 'Updating playlists - wait a moment' }
 
 	const downloadedPlaylistsInfo = downloadManager.getDownloadedPlaylistsInfo()
 
@@ -58,5 +65,5 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 	})
 
 	if (this.isGetYoutubeIdsActive === false) this.getYoutubeIds()
-	return 1
+	return { successCode: 1, msg: 'success' }
 }

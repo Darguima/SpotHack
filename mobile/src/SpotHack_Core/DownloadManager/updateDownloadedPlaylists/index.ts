@@ -1,5 +1,7 @@
 import { DownloadManager } from '../index'
 
+import { ToastAndroid } from 'react-native'
+
 import updatePlaylistsNames from './updatePlaylistsNames'
 
 import spotifyApi from '../../../services/spotify/spotifyApi'
@@ -47,4 +49,7 @@ export default async function (this: DownloadManager, currentRootPath: string) {
 	}
 
 	await this.setDownloadedPlaylistsInfo(downloadedPlaylistsInfo, currentRootPath)
+
+	this.arePlaylistsUpdatedValue = true
+	ToastAndroid.show('Playlists Updated', ToastAndroid.SHORT)
 }

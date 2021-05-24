@@ -61,8 +61,8 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 		})()
 	}, [])
 
-	const onDownloadButtonPress = (youtubeId: string, youtubeQuery: string, downloadSource: string) => {
-		downloadMachine.addMusicsToDownloadQueue([{
+	const onDownloadButtonPress = async (youtubeId: string, youtubeQuery: string, downloadSource: string) => {
+		const downloadStatus = await downloadMachine.addMusicsToDownloadQueue([{
 			spotifyId: spotifyId,
 			youtubeId: youtubeId,
 
@@ -77,7 +77,10 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 
 			downloadSource: downloadSource
 		}])
-		ToastAndroid.show('Downloading Music', ToastAndroid.LONG)
+
+		downloadStatus.successCode
+			? ToastAndroid.show('Downloading Music', ToastAndroid.LONG)
+			: ToastAndroid.show(downloadStatus.msg, ToastAndroid.LONG)
 	}
 
 	return (

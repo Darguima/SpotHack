@@ -69,7 +69,10 @@ const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistN
 						})
 
 						const downloadStatus = await downloadMachine.addMusicsToDownloadQueue(playlistInfo)
-						if (downloadStatus) ToastAndroid.show('Downloading Playlist', ToastAndroid.LONG)
+
+						downloadStatus.successCode
+							? ToastAndroid.show('Downloading Playlist', ToastAndroid.LONG)
+							: ToastAndroid.show(downloadStatus.msg, ToastAndroid.LONG)
 					}}
 				>
 					<Text style={styles.buttonText}>Download</Text>

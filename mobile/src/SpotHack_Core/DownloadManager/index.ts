@@ -42,6 +42,7 @@ export class DownloadManager {
 	set rootPath (newRootPath) {
 		if (this.rootPathValue !== newRootPath) {
 			this.rootPathValue = newRootPath
+			this.arePlaylistsUpdatedValue = false
 
 			setTimeout(() => {
 				this.updateDownloadsInfo().then(() => {
@@ -50,6 +51,9 @@ export class DownloadManager {
 			}, 200)
 		}
 	}
+
+	protected arePlaylistsUpdatedValue = false
+	get arePlaylistsUpdated () { return this.arePlaylistsUpdatedValue }
 
 	protected downloadsInfo: downloadsInfoSchema = {}
 	protected async editDownloadsInfo (newDownloadsInfo: downloadsInfoSchema) {
