@@ -1,5 +1,7 @@
 import * as RNFS from 'react-native-fs'
 
+import updateDownloadedPlaylists from './updateDownloadedPlaylists'
+
 const downloadsInfoFilePath = RNFS.CachesDirectoryPath + '/downloadedPlaylistsInfo.json'
 
 const editFile = async (object: any, filePath: string) => {
@@ -12,52 +14,51 @@ const editFile = async (object: any, filePath: string) => {
 	}
 }
 
-interface downloadedMusicInfoSchema {
+export interface downloadedMusicInfoSchema {
 	title: string,
 	artists: string,
 	spotifyId: string,
 	youtubeQuery: string
 }
 
-interface downloadedPlaylistInfoSchema {
+export interface downloadedPlaylistInfoSchema {
 	playlistName: string,
 	tracks: downloadedMusicInfoSchema[]
 }
 
-interface downloadedPlaylistsInfoSchema {
+export interface downloadedPlaylistsInfoSchema {
 	// PlaylistId
 	[key: string]: downloadedPlaylistInfoSchema
 }
 
-interface downloadsInfoSchema {
+export interface downloadsInfoSchema {
 	// rooPath
 	[key: string]: downloadedPlaylistsInfoSchema
 }
 
 export class DownloadManager {
-	private rootPathValue = ''
+	protected rootPathValue = ''
 	get rootPath () { return this.rootPathValue }
 	set rootPath (newRootPath) {
 		if (this.rootPathValue !== newRootPath) {
 			this.rootPathValue = newRootPath
+
 			setTimeout(() => {
 				this.updateDownloadsInfo().then(() => {
-					if (this.rootPath === newRootPath) {
-						console.log(JSON.stringify(this.getDownloadedPlaylistsInfo(), null, 2))
-					}
+					this.updateDownloadedPlaylists(newRootPath)
 				})
 			}, 200)
 		}
 	}
 
-	private downloadsInfo: downloadsInfoSchema = {}
-	private async editDownloadsInfo (newDownloadsInfo: downloadsInfoSchema) {
+	protected downloadsInfo: downloadsInfoSchema = {}
+	protected async editDownloadsInfo (newDownloadsInfo: downloadsInfoSchema) {
 		const editFileSuccess = await editFile(newDownloadsInfo, downloadsInfoFilePath)
 		if (editFileSuccess) this.downloadsInfo = newDownloadsInfo
 		return editFileSuccess
 	}
 
-	private async updateDownloadsInfo () {
+	protected async updateDownloadsInfo () {
 		let downloadedPlaylistsInfoFromFile: downloadsInfoSchema = { [this.rootPath]: {} }
 
 		try {
@@ -70,11 +71,17 @@ export class DownloadManager {
 		this.downloadsInfo = downloadedPlaylistsInfoFromFile
 	}
 
-	public getDownloadedPlaylistsInfo () { return this.downloadsInfo[this.rootPath] }
-	private async setDownloadedPlaylistsInfo (newDownloadedPlaylistsInfo: downloadedPlaylistsInfoSchema) {
+	public getDownloadedPlaylistsInfo (rootPath: string = this.rootPath) {
+		return JSON.parse(JSON.stringify(this.downloadsInfo[rootPath])) as downloadedPlaylistsInfoSchema
+	}
+
+	protected async setDownloadedPlaylistsInfo (
+		newDownloadedPlaylistsInfo: downloadedPlaylistsInfoSchema,
+		rootPath: string = this.rootPath
+	) {
 		return await this.editDownloadsInfo({
 			...this.downloadsInfo,
-			[this.rootPath]: newDownloadedPlaylistsInfo
+			[rootPath]: newDownloadedPlaylistsInfo
 		})
 	}
 
@@ -103,6 +110,9 @@ export class DownloadManager {
 			}
 		})
 	}
+
+	protected apiUpdatedPlaylists: downloadedPlaylistsInfoSchema = {}
+	protected updateDownloadedPlaylists = updateDownloadedPlaylists
 }
 
 const downloadManager = new DownloadManager()
