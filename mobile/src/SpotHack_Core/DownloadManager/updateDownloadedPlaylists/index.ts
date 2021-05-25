@@ -3,12 +3,12 @@ import { DownloadManager } from '../index'
 import { ToastAndroid } from 'react-native'
 
 import updatePlaylistsNames from './updatePlaylistsNames'
+import verifyFileTree from './verifyFileTree'
 
 import spotifyApi from '../../../services/spotify/spotifyApi'
 
 import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
 import createYoutubeQuery from '../../../utils/createYoutubeQuery'
-import removeSpecialChars from '../../../utils/removeSpecialChars'
 
 export default async function (this: DownloadManager, currentRootPath: string) {
 	const downloadedPlaylistsInfo = this.getDownloadedPlaylistsInfo()
@@ -35,20 +35,15 @@ export default async function (this: DownloadManager, currentRootPath: string) {
 
 	if (currentRootPath !== this.rootPath) return
 
-	const playlistsNamesUpdated = await updatePlaylistsNames(downloadedPlaylistsInfo, this.apiUpdatedPlaylists, currentRootPath)
+	await updatePlaylistsNames(downloadedPlaylistsInfo, this.apiUpdatedPlaylists, currentRootPath)
 
-	for (const playlistId in playlistsNamesUpdated) {
-		const playlistUpdateInfo = playlistsNamesUpdated[playlistId]
-		const playlistStored = downloadedPlaylistsInfo[playlistUpdateInfo.playlistId]
+	if (currentRootPath !== this.rootPath) return
 
-		playlistStored.playlistName = playlistUpdateInfo.newName
+	const downloadedPlaylistInfoOnDevice = await verifyFileTree(downloadedPlaylistsInfo, this.apiUpdatedPlaylists, currentRootPath)
 
-		playlistStored.tracks = playlistStored.tracks.filter(track => {
-			return playlistUpdateInfo.ytQueryOfMovedTracks.includes(removeSpecialChars(track.youtubeQuery))
-		})
-	}
+	await this.setDownloadedPlaylistsInfo(downloadedPlaylistInfoOnDevice, currentRootPath)
 
-	await this.setDownloadedPlaylistsInfo(downloadedPlaylistsInfo, currentRootPath)
+	if (currentRootPath !== this.rootPath) return
 
 	this.arePlaylistsUpdatedValue = true
 	ToastAndroid.show('Playlists Updated', ToastAndroid.SHORT)
