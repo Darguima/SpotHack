@@ -4,11 +4,10 @@ import removeSpecialChars from '../../../utils/removeSpecialChars'
 import { downloadedPlaylistsInfoSchema } from '../index'
 
 export default async (
-	downloadedPlaylistsInfo: downloadedPlaylistsInfoSchema,
 	apiUpdatedPlaylists: downloadedPlaylistsInfoSchema,
 	rootPath: string
 ) => {
-	const playlistsIdsNames = Object.keys(downloadedPlaylistsInfo)
+	const playlistsIdsNames = Object.keys(apiUpdatedPlaylists)
 		.map(playlistId => ({
 			playlistId,
 			playlistName: apiUpdatedPlaylists[playlistId].playlistName

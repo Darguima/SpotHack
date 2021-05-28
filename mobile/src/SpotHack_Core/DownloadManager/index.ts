@@ -1,18 +1,6 @@
-import * as RNFS from 'react-native-fs'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import updateDownloadedPlaylists from './updateDownloadedPlaylists'
-
-const downloadsInfoFilePath = RNFS.CachesDirectoryPath + '/downloadedPlaylistsInfo.json'
-
-const editFile = async (object: any, filePath: string) => {
-	try {
-		if (await RNFS.exists(filePath)) { await RNFS.unlink(filePath) }
-		await RNFS.writeFile(filePath, JSON.stringify(object))
-		return 1
-	} catch (err) {
-		return 0
-	}
-}
 
 export interface downloadedMusicInfoSchema {
 	title: string,
@@ -57,33 +45,48 @@ export class DownloadManager {
 
 	protected downloadsInfo: downloadsInfoSchema = {}
 	protected async editDownloadsInfo (newDownloadsInfo: downloadsInfoSchema) {
-		const editFileSuccess = await editFile(newDownloadsInfo, downloadsInfoFilePath)
-		if (editFileSuccess) this.downloadsInfo = newDownloadsInfo
-		return editFileSuccess
+		const downloadsInfoWithoutTracks: downloadsInfoSchema = {}
+
+		// Don't is needed store the tracks info
+		for (const rootPath in newDownloadsInfo) {
+			downloadsInfoWithoutTracks[rootPath] = {}
+			for (const playlistId in newDownloadsInfo[rootPath]) {
+				downloadsInfoWithoutTracks[rootPath][playlistId] = {
+					playlistName: newDownloadsInfo[rootPath][playlistId].playlistName,
+					tracks: playlistId !== '0'
+						?					[]
+						:					newDownloadsInfo[rootPath][playlistId].tracks
+				}
+			}
+		}
+
+		await AsyncStorage.setItem('@SpotHackDlManager:downloadsInfo', JSON.stringify(downloadsInfoWithoutTracks))
+		this.downloadsInfo = newDownloadsInfo
 	}
 
 	protected async updateDownloadsInfo () {
-		let downloadedPlaylistsInfoFromFile: downloadsInfoSchema = { [this.rootPath]: {} }
+		let updatedDownloadedPlaylistsInfo: downloadsInfoSchema = { [this.rootPath]: {} }
+		const storedDownloadedPlaylistsInfo = await AsyncStorage.getItem('@SpotHackDlManager:downloadsInfo')
 
-		try {
-			downloadedPlaylistsInfoFromFile = {
-				...downloadedPlaylistsInfoFromFile, // [this.rootPath]: {}
-				...JSON.parse(await RNFS.readFile(downloadsInfoFilePath))
+		if (storedDownloadedPlaylistsInfo) {
+			updatedDownloadedPlaylistsInfo = {
+				...updatedDownloadedPlaylistsInfo, // [this.rootPath]: {}
+				...JSON.parse(storedDownloadedPlaylistsInfo)
 			}
-		} catch (err) {}
+		}
 
-		this.downloadsInfo = downloadedPlaylistsInfoFromFile
+		this.downloadsInfo = updatedDownloadedPlaylistsInfo
 	}
 
-	public getDownloadedPlaylistsInfo (rootPath: string = this.rootPath) {
-		return JSON.parse(JSON.stringify(this.downloadsInfo[rootPath])) as downloadedPlaylistsInfoSchema
+	public getDownloadedPlaylistsInfo (rootPath: string = this.rootPath): downloadedPlaylistsInfoSchema {
+		return JSON.parse(JSON.stringify(this.downloadsInfo[rootPath]))
 	}
 
 	protected async setDownloadedPlaylistsInfo (
 		newDownloadedPlaylistsInfo: downloadedPlaylistsInfoSchema,
 		rootPath: string = this.rootPath
 	) {
-		return await this.editDownloadsInfo({
+		await this.editDownloadsInfo({
 			...this.downloadsInfo,
 			[rootPath]: newDownloadedPlaylistsInfo
 		})
@@ -103,7 +106,7 @@ export class DownloadManager {
 			}
 		}
 
-		return await this.setDownloadedPlaylistsInfo({
+		await this.setDownloadedPlaylistsInfo({
 			...currentDownloadedPlaylistsInfo,
 			[playlistId]: {
 				playlistName,

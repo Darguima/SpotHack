@@ -12,10 +12,10 @@ import createYoutubeQuery from '../../../utils/createYoutubeQuery'
 
 export default async function (this: DownloadManager, currentRootPath: string) {
 	const downloadedPlaylistsInfo = this.getDownloadedPlaylistsInfo()
-	delete downloadedPlaylistsInfo['0']
 
 	if (currentRootPath !== this.rootPath) return
 
+	if (downloadedPlaylistsInfo[0]) { this.apiUpdatedPlaylists[0] = downloadedPlaylistsInfo[0] }
 	await Promise.all(
 		Object.keys(downloadedPlaylistsInfo).map(async playlistId => {
 			if (Object.keys(this.apiUpdatedPlaylists).includes(playlistId)) return
@@ -39,7 +39,7 @@ export default async function (this: DownloadManager, currentRootPath: string) {
 
 	if (currentRootPath !== this.rootPath) return
 
-	const downloadedPlaylistInfoOnDevice = await verifyFileTree(downloadedPlaylistsInfo, this.apiUpdatedPlaylists, currentRootPath)
+	const downloadedPlaylistInfoOnDevice = await verifyFileTree(this.apiUpdatedPlaylists, currentRootPath)
 
 	await this.setDownloadedPlaylistsInfo(downloadedPlaylistInfoOnDevice, currentRootPath)
 

@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-community/async-storage'
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import AsyncStorage from '@react-native-community/async-storage'
 
-import { DownloadDirectoryPath } from 'react-native-fs'
+import { mkdir, DownloadDirectoryPath } from 'react-native-fs'
 
 import downloadMachine from '../SpotHack_Core/DownloadMachine'
 
@@ -49,12 +49,16 @@ export const SpotHackSettingsProvider: React.FC = ({ children }) => {
 	}, [])
 
 	useEffect(() => {
-		// Change on the downloadMachine the rootPath
-		if (prevSpotHackSettingsRef.current.rootPath !== spotHackSettings.rootPath) {
-			downloadMachine.setFinalPath(spotHackSettings.rootPath)
-		}
+		(async () => {
+			await mkdir(spotHackSettings.rootPath)
 
-		prevSpotHackSettingsRef.current = spotHackSettings
+			// Change on the downloadMachine the rootPath
+			if (prevSpotHackSettingsRef.current.rootPath !== spotHackSettings.rootPath) {
+				downloadMachine.setFinalPath(spotHackSettings.rootPath)
+			}
+
+			prevSpotHackSettingsRef.current = spotHackSettings
+		})()
 	}, [spotHackSettings])
 
 	const saveNewSpotHackSettings = (newSpotHackSettings: Partial<spotHackSettingsSchema>) => {

@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-community/async-storage'
 import spotifyOAuth from '../services/spotify/spotifyOAuth'
 import spotifyApi from '../services/spotify/spotifyApi'
 import Axios from 'axios'
-import { unlink as removeFile, CachesDirectoryPath } from 'react-native-fs'
 
 interface AuthContextData {
 	loading: boolean,
@@ -29,7 +28,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 	const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
 	const [refreshToken, seRefreshToken] = useState<string | undefined>(undefined)
 
-	// Take the saved data from Asyncstorage
+	// Take the saved data from AsyncStorage
 	useEffect(() => {
 		(async () => {
 			const [[, oAuthCodeStored], [, accessTokenStored], [, refreshTokenStored]] = await AsyncStorage.multiGet(
@@ -149,7 +148,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 				setErrorOnLogin('')
 
 				AsyncStorage.clear()
-				removeFile(CachesDirectoryPath + '/downloadedPlaylistsInfo.json')
 
 				spotifyApi.defaults.headers.Authorization = ''
 
