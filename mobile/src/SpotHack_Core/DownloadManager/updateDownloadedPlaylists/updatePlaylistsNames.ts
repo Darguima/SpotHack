@@ -13,6 +13,7 @@ export default async (
 
 	const playlistsWithDifferentName = playlistsIds
 		.filter(playlistId => {
+			if (!downloadedPlaylistsInfo[playlistId] || !apiUpdatedPlaylists[playlistId]) return false
 			return downloadedPlaylistsInfo[playlistId].playlistName !== apiUpdatedPlaylists[playlistId].playlistName
 		})
 		.map(playlistId => ({

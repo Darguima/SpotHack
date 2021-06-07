@@ -11,8 +11,7 @@ export default async (
 		.map(playlistId => ({
 			playlistId,
 			playlistName: apiUpdatedPlaylists[playlistId].playlistName
-		})
-		)
+		}))
 
 	const playlistsOnRootPath = (await RNFS.readDir(rootPath))
 		.filter(possibleDirectory => possibleDirectory.isDirectory())
@@ -21,7 +20,7 @@ export default async (
 				return removeSpecialChars(playlist.playlistName) === possiblePlaylist.name
 			})
 		})
-		.filter(possibleUndefined => possibleUndefined !== undefined) as {playlistId: string;playlistName: string;}[]
+		.filter(possibleUndefined => possibleUndefined !== undefined) as { playlistId: string; playlistName: string; }[]
 		// For some reason typescript don't consider this filter and say that the value is possible undefined
 
 	const fileTree: downloadedPlaylistsInfoSchema[] =

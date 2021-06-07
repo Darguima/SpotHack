@@ -5,33 +5,9 @@ import { ToastAndroid } from 'react-native'
 import updatePlaylistsNames from './updatePlaylistsNames'
 import verifyFileTree from './verifyFileTree'
 
-import spotifyApi from '../../../services/spotify/spotifyApi'
-
-import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
-import createYoutubeQuery from '../../../utils/createYoutubeQuery'
-
 export default async function (this: DownloadManager, currentRootPath: string) {
 	const downloadedPlaylistsInfo = this.getDownloadedPlaylistsInfo()
-
-	if (currentRootPath !== this.rootPath) return
-
 	if (downloadedPlaylistsInfo[0]) { this.apiUpdatedPlaylists[0] = downloadedPlaylistsInfo[0] }
-	await Promise.all(
-		Object.keys(downloadedPlaylistsInfo).map(async playlistId => {
-			if (Object.keys(this.apiUpdatedPlaylists).includes(playlistId)) return
-			const updatedPlaylist: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${playlistId}`)).data
-
-			if (currentRootPath !== this.rootPath) return
-			this.apiUpdatedPlaylists[playlistId] = {
-				playlistName: updatedPlaylist.name,
-				tracks: updatedPlaylist.tracks.items.map(({ track }) => ({
-					spotifyId: track.id,
-					title: track.name,
-					artists: convertArtistsArrayToString(track.artists),
-					youtubeQuery: createYoutubeQuery(convertArtistsArrayToString(track.artists), track.name)
-				}))
-			}
-		}))
 
 	if (currentRootPath !== this.rootPath) return
 

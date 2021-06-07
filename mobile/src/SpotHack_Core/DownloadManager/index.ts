@@ -2,6 +2,11 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 import updateDownloadedPlaylists from './updateDownloadedPlaylists'
 
+import spotifyApi from '../../services/spotify/spotifyApi'
+
+import convertArtistsArrayToString from '../../utils/convertArtistsArrayToString'
+import createYoutubeQuery from '../../utils/createYoutubeQuery'
+
 export interface downloadedMusicInfoSchema {
 	title: string,
 	artists: string,
@@ -33,8 +38,10 @@ export class DownloadManager {
 			this.arePlaylistsUpdatedValue = false
 
 			setTimeout(() => {
-				this.updateDownloadsInfo().then(() => {
-					this.updateDownloadedPlaylists(newRootPath)
+				this.updateAlreadyDownloadedPlaylistsIds().then(() => {
+					this.updateDownloadsInfo().then(() => {
+						this.updateDownloadedPlaylists(newRootPath)
+					})
 				})
 			}, 200)
 		}
@@ -74,6 +81,19 @@ export class DownloadManager {
 				...JSON.parse(storedDownloadedPlaylistsInfo)
 			}
 		}
+
+		await Promise.all(
+			Object.keys(updatedDownloadedPlaylistsInfo)
+				.map(rootPath => {
+					return Object.keys(updatedDownloadedPlaylistsInfo[rootPath])
+				})
+				.reduce((prevArrayStrings, currentArrayStrings) => {
+					return [...prevArrayStrings, ...currentArrayStrings]
+				})
+				.map(async playlistId => {
+					await this.addAlreadyDownloadedPlaylistId(playlistId)
+				})
+		)
 
 		this.downloadsInfo = updatedDownloadedPlaylistsInfo
 	}
@@ -116,9 +136,70 @@ export class DownloadManager {
 				]
 			}
 		})
+
+		await this.addAlreadyDownloadedPlaylistId(playlistId)
 	}
 
 	protected apiUpdatedPlaylists: downloadedPlaylistsInfoSchema = {}
+	protected async getApiUpdatedPlaylist (playlistId: string): Promise<downloadedPlaylistInfoSchema | undefined> {
+		if (!this.apiUpdatedPlaylists[playlistId]) {
+			const apiPlaylist: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${playlistId}`)).data
+
+			if (!apiPlaylist) return
+
+			this.apiUpdatedPlaylists[playlistId] = {
+				playlistName: apiPlaylist.name,
+				tracks: apiPlaylist.tracks.items.map(({ track }) => ({
+					spotifyId: track.id,
+					title: track.name,
+					artists: convertArtistsArrayToString(track.artists),
+					youtubeQuery: createYoutubeQuery(convertArtistsArrayToString(track.artists), track.name)
+				}))
+			}
+		}
+
+		return JSON.parse(JSON.stringify(this.apiUpdatedPlaylists[playlistId]))
+	}
+
+	protected alreadyDownloadedPlaylistsIds: string[] = []
+	protected async updateAlreadyDownloadedPlaylistsIds () {
+		const storedAlreadyDownloadedPlaylistsIds = await AsyncStorage.getItem('@SpotHackDlManager:alreadyDownloadedPlaylistsIds')
+
+		if (storedAlreadyDownloadedPlaylistsIds) {
+			const updatedAlreadyDownloadedPlaylistsIds: string[] = JSON.parse(storedAlreadyDownloadedPlaylistsIds)
+
+			const apiSuccessPlaylistsRequests = (
+				await Promise.all(
+					updatedAlreadyDownloadedPlaylistsIds
+						.map(async (playlistId: string) => {
+							if (await this.getApiUpdatedPlaylist(playlistId)) {
+								return playlistId
+							}
+						})
+				)
+			).filter(possibleUndefined => possibleUndefined !== undefined) as string[]
+
+			this.alreadyDownloadedPlaylistsIds = apiSuccessPlaylistsRequests
+			await AsyncStorage.setItem(
+				'@SpotHackDlManager:alreadyDownloadedPlaylistsIds',
+				JSON.stringify(apiSuccessPlaylistsRequests)
+			)
+		}
+	}
+
+	protected async addAlreadyDownloadedPlaylistId (playlistId: string) {
+		if (playlistId === '0') return
+		if (this.alreadyDownloadedPlaylistsIds.indexOf(playlistId) !== -1) return
+
+		if (await this.getApiUpdatedPlaylist(playlistId)) {
+			this.alreadyDownloadedPlaylistsIds.push(playlistId)
+			await AsyncStorage.setItem(
+				'@SpotHackDlManager:alreadyDownloadedPlaylistsIds',
+				JSON.stringify(this.alreadyDownloadedPlaylistsIds)
+			)
+		}
+	}
+
 	protected updateDownloadedPlaylists = updateDownloadedPlaylists
 }
 
