@@ -180,11 +180,42 @@ export class DownloadManager {
 			).filter(possibleUndefined => possibleUndefined !== undefined) as string[]
 
 			this.alreadyDownloadedPlaylistsIds = apiSuccessPlaylistsRequests
-			await AsyncStorage.setItem(
-				'@SpotHackDlManager:alreadyDownloadedPlaylistsIds',
-				JSON.stringify(apiSuccessPlaylistsRequests)
-			)
 		}
+
+		let userPlaylistsUrl = 'me/playlists'
+		while (1) {
+			const userPlaylists: SpotifyApi.ListOfUsersPlaylistsResponse = (await spotifyApi.get(
+				userPlaylistsUrl,
+				{
+					params: {
+						limit: 50
+					}
+				}
+			)).data
+
+			if (userPlaylists) {
+				const playlistsIds = userPlaylists.items.map(playlist => playlist.id)
+
+				await Promise.all(
+					playlistsIds
+						.map(async (playlistId: string) => {
+							await this.getApiUpdatedPlaylist(playlistId)
+						})
+				)
+
+				this.alreadyDownloadedPlaylistsIds = [...this.alreadyDownloadedPlaylistsIds, ...playlistsIds]
+
+				if (!userPlaylists.next) break
+				userPlaylistsUrl = userPlaylists.next.replace(spotifyApi.defaults.baseURL || '', '')
+			} else break
+		}
+
+		// Remove repeated Ids
+		this.alreadyDownloadedPlaylistsIds = [...new Set(this.alreadyDownloadedPlaylistsIds)]
+		await AsyncStorage.setItem(
+			'@SpotHackDlManager:alreadyDownloadedPlaylistsIds',
+			JSON.stringify(this.alreadyDownloadedPlaylistsIds)
+		)
 	}
 
 	protected async addAlreadyDownloadedPlaylistId (playlistId: string) {
@@ -206,3 +237,6 @@ export class DownloadManager {
 const downloadManager = new DownloadManager()
 
 export default downloadManager
+
+// examinar todas as pastas ao mesmo tempo (n deve ser preciso analisar as tracks)
+// Adicionar os ids das playlists favoritadas
