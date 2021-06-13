@@ -1,45 +1,50 @@
 import * as RNFS from 'react-native-fs'
 
-import { downloadedPlaylistsInfoSchema } from '../index'
+import { downloadedPlaylistsInfoSchema, downloadsInfoSchema } from '../index'
 
 import removeSpecialChars from '../../../utils/removeSpecialChars'
 
 export default async (
-	downloadedPlaylistsInfo: downloadedPlaylistsInfoSchema,
-	apiUpdatedPlaylists: downloadedPlaylistsInfoSchema,
-	rootPath: string
+	downloadsInfo: downloadsInfoSchema,
+	apiUpdatedPlaylists: downloadedPlaylistsInfoSchema
 ) => {
-	const playlistsIds = Object.keys(downloadedPlaylistsInfo)
-
-	const playlistsWithDifferentName = playlistsIds
-		.filter(playlistId => {
-			if (!downloadedPlaylistsInfo[playlistId] || !apiUpdatedPlaylists[playlistId]) return false
-			return downloadedPlaylistsInfo[playlistId].playlistName !== apiUpdatedPlaylists[playlistId].playlistName
-		})
-		.map(playlistId => ({
-			currentPath: rootPath + removeSpecialChars(downloadedPlaylistsInfo[playlistId].playlistName),
-			newPath: rootPath + removeSpecialChars(apiUpdatedPlaylists[playlistId].playlistName)
-		}))
-
 	await Promise.all(
-		playlistsWithDifferentName.map(async playlist => {
-			if (!await RNFS.exists(playlist.currentPath)) return
+		Object.keys(downloadsInfo).map(async path => {
+			const playlistsOnPath = downloadsInfo[path]
 
-			await RNFS.mkdir(playlist.newPath)
+			const playlistsIds = Object.keys(playlistsOnPath)
+
+			const playlistsWithDifferentName = playlistsIds
+				.filter(playlistId => {
+					if (!playlistsOnPath[playlistId] || !apiUpdatedPlaylists[playlistId]) return false
+					return playlistsOnPath[playlistId].playlistName !== apiUpdatedPlaylists[playlistId].playlistName
+				})
+				.map(playlistId => ({
+					currentPath: path + removeSpecialChars(playlistsOnPath[playlistId].playlistName),
+					newPath: path + removeSpecialChars(apiUpdatedPlaylists[playlistId].playlistName)
+				}))
 
 			await Promise.all(
-				(await RNFS.readDir(playlist.currentPath))
-					.filter(possibleFile => possibleFile.isFile())
-					.map(musicFile => ({
-						currentPath: playlist.currentPath + '/' + musicFile.name,
-						newPath: playlist.newPath + '/' + musicFile.name
-					}))
-					.map(async musicToMove => {
-						await RNFS.moveFile(musicToMove.currentPath, musicToMove.newPath)
-					})
-			)
+				playlistsWithDifferentName.map(async playlist => {
+					if (!await RNFS.exists(playlist.currentPath)) return
 
-			await RNFS.unlink(playlist.currentPath)
+					await RNFS.mkdir(playlist.newPath)
+
+					await Promise.all(
+						(await RNFS.readDir(playlist.currentPath))
+							.filter(possibleFile => possibleFile.isFile())
+							.map(musicFile => ({
+								currentPath: playlist.currentPath + '/' + musicFile.name,
+								newPath: playlist.newPath + '/' + musicFile.name
+							}))
+							.map(async musicToMove => {
+								await RNFS.moveFile(musicToMove.currentPath, musicToMove.newPath)
+							})
+					)
+
+					await RNFS.unlink(playlist.currentPath)
+				})
+			)
 		})
 	)
 }

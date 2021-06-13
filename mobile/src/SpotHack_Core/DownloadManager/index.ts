@@ -30,28 +30,23 @@ export interface downloadsInfoSchema {
 }
 
 export class DownloadManager {
-	protected rootPathValue = ''
-	get rootPath () { return this.rootPathValue }
-	set rootPath (newRootPath) {
-		if (this.rootPathValue !== newRootPath) {
-			this.rootPathValue = newRootPath
-			this.arePlaylistsUpdatedValue = false
-
-			setTimeout(() => {
-				this.updateAlreadyDownloadedPlaylistsIds().then(() => {
-					this.updateDownloadsInfo().then(() => {
-						this.updateDownloadedPlaylists(newRootPath)
-					})
-				})
-			}, 200)
-		}
+	constructor () {
+		this.getStoredAlreadyDownloadedPlaylistsIds().then(() => {
+			this.getStoredDownloadsInfo().then(() => {
+				this.updateDownloadedPlaylists()
+			})
+		})
 	}
 
-	protected arePlaylistsUpdatedValue = false
-	get arePlaylistsUpdated () { return this.arePlaylistsUpdatedValue }
+	public rootPath = ''
 
-	protected downloadsInfo: downloadsInfoSchema = {}
-	protected async editDownloadsInfo (newDownloadsInfo: downloadsInfoSchema) {
+	public arePlaylistsUpdated = false
+
+	private downloadsInfoObject: downloadsInfoSchema = {}
+	protected get downloadsInfo () { return JSON.parse(JSON.stringify(this.downloadsInfoObject)) as downloadsInfoSchema }
+	protected set downloadsInfo (newDownloadsInfo) {
+		this.downloadsInfoObject = newDownloadsInfo
+
 		const downloadsInfoWithoutTracks: downloadsInfoSchema = {}
 
 		// Don't is needed store the tracks info
@@ -67,25 +62,24 @@ export class DownloadManager {
 			}
 		}
 
-		await AsyncStorage.setItem('@SpotHackDlManager:downloadsInfo', JSON.stringify(downloadsInfoWithoutTracks))
-		this.downloadsInfo = newDownloadsInfo
+		AsyncStorage.setItem('@SpotHackDlManager:downloadsInfo', JSON.stringify(downloadsInfoWithoutTracks))
 	}
 
-	protected async updateDownloadsInfo () {
-		let updatedDownloadedPlaylistsInfo: downloadsInfoSchema = { [this.rootPath]: {} }
+	protected async getStoredDownloadsInfo () {
+		let newDownloadedPlaylistsInfo: downloadsInfoSchema = { [this.rootPath]: {} }
 		const storedDownloadedPlaylistsInfo = await AsyncStorage.getItem('@SpotHackDlManager:downloadsInfo')
 
 		if (storedDownloadedPlaylistsInfo) {
-			updatedDownloadedPlaylistsInfo = {
-				...updatedDownloadedPlaylistsInfo, // [this.rootPath]: {}
+			newDownloadedPlaylistsInfo = {
+				...newDownloadedPlaylistsInfo, // [this.rootPath]: {}
 				...JSON.parse(storedDownloadedPlaylistsInfo)
 			}
 		}
 
 		await Promise.all(
-			Object.keys(updatedDownloadedPlaylistsInfo)
+			Object.keys(newDownloadedPlaylistsInfo)
 				.map(rootPath => {
-					return Object.keys(updatedDownloadedPlaylistsInfo[rootPath])
+					return Object.keys(newDownloadedPlaylistsInfo[rootPath])
 				})
 				.reduce((prevArrayStrings, currentArrayStrings) => {
 					return [...prevArrayStrings, ...currentArrayStrings]
@@ -95,21 +89,18 @@ export class DownloadManager {
 				})
 		)
 
-		this.downloadsInfo = updatedDownloadedPlaylistsInfo
+		this.downloadsInfo = newDownloadedPlaylistsInfo
 	}
 
-	public getDownloadedPlaylistsInfo (rootPath: string = this.rootPath): downloadedPlaylistsInfoSchema {
+	public getPlaylistsOnPathInfo (rootPath: string = this.rootPath): downloadedPlaylistsInfoSchema {
 		return JSON.parse(JSON.stringify(this.downloadsInfo[rootPath]))
 	}
 
-	protected async setDownloadedPlaylistsInfo (
-		newDownloadedPlaylistsInfo: downloadedPlaylistsInfoSchema,
-		rootPath: string = this.rootPath
-	) {
-		await this.editDownloadsInfo({
+	protected setPlaylistsOnPathInfo (newPlaylistsInfo: downloadedPlaylistsInfoSchema, rootPath: string = this.rootPath) {
+		this.downloadsInfo = {
 			...this.downloadsInfo,
-			[rootPath]: newDownloadedPlaylistsInfo
-		})
+			[rootPath]: newPlaylistsInfo
+		}
 	}
 
 	public async addDownloadedMusicInfo (
@@ -117,7 +108,7 @@ export class DownloadManager {
 		playlistName: string,
 		musicInfo: downloadedMusicInfoSchema
 	) {
-		const currentDownloadedPlaylistsInfo = this.getDownloadedPlaylistsInfo()
+		const currentDownloadedPlaylistsInfo = this.getPlaylistsOnPathInfo()
 
 		if (!currentDownloadedPlaylistsInfo[playlistId]) {
 			currentDownloadedPlaylistsInfo[playlistId] = {
@@ -126,7 +117,7 @@ export class DownloadManager {
 			}
 		}
 
-		await this.setDownloadedPlaylistsInfo({
+		this.setPlaylistsOnPathInfo({
 			...currentDownloadedPlaylistsInfo,
 			[playlistId]: {
 				playlistName,
@@ -162,9 +153,10 @@ export class DownloadManager {
 	}
 
 	protected alreadyDownloadedPlaylistsIds: string[] = []
-	protected async updateAlreadyDownloadedPlaylistsIds () {
+	protected async getStoredAlreadyDownloadedPlaylistsIds () {
 		const storedAlreadyDownloadedPlaylistsIds = await AsyncStorage.getItem('@SpotHackDlManager:alreadyDownloadedPlaylistsIds')
 
+		// Playlists Ids saved on AsyncStorage
 		if (storedAlreadyDownloadedPlaylistsIds) {
 			const updatedAlreadyDownloadedPlaylistsIds: string[] = JSON.parse(storedAlreadyDownloadedPlaylistsIds)
 
@@ -182,6 +174,7 @@ export class DownloadManager {
 			this.alreadyDownloadedPlaylistsIds = apiSuccessPlaylistsRequests
 		}
 
+		// Playlists Ids from followed/created playlists on Spotify
 		let userPlaylistsUrl = 'me/playlists'
 		while (1) {
 			const userPlaylists: SpotifyApi.ListOfUsersPlaylistsResponse = (await spotifyApi.get(
@@ -237,6 +230,3 @@ export class DownloadManager {
 const downloadManager = new DownloadManager()
 
 export default downloadManager
-
-// examinar todas as pastas ao mesmo tempo (n deve ser preciso analisar as tracks)
-// Adicionar os ids das playlists favoritadas

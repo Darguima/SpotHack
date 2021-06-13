@@ -19,7 +19,7 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 
 	if (!downloadManager.arePlaylistsUpdated) return { successCode: 0, msg: 'Updating playlists - wait a moment' }
 
-	const downloadedPlaylistsInfo = downloadManager.getDownloadedPlaylistsInfo()
+	const playlistsOnRootPathInfo = downloadManager.getPlaylistsOnPathInfo()
 
 	playlist.forEach(item => {
 		// Ignore repeated downloads
@@ -29,8 +29,8 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 
 		let alreadyDownloaded = false
 
-		if (downloadedPlaylistsInfo[item.playlistId]) {
-			if (downloadedPlaylistsInfo[item.playlistId].tracks.some(track => track.spotifyId === item.spotifyId)) {
+		if (playlistsOnRootPathInfo[item.playlistId]) {
+			if (playlistsOnRootPathInfo[item.playlistId].tracks.some(track => track.spotifyId === item.spotifyId)) {
 				alreadyDownloaded = true
 			}
 		}

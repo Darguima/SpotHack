@@ -5,22 +5,27 @@ import { ToastAndroid } from 'react-native'
 import updatePlaylistsNames from './updatePlaylistsNames'
 import verifyFileTree from './verifyFileTree'
 
-export default async function (this: DownloadManager, currentRootPath: string) {
-	const downloadedPlaylistsInfo = this.getDownloadedPlaylistsInfo()
-	if (downloadedPlaylistsInfo[0]) { this.apiUpdatedPlaylists[0] = downloadedPlaylistsInfo[0] }
+export default async function (this: DownloadManager) {
+	const downloadsInfo = this.downloadsInfo
 
-	if (currentRootPath !== this.rootPath) return
+	this.apiUpdatedPlaylists[0] = { playlistName: 'SpotHack_Music', tracks: [] }
+	Object.keys(downloadsInfo).forEach(path => {
+		const playlistsOnPath = downloadsInfo[path]
+		if (playlistsOnPath[0]) {
+			playlistsOnPath[0].tracks.forEach(trackOnPath => {
+				if (!this.apiUpdatedPlaylists[0].tracks.some(apiTrack => apiTrack.spotifyId === trackOnPath.spotifyId)) {
+					this.apiUpdatedPlaylists[0].tracks.push(trackOnPath)
+				}
+			})
+		}
+	})
 
-	await updatePlaylistsNames(downloadedPlaylistsInfo, this.apiUpdatedPlaylists, currentRootPath)
+	await updatePlaylistsNames(downloadsInfo, this.apiUpdatedPlaylists)
 
-	if (currentRootPath !== this.rootPath) return
+	const downloadedPlaylistInfoOnDevice = await verifyFileTree(downloadsInfo, this.apiUpdatedPlaylists)
 
-	const downloadedPlaylistInfoOnDevice = await verifyFileTree(this.apiUpdatedPlaylists, currentRootPath)
+	this.downloadsInfo = downloadedPlaylistInfoOnDevice
 
-	await this.setDownloadedPlaylistsInfo(downloadedPlaylistInfoOnDevice, currentRootPath)
-
-	if (currentRootPath !== this.rootPath) return
-
-	this.arePlaylistsUpdatedValue = true
+	this.arePlaylistsUpdated = true
 	ToastAndroid.show('Playlists Updated', ToastAndroid.SHORT)
 }
