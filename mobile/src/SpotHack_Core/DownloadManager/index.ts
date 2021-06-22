@@ -6,6 +6,7 @@ import spotifyApi from '../../services/spotify/spotifyApi'
 
 import convertArtistsArrayToString from '../../utils/convertArtistsArrayToString'
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
+import { getExternalStoragePermissions } from '../../utils/getStoragePermissions'
 
 export interface downloadedMusicInfoSchema {
 	title: string,
@@ -30,12 +31,23 @@ export interface downloadsInfoSchema {
 }
 
 export class DownloadManager {
-	constructor () {
-		this.getStoredAlreadyDownloadedPlaylistsIds().then(() => {
-			this.getStoredDownloadsInfo().then(() => {
-				this.updateDownloadedPlaylists()
+	/*
+		* This should be used on app start and only if the user is already logged in
+		* At this moment is being called on:
+			`/src/routes/index.tsx`
+			`/src/SpotHack_Core/DownloadMachine/machineMethods/addMusicsToDownloadQueue.ts`
+	*/
+	public downloadManagerStarted = false
+	public async startDownloadManager () {
+		if (await getExternalStoragePermissions() && this.downloadManagerStarted === false) {
+			this.downloadManagerStarted = true
+
+			this.getStoredAlreadyDownloadedPlaylistsIds().then(() => {
+				this.getStoredDownloadsInfo().then(() => {
+					this.updateDownloadedPlaylists()
+				})
 			})
-		})
+		}
 	}
 
 	public rootPath = ''

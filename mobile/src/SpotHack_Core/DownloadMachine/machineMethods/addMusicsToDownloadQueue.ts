@@ -7,7 +7,7 @@ import { getExternalStoragePermissions } from '../../../utils/getStoragePermissi
 
 interface addMusicsToDownloadQueueReturnSchema {
 	successCode: 0 | 1,
-	msg: 'success' | 'Storage Permissions missing' | 'Updating playlists - wait a moment'
+	msg: 'success' | 'Storage Permissions missing' | 'Updating playlists - wait a moment' | 'Starting update the playlists - wait a moment'
 }
 
 export default async function addMusicsToDownloadQueue (this: DownloadMachine, playlist: Array<musicForQueueSchema>): Promise<addMusicsToDownloadQueueReturnSchema> {
@@ -17,7 +17,13 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 		if (!this.storagePermissions) return { successCode: 0, msg: 'Storage Permissions missing' }
 	}
 
-	if (!downloadManager.arePlaylistsUpdated) return { successCode: 0, msg: 'Updating playlists - wait a moment' }
+	if (!downloadManager.downloadManagerStarted) {
+		downloadManager.startDownloadManager()
+		return { successCode: 0, msg: 'Starting update the playlists - wait a moment' }
+	}
+	if (!downloadManager.arePlaylistsUpdated) {
+		return { successCode: 0, msg: 'Updating playlists - wait a moment' }
+	}
 
 	const playlistsOnRootPathInfo = downloadManager.getPlaylistsOnPathInfo()
 
