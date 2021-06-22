@@ -34,6 +34,7 @@ export class DownloadManager {
 	/*
 		* This should be used on app start and only if the user is already logged in
 		* At this moment is being called on:
+			this file on `set rootPath`
 			`/src/routes/index.tsx`
 			`/src/SpotHack_Core/DownloadMachine/machineMethods/addMusicsToDownloadQueue.ts`
 	*/
@@ -50,7 +51,15 @@ export class DownloadManager {
 		}
 	}
 
-	public rootPath = ''
+	private rootPathValue = ''
+	get rootPath () { return this.rootPathValue }
+	set rootPath (newRootPath) {
+		this.rootPathValue = newRootPath
+		if (!this.downloadsInfo[newRootPath]) {
+			this.downloadManagerStarted = false
+			this.startDownloadManager()
+		}
+	}
 
 	public arePlaylistsUpdated = false
 
