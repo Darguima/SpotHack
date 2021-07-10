@@ -17,7 +17,7 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 		if (!this.storagePermissions) return { successCode: 0, msg: 'Storage Permissions missing' }
 	}
 
-	if (!downloadManager.downloadManagerStarted) {
+	if (!downloadManager.downloadManagerStarted && !downloadManager.arePlaylistsUpdated) {
 		downloadManager.startDownloadManager()
 		return { successCode: 0, msg: 'Starting update the playlists - wait a moment' }
 	}
