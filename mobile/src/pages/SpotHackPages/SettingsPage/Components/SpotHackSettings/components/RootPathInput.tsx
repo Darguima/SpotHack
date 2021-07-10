@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid } from 'react-native'
 
 import useSpotHackSettings from '../../../../../../contexts/spotHackSettings'
-import { exists as existsPath, mkdir as createPath } from 'react-native-fs'
+import { exists as existsPath, mkdir as createPath, readDir } from 'react-native-fs'
 import ContentBox from '../../../../../Components/ContentBox'
 import { getExternalStoragePermissions } from '../../../../../../utils/getStoragePermissions'
 
@@ -46,8 +46,9 @@ const RootPathInput:React.FC = () => {
 
 		try {
 			if (!await existsPath(possibleNewRootPath)) {
-				createPath(possibleNewRootPath)
+				await createPath(possibleNewRootPath)
 			}
+			await readDir(possibleNewRootPath)
 
 			saveNewSpotHackSettings({ rootPath: possibleNewRootPath })
 			setRootPathIsEditable(false)
