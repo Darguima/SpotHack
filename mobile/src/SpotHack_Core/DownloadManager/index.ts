@@ -52,6 +52,8 @@ export class DownloadManager {
 		await this.getStoredAlreadyDownloadedPlaylistsIds()
 		await this.getStoredDownloadsInfo()
 		await this.updateDownloadedPlaylists()
+
+		this.downloadManagerStarted = false
 	}
 
 	private rootPathValue = ''
@@ -59,6 +61,7 @@ export class DownloadManager {
 	set rootPath (newRootPath) {
 		this.rootPathValue = newRootPath
 		if (!this.downloadsInfo[newRootPath]) {
+			this.arePlaylistsUpdated = false
 			this.startDownloadManager()
 		}
 	}
