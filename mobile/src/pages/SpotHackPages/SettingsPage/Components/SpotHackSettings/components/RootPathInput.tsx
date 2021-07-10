@@ -6,6 +6,8 @@ import { exists as existsPath, mkdir as createPath } from 'react-native-fs'
 import ContentBox from '../../../../../Components/ContentBox'
 import { getExternalStoragePermissions } from '../../../../../../utils/getStoragePermissions'
 
+import downloadManager from '../../../../../../SpotHack_Core/DownloadManager'
+
 const RootPathInput:React.FC = () => {
 	const { spotHackSettings, saveNewSpotHackSettings } = useSpotHackSettings()
 
@@ -35,6 +37,12 @@ const RootPathInput:React.FC = () => {
 		}
 
 		if (!possibleNewRootPath.endsWith('/')) possibleNewRootPath += '/'
+
+		if (downloadManager.downloadManagerStarted) {
+			setIsNewRootPathValid(false)
+			ToastAndroid.show('Updating playlists - wait a moment', ToastAndroid.LONG)
+			return
+		}
 
 		try {
 			if (!await existsPath(possibleNewRootPath)) {

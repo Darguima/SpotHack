@@ -32,7 +32,7 @@ export interface downloadsInfoSchema {
 
 export class DownloadManager {
 	/*
-		* This should be used on app start and only if the user is already logged in
+		* "startDownloadManager" function should be used on app start and only if the user is already logged in
 		* At this moment is being called on:
 			this file on `set rootPath`
 			`/src/routes/index.tsx`
@@ -40,15 +40,18 @@ export class DownloadManager {
 	*/
 	public downloadManagerStarted = false
 	public async startDownloadManager () {
-		if (await getExternalStoragePermissions() && this.downloadManagerStarted === false) {
+		if (this.downloadManagerStarted === false) {
 			this.downloadManagerStarted = true
+		} else return
 
-			this.getStoredAlreadyDownloadedPlaylistsIds().then(() => {
-				this.getStoredDownloadsInfo().then(() => {
-					this.updateDownloadedPlaylists()
-				})
-			})
+		if (!await getExternalStoragePermissions()) {
+			this.downloadManagerStarted = false
+			return
 		}
+
+		await this.getStoredAlreadyDownloadedPlaylistsIds()
+		await this.getStoredDownloadsInfo()
+		await this.updateDownloadedPlaylists()
 	}
 
 	private rootPathValue = ''
@@ -56,7 +59,6 @@ export class DownloadManager {
 	set rootPath (newRootPath) {
 		this.rootPathValue = newRootPath
 		if (!this.downloadsInfo[newRootPath]) {
-			this.downloadManagerStarted = false
 			this.startDownloadManager()
 		}
 	}
