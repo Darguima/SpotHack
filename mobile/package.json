@@ -22,7 +22,7 @@
     "axios": "^0.21.1",
     "firebase": "^8.2.1",
     "react": "16.13.1",
-    "react-native": "0.63.3",
+    "react-native": "0.64.1",
     "react-native-ffmpeg": "^0.5.1",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.9.0",
