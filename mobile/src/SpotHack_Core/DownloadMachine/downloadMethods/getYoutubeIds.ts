@@ -6,20 +6,13 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 	this.isGetYoutubeIdsActive = true
 
 	while (this.youtubeIdsQueue.length > 0) {
+		const queue = this.queue
 		const queueIndex = this.youtubeIdsQueue[0]
 
 		if (this.queue[queueIndex].youtubeId === '') {
 			const { youtubeId, infoSourceIcon, success } = await getYoutubeUrl(this.queue[queueIndex].spotifyId, '', '', this.queue[queueIndex].youtubeQuery)
-			const queue = this.queue
 
 			if (success !== 0) {
-				queue[queueIndex] = {
-					...queue[queueIndex],
-					youtubeId: youtubeId[queue[queueIndex].downloadSource],
-					progress: 2,
-					stage: 'gotten_youtubeUrl'
-				}
-
 				// downloadsStatistics
 				this.downloadsStatistics.musicsWithYoutubeId += 1
 				if (!this.downloadsStatistics.youtubeIdsSources[infoSourceIcon]) {
@@ -29,18 +22,25 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 				}
 				// =
 
+				queue[queueIndex] = {
+					...queue[queueIndex],
+					youtubeId: youtubeId[queue[queueIndex].downloadSource || this.defaultDownloadSource], // downloadSource can be "" if come from Download Manager
+					progress: 2,
+					stage: 'gotten_youtubeUrl'
+				}
+
 				this.downloadUrlsQueue.push(queueIndex)
 				if (this.isGetDownloadUrlsActive === false) this.getDownloadUrls()
 			} else {
+				// downloadsStatistics
+				this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
+				// =
+
 				queue[queueIndex] = {
 					...queue[queueIndex],
 					progress: 0,
 					stage: 'gotten_youtubeId - error'
 				}
-
-				// downloadsStatistics
-				this.downloadsStatistics.errors.push(queue[queueIndex].youtubeQuery)
-				// =
 			}
 		} else {
 			// downloadsStatistics
@@ -51,6 +51,12 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 				this.downloadsStatistics.youtubeIdsSources.spothack += 1
 			}
 			// =
+
+			queue[queueIndex] = {
+				...queue[queueIndex],
+				progress: 2,
+				stage: 'gotten_youtubeUrl'
+			}
 
 			this.downloadUrlsQueue.push(queueIndex)
 			if (this.isGetDownloadUrlsActive === false) this.getDownloadUrls()

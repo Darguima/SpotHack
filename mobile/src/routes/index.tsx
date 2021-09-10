@@ -10,6 +10,9 @@ import { UserDataProvider } from '../contexts/userData'
 import { AppUtilsProvider } from '../contexts/appUtils'
 import { UserHistoryProvider } from '../contexts/userHistory'
 import { SpotHackSettingsProvider } from '../contexts/spotHackSettings'
+import { DownloadsInfoProvider } from '../contexts/downloadsInfo'
+
+import downloadManager from '../SpotHack_Core/DownloadManager'
 
 const Routes: React.FC = () => {
 	const { loading, signed } = useAuth()
@@ -18,14 +21,18 @@ const Routes: React.FC = () => {
 		return <LoadingPage />
 	}
 
+	if (signed) { downloadManager.startDownloadManager() }
+
 	return signed
 		? <UserDataProvider>
 			<AppUtilsProvider>
 				<UserHistoryProvider>
 					<SpotHackSettingsProvider>
+						<DownloadsInfoProvider>
 
-						<AppRoutes />
+							<AppRoutes />
 
+						</DownloadsInfoProvider>
 					</SpotHackSettingsProvider>
 				</UserHistoryProvider>
 			</AppUtilsProvider>

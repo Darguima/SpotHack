@@ -4,6 +4,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
 import Description from './Components/Description'
 import PlaylistOptions from './Components/PlaylistOptions'
+import PlaylistChanges from './Components/PlaylistChanges'
 import PlaylistData from './Components/PlaylistData'
 
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -102,6 +103,10 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
 				<PlaylistOptions
 					musicsArray={playlistInfo.tracks}
 					playlistName={playlistInfo.name}
+					playlistId={playlistInfo.spotifyId}
+				/>
+
+				<PlaylistChanges
 					playlistId={playlistInfo.spotifyId}
 				/>
 

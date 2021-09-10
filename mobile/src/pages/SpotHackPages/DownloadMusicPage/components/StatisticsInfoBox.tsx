@@ -31,9 +31,12 @@ const StatisticsInfoBox:React.FC<StatisticsInfoBoxProps> = ({ downloadStatistics
 
 			<Text>{'\n'}downloaded videos: {downloadStatistics.downloadedMusicVideos}</Text>
 			<Text>converted videos: {downloadStatistics.convertedVideos}</Text>
+			<Text>downloaded musics: {downloadStatistics.downloadedMusics}</Text>
 
-			<Text>{'\n'}number of not errors: {downloadStatistics.queueLength - downloadStatistics.errors.length}</Text>
-			<Text>number of errors: {downloadStatistics.errors.length}</Text>
+			<Text style={{ fontWeight: 'bold' }}>{'\n'}Success: {downloadStatistics.downloadedMusics}</Text>
+			<Text style={{ fontWeight: 'bold' }}>Already Downloaded: {downloadStatistics.alreadyDownloadedMusics}</Text>
+			<Text style={{ fontWeight: 'bold' }}>Errors: {downloadStatistics.errors.length}</Text>
+
 			<Text>errors:</Text>
 			<View style={styles.objectContainer}>
 				{downloadStatistics.errors.map(youtubeQuery => (

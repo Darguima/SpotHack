@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid } from 'react-native'
 
 import useSpotHackSettings from '../../../../../../contexts/spotHackSettings'
-import { exists as existsPath, mkdir as createPath } from 'react-native-fs'
+import { exists as existsPath, mkdir as createPath, readDir } from 'react-native-fs'
 import ContentBox from '../../../../../Components/ContentBox'
 import { getExternalStoragePermissions } from '../../../../../../utils/getStoragePermissions'
+
+import downloadManager from '../../../../../../SpotHack_Core/DownloadManager'
 
 const RootPathInput:React.FC = () => {
 	const { spotHackSettings, saveNewSpotHackSettings } = useSpotHackSettings()
@@ -34,14 +36,24 @@ const RootPathInput:React.FC = () => {
 			return
 		}
 
+		if (!possibleNewRootPath.endsWith('/')) possibleNewRootPath += '/'
+
+		if (downloadManager.downloadManagerStarted) {
+			setIsNewRootPathValid(false)
+			ToastAndroid.show('Updating playlists - wait a moment', ToastAndroid.LONG)
+			return
+		}
+
 		try {
 			if (!await existsPath(possibleNewRootPath)) {
-				createPath(possibleNewRootPath)
+				await createPath(possibleNewRootPath)
 			}
+			await readDir(possibleNewRootPath)
 
 			saveNewSpotHackSettings({ rootPath: possibleNewRootPath })
 			setRootPathIsEditable(false)
 			setIsNewRootPathValid(true)
+			setNewRootPath(possibleNewRootPath)
 			ToastAndroid.show('Root Path Edited', ToastAndroid.LONG)
 		} catch (err) {
 			setIsNewRootPathValid(false)

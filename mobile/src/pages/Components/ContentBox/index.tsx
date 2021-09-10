@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, ViewStyle, TextStyle } from 'react-native'
 
 interface ContentBoxProps {
-	title: string,
+	title: string | React.ReactNode,
 	titleIcon?: React.ReactNode,
 
 	style?: ViewStyle,
@@ -74,7 +74,9 @@ const styles = StyleSheet.create({
 
 		borderColor: '#1c5ed6',
 		borderWidth: 3,
-		borderRadius: 10
+		borderRadius: 10,
+
+		overflow: 'hidden'
 	},
 
 	containerTitle: {

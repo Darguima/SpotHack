@@ -17,39 +17,44 @@ interface SearchBarHeaderProps {
 
 	viewPressAction?: () => void
 	entypoIconName?: string,
-	iconPressAction?: () => void
+	iconSize?: number,
+	iconPressAction?: () => void,
+
+	titleNumberOfLines?: number,
+	artistsNumberOfLines?: number,
 }
 
 const MusicPlaylistView:React.FC<SearchBarHeaderProps> = (
 	{
 		imageSource, title, artists,
 		style, viewBackgroundColor = '#212121', contentBackgroundColor = '#212121',
-		viewPressAction, entypoIconName, iconPressAction = () => {}
+		titleNumberOfLines = 2, artistsNumberOfLines = 1,
+		viewPressAction, entypoIconName, iconSize = 30, iconPressAction = () => {}
 	}) => {
 	return (
 		<View style={[styles.container, { backgroundColor: viewBackgroundColor }, style || {}]}>
 			<View style={[styles.content, { backgroundColor: contentBackgroundColor }]}>
 
-					<View style={styles.leftPart}>
-						<TouchableOpacity style={styles.leftPartButton} onPress={viewPressAction}>
-							<View style={styles.imageContainer}>
-								<Image source={imageSource} style={styles.image}/>
-							</View>
+				<View style={styles.leftPart}>
+					<TouchableOpacity style={styles.leftPartButton} onPress={viewPressAction}>
+						<View style={styles.imageContainer}>
+							<Image source={imageSource} style={styles.image}/>
+						</View>
 
-							<View style={styles.textsContainer}>
-								<Text style={styles.titleText} numberOfLines={2}>{title}</Text>
-								<Text style={styles.artistsText} numberOfLines={1}>{artists}</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
+						<View style={styles.textsContainer}>
+							<Text style={styles.titleText} numberOfLines={titleNumberOfLines}>{title}</Text>
+							<Text style={styles.artistsText} numberOfLines={artistsNumberOfLines}>{artists}</Text>
+						</View>
+					</TouchableOpacity>
+				</View>
 
-					{entypoIconName &&
+				{entypoIconName &&
 						<View style={styles.rightPart}>
 							<TouchableOpacity style={styles.iconButton} onPress={iconPressAction}>
-								<Entypo name={entypoIconName} style={styles.icon} size={30}/>
+								<Entypo name={entypoIconName} style={styles.icon} size={iconSize}/>
 							</TouchableOpacity>
 						</View>
-					}
+				}
 
 			</View>
 		</View>

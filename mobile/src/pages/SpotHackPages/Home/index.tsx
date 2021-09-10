@@ -1,114 +1,42 @@
 import React from 'react'
-import { View, Image, StyleSheet } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { StyleSheet, ScrollView } from 'react-native'
 
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
+import { useNavigation } from '@react-navigation/native'
+
+import ShortcutsToTabs from './components/ShortcutsToTabs'
+import PlaylistsChanges from './components/PlaylistsChanges'
 
 const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo } }) => {
+	const { navigate } = useNavigation()
+
 	return (
-		<View
-			style={styles.container}
+		<ScrollView
+			style={styles.scrollView}
+			contentContainerStyle={styles.scrollViewContentContainerStyle}
 		>
-			<ScrollView
-				style={styles.scrollView}
-				contentContainerStyle={styles.scrolViewContentContainerStyle}
-			>
 
-				<View style={[styles.imagesButtonContainer, { marginTop: '10%' }]}>
-					<TouchableOpacity
-						style={styles.imageButton}
-						onPress={() => jumpTo('SearchMusicStack')}
-					>
-						<Image
-							source={require('../../../assets/searchMusic.png')}
-							style={styles.images}
-						/>
-					</TouchableOpacity>
-				</View>
+			<ShortcutsToTabs navigationFunction={navigate} jumpToRoutePageName="PlaylistsChangesPage">
+				<PlaylistsChanges />
+			</ShortcutsToTabs>
 
-				<View style={styles.imagesButtonContainer}>
-					<TouchableOpacity
-						style={styles.imageButton}
-						onPress={() => jumpTo('SearchPlaylistStack')}
-					>
-						<Image
-							source={require('../../../assets/playlists.png')}
-							style={styles.images}
-						/>
-					</TouchableOpacity>
-				</View>
+			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SearchMusicStack" imageSource={require('../../../assets/searchMusic.png')} />
+			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SearchPlaylistStack" imageSource={require('../../../assets/playlists.png')} />
+			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SavedMusicPage" imageSource={require('../../../assets/savedMusic.png')} />
+			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SettingsPage" imageSource={require('../../../assets/settings.png')} />
 
-				<View style={styles.imagesButtonContainer}>
-					<TouchableOpacity
-						style={styles.imageButton}
-						onPress={() => jumpTo('SavedMusicPage')}
-					>
-						<Image
-							source={require('../../../assets/savedMusic.png')}
-							style={styles.images}
-						/>
-					</TouchableOpacity>
-				</View>
-
-				<View style={[styles.imagesButtonContainer, { marginBottom: '10%' }]}>
-					<TouchableOpacity
-						style={styles.imageButton}
-						onPress={() => jumpTo('SettingsPage')}
-					>
-						<Image
-							source={require('../../../assets/settings.png')}
-							style={styles.images}
-						/>
-					</TouchableOpacity>
-				</View>
-
-			</ScrollView>
-
-		</View>
+		</ScrollView>
 	)
 }
 
 const styles = StyleSheet.create({
-	container: {
+	scrollView: {
 		flex: 1,
-
-		alignItems: 'center',
-
-		width: '100%',
-		height: '100%',
-
 		backgroundColor: '#000'
 	},
 
-	scrollView: {
-		width: '100%'
-	},
-
-	scrolViewContentContainerStyle: {
-		flexGrow: 1,
+	scrollViewContentContainerStyle: {
 		alignItems: 'center'
-	},
-
-	imagesButtonContainer: {
-		width: '80%',
-		aspectRatio: 1.5,
-
-		marginVertical: '5%'
-	},
-
-	imageButton: {
-		width: '100%',
-		height: '100%'
-
-	},
-
-	images: {
-		resizeMode: 'stretch',
-		width: '100%',
-		height: '100%',
-
-		borderRadius: 25
-
 	}
 })
 

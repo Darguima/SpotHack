@@ -28,7 +28,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 	const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
 	const [refreshToken, seRefreshToken] = useState<string | undefined>(undefined)
 
-	// Take the saved data from Asyncstorage
+	// Take the saved data from AsyncStorage
 	useEffect(() => {
 		(async () => {
 			const [[, oAuthCodeStored], [, accessTokenStored], [, refreshTokenStored]] = await AsyncStorage.multiGet(
@@ -151,7 +151,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
 				spotifyApi.defaults.headers.Authorization = ''
 
-				return { response: 'sucess on logout', logout: 1 }
+				return { response: 'success on logout', logout: 1 }
 			} catch (err) {
 				return { response: 'error on logout', logout: 0 }
 			}

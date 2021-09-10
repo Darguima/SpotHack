@@ -7,7 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import SearchMusicRoutes from './searchMusic.routes'
 import SearchPlaylistRoutes from './searchPlaylist.routes'
-import Home from '../pages/SpotHackPages/Home'
+import HomeRoutes from './home.routes'
 import SavedMusicRoutes from './savedMusic.routes'
 import SettingsPage from '../pages/SpotHackPages/SettingsPage'
 
@@ -81,7 +81,7 @@ const AppRoutes: React.FC = () => {
 
 					<Screen
 						name="Home"
-						component={Home}
+						component={HomeRoutes}
 
 						options={{
 							tabBarLabel: 'Home',
