@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, BackHandler, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, BackHandler, ScrollView, FlatList, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import SearchBarHeader from '../../Components/SearchBarHeader'
@@ -10,7 +10,7 @@ import MusicPlaylistView from '../../Components/MusicPlaylistView'
 import useAppUtils from '../../../contexts/appUtils'
 import useUserHistory, { playlistsSpotifyResponseSchema } from '../../../contexts/userHistory'
 
-import getPlaylitDataFromSpotify from './getPlaylitDataFromSpotify'
+import getPlaylistDataFromSpotify from './getPlaylistDataFromSpotify'
 
 import { StackScreenProps } from '@react-navigation/stack'
 
@@ -20,27 +20,40 @@ const SearchPlaylistPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
 	const [errorMessage, setErrorMessage] = useState<Array<string>>([])
 	const [playlistsSpotifyResponse, setPlaylistsSpotifyResponse] = useState <Array<playlistsSpotifyResponseSchema>>([])
+	const [offset, setOffset] = useState(-1)
+	const offsetAccount = 20
 
-	const { addPlaylistToPlaylistSearchHistory } = useUserHistory()
+	const { addPlaylistToPlaylistSearchHistory, removePlaylistFromPlaylistSearchHistory } = useUserHistory()
 
 	const { navigate } = useNavigation()
 
 	// Search playlists and save on the state
+
 	useEffect(() => {
 		setPlaylistsSpotifyResponse([])
-		setErrorMessage(['Searching'])
 
 		if (searchedPlaylist) {
-			(async () => {
-				const response = await getPlaylitDataFromSpotify(searchedPlaylist)
-
-				setPlaylistsSpotifyResponse(response.response)
-				setErrorMessage(response.err)
-			})()
+			setErrorMessage(['Searching'])
+			setOffset(0)
 		} else {
 			setErrorMessage([])
+			setOffset(-1)
 		}
 	}, [searchedPlaylist])
+
+	useEffect(() => {
+		(async () => {
+			const response = await getPlaylistDataFromSpotify(searchedPlaylist, offset, offsetAccount)
+
+			if (response.err.length === 0) {
+				setPlaylistsSpotifyResponse([...playlistsSpotifyResponse, ...response.response])
+				setErrorMessage([])
+			} else {
+				setPlaylistsSpotifyResponse([])
+				setErrorMessage(response.err)
+			}
+		})()
+	}, [offset])
 
 	// BackButton Handler
 	useEffect(() => {
@@ -78,6 +91,45 @@ const SearchPlaylistPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 		}
 	}, [changePlaylistSearchInputValue, searchedPlaylist])
 
+	const renderPlaylistBox = ({ item, index }: {item: playlistsSpotifyResponseSchema, index: number}) => (
+		<MusicPlaylistView
+			key={index}
+
+			style={{
+				marginTop: index === 0 ? '4%' : '2%',
+				marginBottom: index === playlistsSpotifyResponse.length - 1 ? '4%' : '2%'
+			}}
+
+			imageSource={item.image}
+			title={item.name}
+			artists={item.owner}
+
+			viewPressAction={() => {
+				navigate('PlaylistDetailPage', {
+					spotifyId: item.spotifyId,
+					image: item.image,
+					title: item.name,
+					artists: item.owner
+				})
+				addPlaylistToPlaylistSearchHistory(item)
+			}}
+			entypoIconName= {searchedPlaylist !== '' ? 'chevron-right' : 'cross'}
+			iconPressAction={() => {
+				if (searchedPlaylist !== '') {
+					navigate('PlaylistDetailPage', {
+						spotifyId: item.spotifyId,
+						image: item.image,
+						title: item.name,
+						artists: item.owner
+					})
+					addPlaylistToPlaylistSearchHistory(item)
+				} else {
+					removePlaylistFromPlaylistSearchHistory(item.spotifyId)
+				}
+			}}
+		/>
+	)
+
 	return (
 		<View style={styles.container}>
 
@@ -90,53 +142,46 @@ const SearchPlaylistPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 				viewBackgroundColor="#1c5ed6"
 			/>
 
-			<ScrollView>
-				{searchedPlaylist === '' &&
+			{searchedPlaylist !== '' &&
+					<FlatList
+						data={playlistsSpotifyResponse}
+						renderItem={renderPlaylistBox}
+						keyExtractor={item => item.spotifyId}
+
+						onEndReached={() => {
+							if (offset + offsetAccount <= 1000) {
+								setOffset(offset + offsetAccount)
+							}
+						}}
+						onEndReachedThreshold={0.5}
+						initialNumToRender={5}
+
+						ListFooterComponent={
+							<ActivityIndicator
+								color={'#1c5ed6'}
+								size={
+									(offset + offsetAccount <= 1000 && errorMessage.length === 0) || (errorMessage.length === 1 && errorMessage[0] === 'Searching')
+										? 25
+										: 0
+								}
+							/>
+						}
+						ListFooterComponentStyle={offset + offsetAccount <= 1000 ? styles.flatListFooter : {}}
+
+						ListEmptyComponent={<>
+							{errorMessage.map((item, index) => (
+								<Text key={index} style={styles.noTrackFoundText}>{item}</Text>
+							))}
+						</>}
+					/>
+			}
+
+			{searchedPlaylist === '' &&
+				<ScrollView>
 					<NoSearchContent />
-				}
 
-				{errorMessage.length !== 0 &&
-					errorMessage.map((item, index) => (<Text key={index} style={styles.noTrackFoundText}>{item}</Text>))
-
-				}
-
-				{playlistsSpotifyResponse.map((item, index) => {
-					return (
-						<MusicPlaylistView
-							key={index}
-
-							style={{
-								marginTop: index === 0 ? '4%' : '2%',
-								marginBottom: index === playlistsSpotifyResponse.length - 1 ? '4%' : '2%'
-							}}
-
-							imageSource={item.image}
-							title={item.name}
-							artists={item.owner}
-
-							viewPressAction={() => {
-								navigate('PlaylistDetailPage', {
-									spotifyId: item.spotifyId,
-									image: item.image,
-									name: item.name,
-									owner: item.owner
-								})
-								addPlaylistToPlaylistSearchHistory(item)
-							}}
-							entypoIconName="chevron-right"
-							iconPressAction={() => {
-								navigate('PlaylistDetailPage', {
-									spotifyId: item.spotifyId,
-									image: item.image,
-									name: item.name,
-									owner: item.owner
-								})
-								addPlaylistToPlaylistSearchHistory(item)
-							}}
-						/>
-					)
-				})}
-			</ScrollView>
+				</ScrollView>
+			}
 
 		</View>
 	)
@@ -158,6 +203,9 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		color: '#fff'
 
+	},
+	flatListFooter: {
+		marginBottom: '4%'
 	}
 })
 

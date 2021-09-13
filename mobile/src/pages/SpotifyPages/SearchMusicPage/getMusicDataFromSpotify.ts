@@ -1,12 +1,14 @@
 import spotifyApi from '../../../services/spotify/spotifyApi'
 import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
 
-export default async (query: string) => {
+export default async (query: string, offset: number, offsetAccount: number) => {
 	try {
 		const response: SpotifyApi.TrackSearchResponse = (await spotifyApi.get('search', {
 			params: {
 				q: encodeURI(query),
-				type: 'track'
+				type: 'track',
+				offset,
+				limit: offsetAccount
 			}
 		})).data
 
@@ -34,17 +36,16 @@ export default async (query: string) => {
 				err: []
 			}
 		}
-	} catch (err) {
-		try {
-			return {
-				response: [],
-				err: ['Something went wrong!', `Spotify Api - ${err.response.data.error.message}`]
-			}
-		} catch (err) {
-			return {
-				response: [],
-				err: ['Something went wrong!']
-			}
+	} catch (err: any) {
+		const errors = ['Something went wrong!']
+
+		if (err && err.response && err.response.data && err.response.data.error && err.response.data.error.message) {
+			errors.push(`Spotify Api - ${err.response.data.error.message}`)
+		}
+
+		return {
+			response: [],
+			err: errors
 		}
 	}
 }

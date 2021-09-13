@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { Text, View, StyleSheet, ScrollView, BackHandler } from 'react-native'
+import { Text, View, StyleSheet, BackHandler, FlatList, ActivityIndicator } from 'react-native'
 
 import SearchBarHeader from '../../Components/SearchBarHeader'
 import MusicPlaylistView from '../../Components/MusicPlaylistView'
@@ -17,6 +17,8 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
 	const [errorMessage, setErrorMessage] = useState<Array<string>>([])
 	const [musicsSpotifyResponse, setMusicsSpotifyResponse] = useState <Array<musicsSpotifyResponseSchema>>([])
+	const [offset, setOffset] = useState(-1)
+	const offsetAccount = 20
 
 	const { musicSearchHistory, addMusicToMusicSearchHistory, removeMusicFromMusicSearchHistory } = useUserHistory()
 
@@ -25,19 +27,29 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 	// Search musics and save on the state
 	useEffect(() => {
 		setMusicsSpotifyResponse([])
-		setErrorMessage(['Searching'])
 
 		if (searchedMusic) {
-			(async () => {
-				const response = await getMusicDataFromSpotify(searchedMusic)
-
-				setMusicsSpotifyResponse(response.response)
-				setErrorMessage(response.err)
-			})()
+			setErrorMessage(['Searching'])
+			setOffset(0)
 		} else {
 			setErrorMessage([])
+			setOffset(-1)
 		}
 	}, [searchedMusic])
+
+	useEffect(() => {
+		(async () => {
+			const response = await getMusicDataFromSpotify(searchedMusic, offset, offsetAccount)
+
+			if (response.err.length === 0) {
+				setMusicsSpotifyResponse([...musicsSpotifyResponse, ...response.response])
+				setErrorMessage([])
+			} else {
+				setMusicsSpotifyResponse([])
+				setErrorMessage(response.err)
+			}
+		})()
+	}, [offset])
 
 	// BackButton handler
 	useEffect(() => {
@@ -75,6 +87,45 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 		}
 	}, [changeMusicSearchInputValue, searchedMusic])
 
+	const renderMusicBox = ({ item, index }: {item: musicsSpotifyResponseSchema, index: number}) => (
+		<MusicPlaylistView
+			key={index}
+
+			style={{
+				marginTop: index === 0 ? '4%' : '2%',
+				marginBottom: index === musicsSpotifyResponse.length - 1 ? '4%' : '2%'
+			}}
+
+			imageSource={item.image}
+			title={item.title}
+			artists={item.artists}
+
+			viewPressAction={() => {
+				navigate('MusicDetailPage', {
+					spotifyId: item.spotifyId,
+					image: item.image,
+					title: item.title,
+					artists: item.artists
+				})
+				addMusicToMusicSearchHistory(item)
+			}}
+			entypoIconName= {searchedMusic !== '' ? 'chevron-right' : 'cross'}
+			iconPressAction={() => {
+				if (searchedMusic !== '') {
+					navigate('MusicDetailPage', {
+						spotifyId: item.spotifyId,
+						image: item.image,
+						title: item.title,
+						artists: item.artists
+					})
+					addMusicToMusicSearchHistory(item)
+				} else {
+					removeMusicFromMusicSearchHistory(item.spotifyId)
+				}
+			}}
+		/>
+	)
+
 	return (
 		<View style={styles.container}>
 			<SearchBarHeader
@@ -86,84 +137,51 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 				viewBackgroundColor="#1c5ed6"
 			/>
 
-			<ScrollView>
+			{searchedMusic !== '' &&
+				<FlatList
+					data={musicsSpotifyResponse}
+					renderItem={renderMusicBox}
+					keyExtractor={item => item.spotifyId}
 
-				{searchedMusic === '' &&
-					musicSearchHistory.map((item, index) => {
-						return (
-							<MusicPlaylistView
-								key={index}
+					onEndReached={() => {
+						if (offset + offsetAccount <= 1000) {
+							setOffset(offset + offsetAccount)
+						}
+					}}
+					onEndReachedThreshold={0.5}
+					initialNumToRender={5}
 
-								style={{
-									marginTop: index === 0 ? '4%' : '2%',
-									marginBottom: index === musicSearchHistory.length - 1 ? '4%' : '2%'
-								}}
-
-								imageSource={item.image}
-								title={item.title}
-								artists={item.artists}
-
-								viewPressAction={() => {
-									addMusicToMusicSearchHistory(item)
-									navigate('MusicDetailPage', {
-										spotifyId: item.spotifyId,
-										image: item.image,
-										title: item.title,
-										artists: item.artists
-									})
-								}}
-
-								entypoIconName="cross"
-								iconPressAction={() => {
-									removeMusicFromMusicSearchHistory(item.spotifyId)
-								}}
-							/>
-						)
-					})}
-
-				{errorMessage.length !== 0 &&
-					errorMessage.map((item, index) => (<Text key={index} style={styles.noTrackFoundText}>{item}</Text>))
-
-				}
-
-				{musicsSpotifyResponse.map((item, index) => {
-					return (
-						<MusicPlaylistView
-							key={index}
-
-							style={{
-								marginTop: index === 0 ? '4%' : '2%',
-								marginBottom: index === musicsSpotifyResponse.length - 1 ? '4%' : '2%'
-							}}
-
-							imageSource={item.image}
-							title={item.title}
-							artists={item.artists}
-
-							viewPressAction={() => {
-								navigate('MusicDetailPage', {
-									spotifyId: item.spotifyId,
-									image: item.image,
-									title: item.title,
-									artists: item.artists
-								})
-								addMusicToMusicSearchHistory(item)
-							}}
-							entypoIconName="chevron-right"
-							iconPressAction={() => {
-								navigate('MusicDetailPage', {
-									spotifyId: item.spotifyId,
-									image: item.image,
-									title: item.title,
-									artists: item.artists
-								})
-								addMusicToMusicSearchHistory(item)
-							}}
+					ListFooterComponent={
+						<ActivityIndicator
+							color={'#1c5ed6'}
+							size={
+								offset + offsetAccount <= 1000 || (errorMessage.length === 1 && errorMessage[0] === 'Searching')
+									? 25
+									: 0
+							}
 						/>
-					)
-				})}
+					}
+					ListFooterComponentStyle={offset + offsetAccount <= 1000 ? styles.flatListFooter : {}}
 
-			</ScrollView>
+					ListEmptyComponent={<>
+						{errorMessage.map((item, index) => (
+							<Text key={index} style={styles.noTrackFoundText}>{item}</Text>
+						))}
+					</>}
+				/>
+			}
+
+			{searchedMusic === '' &&
+				<FlatList
+					data={musicSearchHistory}
+					renderItem={renderMusicBox}
+					keyExtractor={item => item.spotifyId}
+
+					ListEmptyComponent={<>
+						<Text style={styles.noTrackFoundText}>Search Something</Text>
+					</>}
+				/>
+			}
 		</View>
 	)
 }
@@ -184,6 +202,10 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		color: '#fff'
 
+	},
+
+	flatListFooter: {
+		marginBottom: '4%'
 	}
 })
 
