@@ -29,7 +29,29 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 
 	playlist.forEach(item => {
 		// Ignore repeated downloads
-		if (this.queueIds.indexOf(createQueueId(item.spotifyId, item.playlistId)) !== -1) {
+
+		const alreadyOnQueueMusic = this.queue[this.queueIds.indexOf(createQueueId(item.spotifyId, item.playlistId))]
+
+		if (alreadyOnQueueMusic && alreadyOnQueueMusic.progress !== 0) {
+			return
+		} else if (alreadyOnQueueMusic && alreadyOnQueueMusic.progress === 0) {
+			this.downloadsStatistics.errors.splice(
+				this.downloadsStatistics.errors.findIndex(ytQuery => ytQuery === alreadyOnQueueMusic.youtubeQuery),
+				1
+			)
+
+			this.queue[this.queueIds.indexOf(createQueueId(item.spotifyId, item.playlistId))] = {
+				...alreadyOnQueueMusic,
+				youtubeId: '',
+				downloadSource: item.downloadSource || this.defaultDownloadSource,
+				downloadUrl: '',
+				stageProgress: 0,
+				progress: 1,
+				stage: 'start'
+			}
+
+			this.youtubeIdsQueue.push(alreadyOnQueueMusic.queueIndex)
+
 			return
 		}
 
