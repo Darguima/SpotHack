@@ -210,6 +210,7 @@ export class DownloadManager {
 		musicInfo: downloadedMusicInfoSchema
 	) {
 		const currentDownloadedPlaylistsInfo = this.getPlaylistsOnPathInfo()
+		await this.addAlreadyDownloadedPlaylistId(playlistId)
 
 		if (!currentDownloadedPlaylistsInfo[playlistId]) {
 			currentDownloadedPlaylistsInfo[playlistId] = {
@@ -230,8 +231,6 @@ export class DownloadManager {
 				]
 			}
 		})
-
-		await this.addAlreadyDownloadedPlaylistId(playlistId)
 
 		if (this.playlistsChanges[this.rootPath][playlistId]) {
 			const indexFromPlaylistsChanges = this.playlistsChanges[this.rootPath][playlistId].added.findIndex(
