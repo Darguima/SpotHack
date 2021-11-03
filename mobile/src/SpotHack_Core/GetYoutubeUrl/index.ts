@@ -11,11 +11,13 @@ export interface youtubeIdsSchema {
 	ytLyricsVideo: string
 }
 
+export type infoSourceIcon = 'error' | 'asyncStorage' | 'firebase' | 'ytScrape' | 'ytApi'
+
 export interface getYoutubeUrlReturn {
 	youtubeId: youtubeIdsSchema,
 	youtubeQuery: string,
 	success: number,
-	infoSourceIcon: 'error' | 'asyncStorage' | 'firebase' | 'ytScrape' | 'ytApi'
+	infoSourceIcon: infoSourceIcon
 }
 
 const main = async (spotifyId: string, title: string, artists: string, youtubeQuery?: string) => {

@@ -26,7 +26,7 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 					...queue[queueIndex],
 					youtubeId: youtubeId[queue[queueIndex].downloadSource || this.defaultDownloadSource], // downloadSource can be "" if come from Download Manager
 					progress: 2,
-					stage: 'gotten_youtubeUrl'
+					stage: 'gotten_youtubeId'
 				}
 
 				this.downloadUrlsQueue.push(queueIndex)
@@ -45,17 +45,17 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 		} else {
 			// downloadsStatistics
 			this.downloadsStatistics.musicsWithYoutubeId += 1
-			if (!this.downloadsStatistics.youtubeIdsSources.spothack) {
-				this.downloadsStatistics.youtubeIdsSources.spothack = 1
+			if (!this.downloadsStatistics.youtubeIdsSources.asyncStorage) {
+				this.downloadsStatistics.youtubeIdsSources.asyncStorage = 1
 			} else {
-				this.downloadsStatistics.youtubeIdsSources.spothack += 1
+				this.downloadsStatistics.youtubeIdsSources.asyncStorage += 1
 			}
 			// =
 
 			queue[queueIndex] = {
 				...queue[queueIndex],
 				progress: 2,
-				stage: 'gotten_youtubeUrl'
+				stage: 'gotten_youtubeId'
 			}
 
 			this.downloadUrlsQueue.push(queueIndex)

@@ -51,6 +51,11 @@ export interface musicOnQueueSchema extends musicForQueueSchema {
 	// 6 - downloadedMusic / alreadyDownloaded
 }
 
+export type playlistsOnQueueSchema = Array<{
+	playlistId: string,
+	playlistName: string
+}>
+
 type queueChangesListenerFunction = (index: string, newMusicInfo: musicOnQueueSchema, prevMusicInfo: unknown, name: string) => void;
 type queueChangesListenerFunctionsSchema = Array<queueChangesListenerFunction>
 
@@ -91,6 +96,9 @@ export class DownloadMachine {
 	)
 
 	protected queueIds: Array<string> = []
+
+	protected playlistsOnQueue: playlistsOnQueueSchema = []
+
 	protected storagePermissions = false
 	// End the path with "/"
 	protected temporaryPath = `${RNFS.CachesDirectoryPath}/musicsVideos/`

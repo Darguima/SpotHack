@@ -1,8 +1,9 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import DefaultDownloadSource from './components/DefaultDownloadSource'
 
+import DefaultDownloadSource from './components/DefaultDownloadSource'
 import RootPathInput from './components/RootPathInput'
+import SlowRender from './components/SlowRender'
 
 const SpotifyAccountSettings:React.FC = () => {
 	return (
@@ -11,6 +12,8 @@ const SpotifyAccountSettings:React.FC = () => {
 			<RootPathInput />
 
 			<DefaultDownloadSource />
+
+			<SlowRender />
 
 		</View>
 	)

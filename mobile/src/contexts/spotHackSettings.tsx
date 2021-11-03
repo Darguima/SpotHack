@@ -12,17 +12,35 @@ saveNewSpotHackSettings: (newSpotHackSettings: Partial<spotHackSettingsSchema>) 
 
 interface spotHackSettingsSchema {
 	rootPath: string,
-	defaultDownloadSource: string
+	defaultDownloadSource: string,
+
+	slowRender: boolean,
+
+	downloadsPage: {
+		showAlreadyDownloadedMusics: boolean
+	}
 }
 
 const defaultSpotHackSettings: spotHackSettingsSchema = {
 	rootPath: `${DownloadDirectoryPath}/`,
-	defaultDownloadSource: 'ytFirstVideoOnSearch'
+	defaultDownloadSource: 'ytFirstVideoOnSearch',
+
+	slowRender: true,
+
+	downloadsPage: {
+		showAlreadyDownloadedMusics: false
+	}
 }
 
 const voidSpotHackSettings: spotHackSettingsSchema = {
 	rootPath: '',
-	defaultDownloadSource: ''
+	defaultDownloadSource: '',
+
+	slowRender: true,
+
+	downloadsPage: {
+		showAlreadyDownloadedMusics: false
+	}
 }
 
 const SpotHackSettingsContext = createContext<SpotHackSettingsContextData>({} as SpotHackSettingsContextData)

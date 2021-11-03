@@ -90,6 +90,13 @@ export default async function addMusicsToDownloadQueue (this: DownloadMachine, p
 
 		this.queue.push(musicInfo)
 		this.queueIds.push(musicInfo.queueId)
+
+		if (!this.playlistsOnQueue.some(playlist => musicInfo.playlistId === playlist.playlistId)) {
+			this.playlistsOnQueue.push({
+				playlistId: musicInfo.playlistId,
+				playlistName: musicInfo.playlistName
+			})
+		}
 	})
 
 	if (this.isGetYoutubeIdsActive === false) this.getYoutubeIds()

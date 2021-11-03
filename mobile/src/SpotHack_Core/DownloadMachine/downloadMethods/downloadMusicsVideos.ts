@@ -32,7 +32,7 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 				downloadUrl: downloadUrl,
 
 				progress: 4,
-				stage: 'downloadedMusicsVideos'
+				stage: 'downloadedMusicVideo'
 			}
 
 			this.convertVideosToMusicsQueue.push(queueIndex)
