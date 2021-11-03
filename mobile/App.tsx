@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { StatusBar, LogBox } from 'react-native'
 
+import * as RNFS from 'react-native-fs'
+
 import { AuthProvider } from './src/contexts/auth'
 import Routes from './src/routes/index'
 
@@ -11,6 +13,11 @@ const mobile:React.FC = () => {
 			'react-native-ytdl: miniget: will not use specified encoding since request has already been made. Currently using utf8 encoding.'
 		])
 	}, [])
+
+	RNFS.readDir(RNFS.CachesDirectoryPath + '/musicsVideos')
+		.then(musicsToDelete =>
+			musicsToDelete.forEach(musicToDelete => { RNFS.unlink(musicToDelete.path) })
+		)
 
 	return (
 		<AuthProvider>
