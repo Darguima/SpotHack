@@ -1,13 +1,13 @@
 import spotifyApi from '../../../services/spotify/spotifyApi'
 
-export default async (query: string, offset: number, offsetAccount: number) => {
+export default async (query: string, offset: number, offsetIncrease: number) => {
 	try {
 		const response: SpotifyApi.PlaylistSearchResponse = (await spotifyApi.get('search', {
 			params: {
 				q: encodeURI(query),
 				type: 'playlist',
 				offset,
-				limit: offsetAccount
+				limit: offsetIncrease
 			}
 		})).data
 

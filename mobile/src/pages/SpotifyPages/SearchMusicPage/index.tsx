@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Text, View, StyleSheet, BackHandler, FlatList, ActivityIndicator } from 'react-native'
 
@@ -18,7 +18,7 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 	const [errorMessage, setErrorMessage] = useState<Array<string>>([])
 	const [musicsSpotifyResponse, setMusicsSpotifyResponse] = useState <Array<musicsSpotifyResponseSchema>>([])
 	const [offset, setOffset] = useState(-1)
-	const offsetAccount = 20
+	const offsetIncrease = 20
 
 	const { musicSearchHistory, addMusicToMusicSearchHistory, removeMusicFromMusicSearchHistory } = useUserHistory()
 
@@ -30,26 +30,31 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
 		if (searchedMusic) {
 			setErrorMessage(['Searching'])
-			setOffset(0)
+			if (offset !== 0) { setOffset(0) } else { refreshMusicsData(true) }
 		} else {
 			setErrorMessage([])
 			setOffset(-1)
 		}
 	}, [searchedMusic])
 
-	useEffect(() => {
-		(async () => {
-			const response = await getMusicDataFromSpotify(searchedMusic, offset, offsetAccount)
+	const refreshMusicsData = useCallback(async (clearMusicsSpotifyResponse = false) => {
+		if (offset === -1) return
 
-			if (response.err.length === 0) {
-				setMusicsSpotifyResponse([...musicsSpotifyResponse, ...response.response])
-				setErrorMessage([])
-			} else {
-				setMusicsSpotifyResponse([])
-				setErrorMessage(response.err)
-			}
-		})()
-	}, [offset])
+		const response = await getMusicDataFromSpotify(searchedMusic, offset, offsetIncrease)
+
+		if (response.err.length === 0) {
+			setMusicsSpotifyResponse([
+				...(!clearMusicsSpotifyResponse ? musicsSpotifyResponse : []),
+				...response.response
+			])
+			setErrorMessage([])
+		} else {
+			setMusicsSpotifyResponse([])
+			setErrorMessage(response.err)
+		}
+	}, [searchedMusic, offset, musicsSpotifyResponse])
+
+	useEffect(() => { refreshMusicsData() }, [offset])
 
 	// BackButton handler
 	useEffect(() => {
@@ -141,11 +146,11 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 				<FlatList
 					data={musicsSpotifyResponse}
 					renderItem={renderMusicBox}
-					keyExtractor={item => item.spotifyId}
+					keyExtractor={(item, index) => `${item.spotifyId}_${index}`}
 
 					onEndReached={() => {
-						if (offset + offsetAccount <= 1000) {
-							setOffset(offset + offsetAccount)
+						if (offset + offsetIncrease <= 1000) {
+							setOffset(offset + offsetIncrease)
 						}
 					}}
 					onEndReachedThreshold={0.5}
@@ -155,13 +160,13 @@ const SearchMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 						<ActivityIndicator
 							color={'#1c5ed6'}
 							size={
-								offset + offsetAccount <= 1000 || (errorMessage.length === 1 && errorMessage[0] === 'Searching')
+								(offset + offsetIncrease <= 1000 && errorMessage.length === 0) || (errorMessage.length === 1 && errorMessage[0] === 'Searching')
 									? 25
 									: 0
 							}
 						/>
 					}
-					ListFooterComponentStyle={offset + offsetAccount <= 1000 ? styles.flatListFooter : {}}
+					ListFooterComponentStyle={offset + offsetIncrease <= 1000 ? styles.flatListFooter : {}}
 
 					ListEmptyComponent={<>
 						{errorMessage.map((item, index) => (

@@ -1,14 +1,14 @@
 import spotifyApi from '../../../services/spotify/spotifyApi'
 import convertArtistsArrayToString from '../../../utils/convertArtistsArrayToString'
 
-export default async (query: string, offset: number, offsetAccount: number) => {
+export default async (query: string, offset: number, offsetIncrease: number) => {
 	try {
 		const response: SpotifyApi.TrackSearchResponse = (await spotifyApi.get('search', {
 			params: {
 				q: encodeURI(query),
 				type: 'track',
 				offset,
-				limit: offsetAccount
+				limit: offsetIncrease
 			}
 		})).data
 
