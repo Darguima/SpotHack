@@ -59,6 +59,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 	const { goBack } = useNavigation()
 
 	useEffect(() => {
+		let isMounted = true;
 		(async () => {
 			const response: SpotifyApi.SingleTrackResponse = (await spotifyApi.get(`tracks/${spotifyId}`)).data
 
@@ -88,8 +89,9 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 				artistsArray: response.artists.map(item => ({ name: item.name, spotifyId: item.id }))
 			}
 
-			setMusicInfo(newMusicInfo)
+			if (isMounted) setMusicInfo(newMusicInfo)
 		})()
+		return () => { isMounted = false }
 	}, [])
 
 	return (

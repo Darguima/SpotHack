@@ -24,8 +24,12 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 	const [ytLyricsVideo, setYtLyricsVideo] = useState({ url: 'Loading ...', id: '' })
 
 	useEffect(() => {
+		let isMounted = true;
 		(async () => {
 			const youtubeInfo = await getYoutubeInfo(spotifyId, title, artists)
+
+			if (!isMounted) return
+
 			setYoutubeInfo(youtubeInfo)
 
 			if (youtubeInfo.success === 1) {
@@ -50,9 +54,16 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 				})
 			}
 		})()
+
+		return () => { isMounted = false }
 	}, [])
 
 	const onDownloadButtonPress = async (youtubeId: string, youtubeQuery: string, downloadSource: string) => {
+		if (!youtubeId) {
+			ToastAndroid.show('Wait until we get the Youtube Id', ToastAndroid.LONG)
+			return
+		}
+
 		const downloadStatus = await downloadMachine.addMusicsToDownloadQueue([{
 			spotifyId: spotifyId,
 			youtubeId: youtubeId,
@@ -98,7 +109,7 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 						activeOpacity={0.6}
 						onPress={() => {
 							onDownloadButtonPress(
-								youtubeInfo.youtubeId.ytFirstVideoOnSearch,
+								youtubeInfo.youtubeId?.ytFirstVideoOnSearch,
 								youtubeInfo.youtubeQuery,
 								'ytFirstVideoOnSearch'
 							)
@@ -130,7 +141,7 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 						activeOpacity={0.6}
 						onPress={() => {
 							onDownloadButtonPress(
-								youtubeInfo.youtubeId.ytLyricsVideo,
+								youtubeInfo.youtubeId?.ytLyricsVideo,
 								youtubeInfo.youtubeQuery,
 								'ytLyricsVideo'
 							)

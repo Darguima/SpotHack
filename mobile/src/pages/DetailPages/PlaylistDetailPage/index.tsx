@@ -50,6 +50,7 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
 	const { goBack } = useNavigation()
 
 	useEffect(() => {
+		let isMounted = true;
 		(async () => {
 			const response: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${spotifyId}`)).data
 
@@ -73,8 +74,9 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
 				tracks: response.tracks.items
 			}
 
-			setPlaylistInfo(newPlaylistInfo)
+			if (isMounted) setPlaylistInfo(newPlaylistInfo)
 		})()
+		return () => { isMounted = false }
 	}, [])
 
 	return (
