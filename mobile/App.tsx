@@ -14,10 +14,17 @@ const mobile:React.FC = () => {
 		])
 	}, [])
 
-	RNFS.readDir(RNFS.CachesDirectoryPath + '/musicsVideos')
-		.then(musicsToDelete =>
-			musicsToDelete.forEach(musicToDelete => { RNFS.unlink(musicToDelete.path) })
-		)
+	RNFS.readDir(RNFS.CachesDirectoryPath)
+		.then(foldersOnCache => {
+			if (foldersOnCache
+				.some(pathOnCache => (pathOnCache.name === 'musicsVideos' && pathOnCache.isDirectory()))
+			) {
+				RNFS.readDir(RNFS.CachesDirectoryPath + '/musicsVideos')
+					.then(musicsToDelete =>
+						musicsToDelete.forEach(musicToDelete => RNFS.unlink(musicToDelete.path))
+					)
+			}
+		})
 
 	return (
 		<AuthProvider>
