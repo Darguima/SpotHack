@@ -12,7 +12,8 @@ import { ImageSourcePropType } from 'react-native'
 type onPlaylistUpdateEventFunction = (
 	playlistsChangesOnRootPaths: playlistsChangesSchema,
 	playlistsChanges: playlistsChangesOnPathSchema,
-	downloadsInfo: downloadsInfoSchema
+	downloadsInfo: downloadsInfoSchema,
+	arePlaylistsUpdated: boolean
 	) => void
 
 export interface downloadedMusicInfoSchema {
@@ -104,6 +105,8 @@ export class DownloadManager {
 			this.downloadManagerStarted = true
 		} else return
 
+		this.arePlaylistsUpdated = false
+
 		if (!await getExternalStoragePermissions()) {
 			this.downloadManagerStarted = false
 			return
@@ -121,7 +124,6 @@ export class DownloadManager {
 	set rootPath (newRootPath) {
 		this.rootPathValue = newRootPath
 		if (!this.downloadsInfo[newRootPath]) {
-			this.arePlaylistsUpdated = false
 			this.startDownloadManager()
 		}
 	}
@@ -130,15 +132,14 @@ export class DownloadManager {
 	get arePlaylistsUpdated () { return this.arePlaylistsUpdatedValue }
 	set arePlaylistsUpdated (newArePlaylistsUpdated: boolean) {
 		this.arePlaylistsUpdatedValue = newArePlaylistsUpdated
-		if (newArePlaylistsUpdated) {
-			this.onPlaylistUpdateEventFunctionsArray.forEach(
-				eventFunction => eventFunction(
-					JSON.parse(JSON.stringify(this.playlistsChanges)),
-					JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath])),
-					JSON.parse(JSON.stringify(this.downloadsInfo))
-				)
+		this.onPlaylistUpdateEventFunctionsArray.forEach(
+			eventFunction => eventFunction(
+				JSON.parse(JSON.stringify(this.playlistsChanges)),
+				JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath] || {})),
+				JSON.parse(JSON.stringify(this.downloadsInfo)),
+				newArePlaylistsUpdated
 			)
-		}
+		)
 	}
 
 	public addOnPlaylistUpdateEventFunction (eventFunction: onPlaylistUpdateEventFunction) {

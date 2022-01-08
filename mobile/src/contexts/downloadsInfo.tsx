@@ -32,13 +32,12 @@ export const DownloadsInfoProvider: React.FC = ({ children }) => {
 	}
 
 	useEffect(() => {
-		downloadManager.addOnPlaylistUpdateEventFunction((_, newPlaylistsChanges) => {
+		downloadManager.addOnPlaylistUpdateEventFunction((_, newPlaylistsChanges, __, arePlaylistsUpdated) => {
 			setPlaylistsChangesObject(newPlaylistsChanges)
 			setPlaylistsChanges(Object.keys(newPlaylistsChanges)
 				.map(playlistId => newPlaylistsChanges[playlistId])
 			)
-
-			setPlaylistsChecked(downloadManager.arePlaylistsUpdated)
+			setPlaylistsChecked(arePlaylistsUpdated)
 		})
 	}, [])
 
