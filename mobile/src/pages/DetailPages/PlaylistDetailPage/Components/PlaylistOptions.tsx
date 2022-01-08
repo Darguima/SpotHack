@@ -9,6 +9,7 @@ import downloadMachine, { musicForQueueSchema } from '../../../../SpotHack_Core/
 import createYoutubeQuery from '../../../../utils/createYoutubeQuery'
 import convertArtistsArrayToString from '../../../../utils/convertArtistsArrayToString'
 import useSpotHackSettings from '../../../../contexts/spotHackSettings'
+import Clipboard from '@react-native-community/clipboard'
 
 interface PlaylistOptionsProps {
 	musicsArray: Array<SpotifyApi.PlaylistTrackObject>,
@@ -23,27 +24,39 @@ const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistN
 	return (
 		<ContentBox
 			title="Playlist Options"
-
-			contentStyle={{
-				marginTop: 0,
-				flexDirection: 'row',
-				justifyContent: 'space-between'
-			}}
+			contentStyle={styles.contentBox}
 		>
 
-			<View style={styles.buttonContainer}>
-				<TouchableOpacity
-					style={styles.button}
-					activeOpacity={0.6}
-					onPress={() => { navigate('FlatListMusics', { musicsArray: musicsArray }) }}
-				>
-					<Text style={styles.buttonText}>Songs</Text>
-					<MaterialCommunityIcons name="playlist-music" style={styles.downloadIcon} size={17}/>
+			<View style={styles.twoButtonsContainer}>
+				<View style={[styles.buttonContainer, styles.shortButtonContainer]}>
+					<TouchableOpacity
+						style={styles.button}
+						activeOpacity={0.6}
+						onPress={() => { navigate('FlatListMusics', { musicsArray: musicsArray }) }}
+					>
+						<Text style={styles.buttonText}>Songs</Text>
+						<MaterialCommunityIcons name="playlist-music" style={styles.icon} size={17}/>
 
-				</TouchableOpacity>
+					</TouchableOpacity>
+				</View>
+
+				<View style={[styles.buttonContainer, styles.shortButtonContainer]}>
+					<TouchableOpacity
+						style={styles.button}
+						activeOpacity={0.6}
+						onPress={() => {
+							Clipboard.setString(playlistId)
+							ToastAndroid.show('Copied Playlist Id ', ToastAndroid.LONG)
+						}}
+					>
+						<Text style={styles.buttonText}>Playlist Id</Text>
+						<MaterialCommunityIcons name="clipboard" style={styles.icon} size={17}/>
+
+					</TouchableOpacity>
+				</View>
 			</View>
 
-			<View style={styles.buttonContainer}>
+			<View style={[styles.buttonContainer, styles.bigButtonContainer]}>
 				<TouchableOpacity
 					style={styles.button}
 					activeOpacity={0.6}
@@ -76,17 +89,36 @@ const PlaylistOptions:React.FC<PlaylistOptionsProps> = ({ musicsArray, playlistN
 					}}
 				>
 					<Text style={styles.buttonText}>Download</Text>
-					<MaterialCommunityIcons name="download" style={styles.downloadIcon} size={17}/>
+					<MaterialCommunityIcons name="download" style={styles.icon} size={17}/>
 
 				</TouchableOpacity>
 			</View>
+
 		</ContentBox>
 	)
 }
 
 const styles = StyleSheet.create({
+	contentBox: {
+		marginTop: 0,
+		flexDirection: 'column'
+	},
+
+	twoButtonsContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+
+	bigButtonContainer: {
+		width: '100%'
+	},
+
+	shortButtonContainer: {
+		width: '45%'
+	},
+
 	buttonContainer: {
-		width: '45%',
+		height: 64,
 		marginTop: '10%',
 
 		borderColor: '#1c5ed6',
@@ -100,9 +132,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 
 		width: '100%',
-
-		marginVertical: '10%'
-
+		height: '100%'
 	},
 
 	buttonText: {
@@ -112,7 +142,7 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 
-	downloadIcon: {
+	icon: {
 		color: '#1c5ed6',
 		marginLeft: '5%'
 	}

@@ -1,9 +1,10 @@
 import React from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView, View } from 'react-native'
 
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 import { useNavigation } from '@react-navigation/native'
 
+import BigShortcutsToTabs from './components/BigShortcutsToTabs'
 import ShortcutsToTabs from './components/ShortcutsToTabs'
 import PlaylistsChanges from './components/PlaylistsChanges'
 
@@ -16,14 +17,27 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation: { jumpTo }
 			contentContainerStyle={styles.scrollViewContentContainerStyle}
 		>
 
-			<ShortcutsToTabs navigationFunction={navigate} jumpToRoutePageName="PlaylistsChangesPage">
+			<BigShortcutsToTabs navigationFunction={navigate} jumpToRoutePageName="PlaylistsChangesPage">
 				<PlaylistsChanges />
-			</ShortcutsToTabs>
+			</BigShortcutsToTabs>
 
-			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SearchMusicStack" imageSource={require('../../../assets/searchMusic.png')} />
-			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SearchPlaylistStack" imageSource={require('../../../assets/playlists.png')} />
-			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SavedMusicPage" imageSource={require('../../../assets/savedMusic.png')} />
-			<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SettingsPage" imageSource={require('../../../assets/settings.png')} />
+			<View style={styles.row}>
+
+				<ShortcutsToTabs navigationFunction={navigate} jumpToRoutePageName="DownloadsManagerPage"
+					imageSource={require('../../../assets/downloadManager.png')}
+					descriptionText={'Downloads Manager'}
+				/>
+
+				<ShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SettingsPage"
+					imageSource={require('../../../assets/settings.png')}
+					descriptionText={'Settings Page'}
+				/>
+
+			</View>
+
+			<BigShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SearchMusicStack" imageSource={require('../../../assets/searchMusic.png')} />
+			<BigShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SearchPlaylistStack" imageSource={require('../../../assets/playlists.png')} />
+			<BigShortcutsToTabs navigationFunction={jumpTo} jumpToRoutePageName="SavedMusicPage" imageSource={require('../../../assets/savedMusic.png')} />
 
 		</ScrollView>
 	)
@@ -37,6 +51,13 @@ const styles = StyleSheet.create({
 
 	scrollViewContentContainerStyle: {
 		alignItems: 'center'
+	},
+
+	row: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+
+		width: '80%'
 	}
 })
 

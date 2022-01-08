@@ -19,6 +19,7 @@ interface SearchBarHeaderProps {
 	entypoIconName?: string,
 	iconSize?: number,
 	iconPressAction?: () => void,
+	disabled?: boolean
 
 	titleNumberOfLines?: number,
 	artistsNumberOfLines?: number,
@@ -29,14 +30,18 @@ const MusicPlaylistView:React.FC<SearchBarHeaderProps> = (
 		imageSource, title, artists,
 		style, viewBackgroundColor = '#212121', contentBackgroundColor = '#212121',
 		titleNumberOfLines = 2, artistsNumberOfLines = 1,
-		viewPressAction, entypoIconName, iconSize = 30, iconPressAction = () => {}
+		viewPressAction, entypoIconName, iconSize = 30, iconPressAction = () => {}, disabled = false
 	}) => {
 	return (
 		<View style={[styles.container, { backgroundColor: viewBackgroundColor }, style || {}]}>
 			<View style={[styles.content, { backgroundColor: contentBackgroundColor }]}>
 
 				<View style={styles.leftPart}>
-					<TouchableOpacity style={styles.leftPartButton} onPress={viewPressAction}>
+					<TouchableOpacity
+						style={styles.leftPartButton}
+						onPress={viewPressAction}
+						disabled={disabled}
+					>
 						<View style={styles.imageContainer}>
 							<Image source={imageSource} style={styles.image}/>
 						</View>
@@ -73,7 +78,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 
-		width: '95%',
+		width: '100%',
+		paddingLeft: '5%',
 		minHeight: 75
 
 	},

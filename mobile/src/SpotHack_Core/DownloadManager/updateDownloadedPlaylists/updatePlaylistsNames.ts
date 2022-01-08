@@ -25,26 +25,28 @@ export default async (
 				}))
 
 			await Promise.all(
-				playlistsWithDifferentName.map(async playlist => {
-					if (!await RNFS.exists(playlist.currentPath)) return
-
-					await RNFS.mkdir(playlist.newPath)
-
-					await Promise.all(
-						(await RNFS.readDir(playlist.currentPath))
-							.filter(possibleFile => possibleFile.isFile())
-							.map(musicFile => ({
-								currentPath: playlist.currentPath + '/' + musicFile.name,
-								newPath: playlist.newPath + '/' + musicFile.name
-							}))
-							.map(async musicToMove => {
-								await RNFS.moveFile(musicToMove.currentPath, musicToMove.newPath)
-							})
-					)
-
-					await RNFS.unlink(playlist.currentPath)
-				})
+				playlistsWithDifferentName.map(async playlist => renameFolder(playlist.currentPath, playlist.newPath))
 			)
 		})
 	)
+}
+
+export const renameFolder = async (currentPath: string, newPath: string) => {
+	if (!await RNFS.exists(currentPath) || currentPath === newPath) return
+
+	await RNFS.mkdir(newPath)
+
+	await Promise.all(
+		(await RNFS.readDir(currentPath))
+			.filter(possibleFile => possibleFile.isFile())
+			.map(musicFile => ({
+				currentPath: currentPath + '/' + musicFile.name,
+				newPath: newPath + '/' + musicFile.name
+			}))
+			.map(async musicToMove => {
+				await RNFS.moveFile(musicToMove.currentPath, musicToMove.newPath)
+			})
+	)
+
+	await RNFS.unlink(currentPath)
 }

@@ -11,7 +11,8 @@ import { ImageSourcePropType } from 'react-native'
 
 type onPlaylistUpdateEventFunction = (
 	playlistsChangesOnRootPaths: playlistsChangesSchema,
-	playlistsChanges: playlistsChangesOnPathSchema
+	playlistsChanges: playlistsChangesOnPathSchema,
+	downloadsInfo: downloadsInfoSchema
 	) => void
 
 export interface downloadedMusicInfoSchema {
@@ -93,6 +94,9 @@ export class DownloadManager {
 			this file on `set rootPath`
 			`/src/routes/index.tsx`
 			`/src/SpotHack_Core/DownloadMachine/machineMethods/addMusicsToDownloadQueue.ts`
+
+		* For restart the manager:
+			`/src/pages/SpotHackPages/DownloadsManagerPage/pages/ReferencePlaylistPage.tsx`
 	*/
 	public downloadManagerStarted = false
 	public async startDownloadManager () {
@@ -130,7 +134,8 @@ export class DownloadManager {
 			this.onPlaylistUpdateEventFunctionsArray.forEach(
 				eventFunction => eventFunction(
 					JSON.parse(JSON.stringify(this.playlistsChanges)),
-					JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath]))
+					JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath])),
+					JSON.parse(JSON.stringify(this.downloadsInfo))
 				)
 			)
 		}
@@ -143,7 +148,7 @@ export class DownloadManager {
 	private onPlaylistUpdateEventFunctionsArray: Array<onPlaylistUpdateEventFunction> = []
 
 	private downloadsInfoObject: downloadsInfoSchema = {}
-	protected get downloadsInfo () { return JSON.parse(JSON.stringify(this.downloadsInfoObject)) as downloadsInfoSchema }
+	public get downloadsInfo () { return JSON.parse(JSON.stringify(this.downloadsInfoObject)) as downloadsInfoSchema }
 	protected set downloadsInfo (newDownloadsInfo) {
 		this.downloadsInfoObject = newDownloadsInfo
 
@@ -342,7 +347,7 @@ export class DownloadManager {
 		)
 	}
 
-	protected async addAlreadyDownloadedPlaylistId (playlistId: string) {
+	public async addAlreadyDownloadedPlaylistId (playlistId: string) {
 		if (playlistId === '0') return
 		if (this.alreadyDownloadedPlaylistsIds.indexOf(playlistId) !== -1) return
 

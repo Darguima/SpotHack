@@ -4,6 +4,7 @@ import { Dimensions, Image } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Feather from 'react-native-vector-icons/Feather'
 
 import SearchMusicRoutes from './searchMusic.routes'
 import SearchPlaylistRoutes from './searchPlaylist.routes'
@@ -131,8 +132,8 @@ const AppRoutes: React.FC = () => {
 							tabBarLabel: 'Settings',
 							tabBarIcon: function icon ({ color, focused }) {
 								return (
-									<MaterialCommunityIcons
-										name="account-settings"
+									<Feather
+										name="settings"
 										size={25}
 										color={focused ? '#1c5ed6' : color}
 									/>

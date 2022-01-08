@@ -1,61 +1,54 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, ImageSourcePropType, Text } from 'react-native'
 
 interface ShortcutsToTabsProps {
+	imageSource: ImageSourcePropType,
 	navigationFunction?: <RouteName extends string>(...args: [RouteName] | [RouteName, any]) => void,
 	jumpToRoutePageName?: string,
-	imageSource?: ImageSourcePropType,
-
+	descriptionText?: string
 }
 
 const ShortcutsToTabs:React.FC<ShortcutsToTabsProps> = ({
-	children,
 	navigationFunction = () => {},
 	jumpToRoutePageName = '',
-	imageSource
+	imageSource,
+	descriptionText
 }) => {
-	if (!children && !imageSource) return <></>
-
 	return (
-		<View style={styles.imagesButtonContainer}>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => navigationFunction(jumpToRoutePageName)}
-			>
-				{children}
-				{!children &&
-				<Image
-					source={imageSource!}
-					style={styles.images}
-				/>
-				}
+		<View style={styles.buttonContainer}>
+			<TouchableOpacity onPress={() => navigationFunction(jumpToRoutePageName)}>
+				<View style={styles.imageContainer}>
+					<Image style={styles.image} source={imageSource} resizeMode={'contain'}/>
+				</View>
 
+				{ !!descriptionText &&
+					<Text style={styles.descriptionText}>{descriptionText}</Text>
+				}
 			</TouchableOpacity>
 		</View>
 	)
 }
 
 const styles = StyleSheet.create({
-	imagesButtonContainer: {
-		width: '80%',
-		aspectRatio: 1.5,
-
-		marginVertical: '5%',
-
-		overflow: 'hidden'
+	buttonContainer: {
+		width: '45%'
 	},
 
-	button: {
+	imageContainer: {
+		width: '100%',
+		aspectRatio: 1,
+
+		marginBottom: '5%'
+	},
+
+	image: {
 		width: '100%',
 		height: '100%'
 	},
 
-	images: {
-		resizeMode: 'stretch',
-		width: '100%',
-		height: '100%',
-
-		borderRadius: 25
+	descriptionText: {
+		color: '#fff',
+		fontSize: 18
 	}
 })
 
