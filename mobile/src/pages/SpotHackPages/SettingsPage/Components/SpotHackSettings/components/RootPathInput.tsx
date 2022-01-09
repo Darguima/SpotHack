@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid } from 'react-native'
 
 import useSpotHackSettings from '../../../../../../contexts/spotHackSettings'
+import useDownloadsInfo from '../../../../../../contexts/downloadsInfo'
 import { exists as existsPath, mkdir as createPath, readDir } from 'react-native-fs'
 import ContentBox from '../../../../../Components/ContentBox'
 import { getExternalStoragePermissions } from '../../../../../../utils/getStoragePermissions'
 
-import downloadManager from '../../../../../../SpotHack_Core/DownloadManager'
-
 const RootPathInput:React.FC = () => {
 	const { spotHackSettings, saveNewSpotHackSettings } = useSpotHackSettings()
+	const { playlistsChecked } = useDownloadsInfo()
 
 	const [newRootPath, setNewRootPath] = useState(spotHackSettings.rootPath)
 	const [isNewRootPathValid, setIsNewRootPathValid] = useState(true)
@@ -38,7 +38,7 @@ const RootPathInput:React.FC = () => {
 
 		if (!possibleNewRootPath.endsWith('/')) possibleNewRootPath += '/'
 
-		if (downloadManager.downloadManagerStarted) {
+		if (!playlistsChecked) {
 			setIsNewRootPathValid(false)
 			ToastAndroid.show('Updating playlists - wait a moment', ToastAndroid.LONG)
 			return

@@ -99,24 +99,15 @@ export class DownloadManager {
 		* For restart the manager:
 			`/src/pages/SpotHackPages/DownloadsManagerPage/pages/ReferencePlaylistPage.tsx`
 	*/
-	public downloadManagerStarted = false
-	public async startDownloadManager () {
-		if (this.downloadManagerStarted === false) {
-			this.downloadManagerStarted = true
-		} else return
 
+	public async startDownloadManager () {
 		this.arePlaylistsUpdated = false
 
-		if (!await getExternalStoragePermissions()) {
-			this.downloadManagerStarted = false
-			return
-		}
+		if (!await getExternalStoragePermissions()) return
 
 		await this.getStoredAlreadyDownloadedPlaylistsIds()
 		await this.getStoredDownloadsInfo()
 		await this.updateDownloadedPlaylists()
-
-		this.downloadManagerStarted = false
 	}
 
 	private rootPathValue = ''
@@ -131,15 +122,18 @@ export class DownloadManager {
 	private arePlaylistsUpdatedValue = false
 	get arePlaylistsUpdated () { return this.arePlaylistsUpdatedValue }
 	set arePlaylistsUpdated (newArePlaylistsUpdated: boolean) {
+		const prevArePlaylistsUpdated = this.arePlaylistsUpdatedValue
 		this.arePlaylistsUpdatedValue = newArePlaylistsUpdated
-		this.onPlaylistUpdateEventFunctionsArray.forEach(
-			eventFunction => eventFunction(
-				JSON.parse(JSON.stringify(this.playlistsChanges)),
-				JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath] || {})),
-				JSON.parse(JSON.stringify(this.downloadsInfo)),
-				newArePlaylistsUpdated
+		if (prevArePlaylistsUpdated !== newArePlaylistsUpdated) {
+			this.onPlaylistUpdateEventFunctionsArray.forEach(
+				eventFunction => eventFunction(
+					JSON.parse(JSON.stringify(this.playlistsChanges)),
+					JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath] || {})),
+					JSON.parse(JSON.stringify(this.downloadsInfo)),
+					newArePlaylistsUpdated
+				)
 			)
-		)
+		}
 	}
 
 	public addOnPlaylistUpdateEventFunction (eventFunction: onPlaylistUpdateEventFunction) {
