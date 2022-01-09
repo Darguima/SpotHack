@@ -100,7 +100,10 @@ export class DownloadManager {
 			`/src/pages/SpotHackPages/DownloadsManagerPage/pages/ReferencePlaylistPage.tsx`
 	*/
 
+	private isDownloadManagerAlreadyStarting = false
 	public async startDownloadManager () {
+		if (this.isDownloadManagerAlreadyStarting) return
+		this.isDownloadManagerAlreadyStarting = true
 		this.arePlaylistsUpdated = false
 
 		if (!await getExternalStoragePermissions()) return
@@ -108,6 +111,7 @@ export class DownloadManager {
 		await this.getStoredAlreadyDownloadedPlaylistsIds()
 		await this.getStoredDownloadsInfo()
 		await this.updateDownloadedPlaylists()
+		this.isDownloadManagerAlreadyStarting = false
 	}
 
 	private rootPathValue = ''
@@ -116,6 +120,8 @@ export class DownloadManager {
 		this.rootPathValue = newRootPath
 		if (!this.downloadsInfo[newRootPath]) {
 			this.startDownloadManager()
+		} else {
+			this.triggerOnPlaylistUpdateEventFunctions(this.arePlaylistsUpdated)
 		}
 	}
 
@@ -125,22 +131,26 @@ export class DownloadManager {
 		const prevArePlaylistsUpdated = this.arePlaylistsUpdatedValue
 		this.arePlaylistsUpdatedValue = newArePlaylistsUpdated
 		if (prevArePlaylistsUpdated !== newArePlaylistsUpdated) {
-			this.onPlaylistUpdateEventFunctionsArray.forEach(
-				eventFunction => eventFunction(
-					JSON.parse(JSON.stringify(this.playlistsChanges)),
-					JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath] || {})),
-					JSON.parse(JSON.stringify(this.downloadsInfo)),
-					newArePlaylistsUpdated
-				)
-			)
+			this.triggerOnPlaylistUpdateEventFunctions(newArePlaylistsUpdated)
 		}
 	}
+
+	private onPlaylistUpdateEventFunctionsArray: Array<onPlaylistUpdateEventFunction> = []
 
 	public addOnPlaylistUpdateEventFunction (eventFunction: onPlaylistUpdateEventFunction) {
 		this.onPlaylistUpdateEventFunctionsArray.push(eventFunction)
 	}
 
-	private onPlaylistUpdateEventFunctionsArray: Array<onPlaylistUpdateEventFunction> = []
+	private triggerOnPlaylistUpdateEventFunctions (newArePlaylistsUpdated: boolean) {
+		this.onPlaylistUpdateEventFunctionsArray.forEach(
+			eventFunction => eventFunction(
+				JSON.parse(JSON.stringify(this.playlistsChanges)),
+				JSON.parse(JSON.stringify(this.playlistsChanges[this.rootPath] || {})),
+				JSON.parse(JSON.stringify(this.downloadsInfo)),
+				newArePlaylistsUpdated
+			)
+		)
+	}
 
 	private downloadsInfoObject: downloadsInfoSchema = {}
 	public get downloadsInfo () { return JSON.parse(JSON.stringify(this.downloadsInfoObject)) as downloadsInfoSchema }

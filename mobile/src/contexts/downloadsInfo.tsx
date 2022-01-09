@@ -32,27 +32,18 @@ export const DownloadsInfoProvider: React.FC = ({ children }) => {
 	}
 
 	useEffect(() => {
+		let isMounted = true
 		downloadManager.addOnPlaylistUpdateEventFunction((_, newPlaylistsChanges, __, arePlaylistsUpdated) => {
+			if (!isMounted) return
 			setPlaylistsChangesObject(newPlaylistsChanges)
 			setPlaylistsChanges(Object.keys(newPlaylistsChanges)
 				.map(playlistId => newPlaylistsChanges[playlistId])
 			)
 			setPlaylistsChecked(arePlaylistsUpdated)
 		})
+
+		return () => { isMounted = false }
 	}, [])
-
-	useEffect(() => {
-		if (downloadManager.playlistsChanges[rootPath]) {
-			setPlaylistsChangesObject(JSON.parse(JSON.stringify(downloadManager.playlistsChanges[rootPath])))
-			setPlaylistsChanges(Object.keys(downloadManager.playlistsChanges[rootPath])
-				.map(playlistId => downloadManager.playlistsChanges[rootPath][playlistId]))
-		} else {
-			setPlaylistsChangesObject({})
-			setPlaylistsChanges([])
-		}
-
-		setPlaylistsChecked(downloadManager.arePlaylistsUpdated)
-	}, [rootPath])
 
 	return (
 		<DownloadsInfoContext.Provider value={{
