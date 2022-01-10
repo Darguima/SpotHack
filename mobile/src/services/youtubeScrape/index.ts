@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import axios from 'axios'
+import convertTimerToSeconds from '../../utils/convertTimerToSeconds'
 
 interface searchYoutubeVideoResponse {
 	uploader: {
@@ -29,14 +30,23 @@ const youtubeScrape = axios.create(
 	}
 )
 
-export const scrapeFromYoutubeVideo = async (q: string, ignoreId?: string) => {
+export const scrapeFromYoutubeVideo = async (q: string, ignoreId?: string, minDuration?: number, maxDuration?: number) => {
 	const { data } = await youtubeScrape.get('search', {
 		params: {
 			q
 		}
 	})
 
-	const { results } : {results: Array<searchYoutubeVideoResponse>} = data
+	let { results } : {results: Array<searchYoutubeVideoResponse>} = data
+
+	if (minDuration && maxDuration) {
+		results = results.filter(video => {
+			if (!video?.video?.duration) return false
+			const duration = convertTimerToSeconds(video.video.duration)
+
+			return minDuration <= duration && duration <= maxDuration
+		})
+	}
 
 	if (results.length !== 0) {
 		const video = results[0].video.id !== ignoreId ? results[0] : results[1]

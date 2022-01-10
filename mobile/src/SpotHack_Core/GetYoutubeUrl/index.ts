@@ -5,6 +5,8 @@ import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
 
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
 
+import downloadMachine from '../DownloadMachine'
+
 export interface youtubeIdsSchema {
 	[key: string]: string,
 	ytFirstVideoOnSearch: string,
@@ -20,7 +22,10 @@ export interface getYoutubeUrlReturn {
 	infoSourceIcon: infoSourceIcon
 }
 
-const main = async (spotifyId: string, title: string, artists: string, youtubeQuery?: string) => {
+const main = async (
+	spotifyId: string, title: string, artists: string, youtubeQuery?: string,
+	spotifyDurationSec?: number
+) => {
 	if (!youtubeQuery) { youtubeQuery = createYoutubeQuery(artists, title) }
 
 	const storedYoutubeIds = youtubeIdsStorage.getYoutubeId(spotifyId)
@@ -68,13 +73,30 @@ const main = async (spotifyId: string, title: string, artists: string, youtubeQu
 			infoSourceIcon: 'error'
 		}
 
+		let minDuration: number | undefined
+		let maxDuration: number | undefined
+		if (spotifyDurationSec) {
+			minDuration = spotifyDurationSec * (1 - downloadMachine.musicTimeLimit)
+			maxDuration = spotifyDurationSec * (1 + downloadMachine.musicTimeLimit)
+		}
+
 		/*
 		 * Search the youtubeQuery on Youtube (with scrape-youtube)
 		*/
 
 		try {
-			const ytResponse1stVideoOnSearch = await scrapeFromYoutubeVideo(youtubeQuery)
-			const ytResponseLyricsVideo = await scrapeFromYoutubeVideo(youtubeQuery + ' lyrics', ytResponse1stVideoOnSearch.video.id || '')
+			const ytResponse1stVideoOnSearch = await scrapeFromYoutubeVideo(
+				youtubeQuery,
+				undefined,
+				minDuration,
+				maxDuration
+			)
+			const ytResponseLyricsVideo = await scrapeFromYoutubeVideo(
+				youtubeQuery + ' lyrics',
+				ytResponse1stVideoOnSearch.video.id || '',
+				minDuration,
+				maxDuration
+			)
 
 			if (ytResponse1stVideoOnSearch.success === 1 && ytResponseLyricsVideo.success === 1) {
 				youtubeInfo = {

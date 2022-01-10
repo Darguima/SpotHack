@@ -14,6 +14,7 @@ interface spotHackSettingsSchema {
 	rootPath: string,
 	defaultDownloadSource: string,
 
+	musicTimeLimit: number,
 	slowRender: boolean,
 
 	downloadsPage: {
@@ -25,6 +26,7 @@ const defaultSpotHackSettings: spotHackSettingsSchema = {
 	rootPath: `${DownloadDirectoryPath}/`,
 	defaultDownloadSource: 'ytFirstVideoOnSearch',
 
+	musicTimeLimit: 0.75,
 	slowRender: true,
 
 	downloadsPage: {
@@ -33,14 +35,10 @@ const defaultSpotHackSettings: spotHackSettingsSchema = {
 }
 
 const voidSpotHackSettings: spotHackSettingsSchema = {
+	...defaultSpotHackSettings,
+
 	rootPath: '',
-	defaultDownloadSource: '',
-
-	slowRender: true,
-
-	downloadsPage: {
-		showAlreadyDownloadedMusics: false
-	}
+	defaultDownloadSource: ''
 }
 
 const SpotHackSettingsContext = createContext<SpotHackSettingsContextData>({} as SpotHackSettingsContextData)
@@ -75,6 +73,7 @@ export const SpotHackSettingsProvider: React.FC = ({ children }) => {
 				downloadMachine.setFinalPath(spotHackSettings.rootPath)
 			}
 			downloadMachine.defaultDownloadSource = spotHackSettings.defaultDownloadSource
+			downloadMachine.musicTimeLimit = spotHackSettings.musicTimeLimit
 
 			prevSpotHackSettingsRef.current = spotHackSettings
 		})()

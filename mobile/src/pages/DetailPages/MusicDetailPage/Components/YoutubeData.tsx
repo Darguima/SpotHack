@@ -16,9 +16,10 @@ interface YoutubeDataProps {
 	artists: string
 	thumbnail: string
 	albumName: string
+	spotifyDurationSec: number
 }
 
-const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, thumbnail, albumName }) => {
+const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, thumbnail, albumName, spotifyDurationSec }) => {
 	const [youtubeInfo, setYoutubeInfo] = useState({ success: 0 } as getYoutubeUrlReturn)
 	const [ytFirstVideoOnSearch, setYtFirstVideoOnSearch] = useState({ url: 'Loading ...', id: '' })
 	const [ytLyricsVideo, setYtLyricsVideo] = useState({ url: 'Loading ...', id: '' })
@@ -26,7 +27,8 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 	useEffect(() => {
 		let isMounted = true;
 		(async () => {
-			const youtubeInfo = await getYoutubeInfo(spotifyId, title, artists)
+			if (spotifyDurationSec === 0) return
+			const youtubeInfo = await getYoutubeInfo(spotifyId, title, artists, undefined, spotifyDurationSec)
 
 			if (!isMounted) return
 
@@ -56,7 +58,7 @@ const YoutubeData: React.FC<YoutubeDataProps> = ({ spotifyId, title, artists, th
 		})()
 
 		return () => { isMounted = false }
-	}, [])
+	}, [spotifyDurationSec])
 
 	const onDownloadButtonPress = async (youtubeId: string, youtubeQuery: string, downloadSource: string) => {
 		if (!youtubeId) {

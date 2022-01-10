@@ -105,6 +105,8 @@ export class DownloadMachine {
 	protected finalPath = `${RNFS.DownloadDirectoryPath}/`
 	public setFinalPath = setFinalPath
 
+	public musicTimeLimit = 0.75
+
 	public defaultDownloadSource = 'ytFirstVideoOnSearch'
 
 	public addMusicsToDownloadQueue = addMusicsToDownloadQueue

@@ -115,6 +115,7 @@ const MusicDetailPage:React.FC<MusicDetailPageProps> = ({
 
 				<YoutubeData
 					spotifyId={musicInfo.spotifyId}
+					spotifyDurationSec={musicInfo.duration / 1000}
 					title={musicInfo.title}
 					artists={musicInfo.artists}
 					thumbnail={musicInfo.thumbnail}

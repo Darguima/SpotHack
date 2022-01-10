@@ -10,7 +10,13 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 		const queueIndex = this.youtubeIdsQueue[0]
 
 		if (this.queue[queueIndex].youtubeId === '') {
-			const { youtubeId, infoSourceIcon, success } = await getYoutubeUrl(this.queue[queueIndex].spotifyId, '', '', this.queue[queueIndex].youtubeQuery)
+			const { youtubeId, infoSourceIcon, success } = await getYoutubeUrl(
+				this.queue[queueIndex].spotifyId,
+				'',
+				'',
+				this.queue[queueIndex].youtubeQuery,
+				this.queue[queueIndex].approxDurationMs / 1000
+			)
 
 			if (success !== 0) {
 				// downloadsStatistics

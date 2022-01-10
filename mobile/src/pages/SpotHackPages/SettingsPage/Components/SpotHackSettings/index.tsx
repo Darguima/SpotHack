@@ -1,8 +1,9 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import DefaultDownloadSource from './components/DefaultDownloadSource'
 import RootPathInput from './components/RootPathInput'
+import DefaultDownloadSource from './components/DefaultDownloadSource'
+import MusicTimeLimit from './components/MusicTimeLimit'
 import SlowRender from './components/SlowRender'
 
 const SpotifyAccountSettings:React.FC = () => {
@@ -12,6 +13,8 @@ const SpotifyAccountSettings:React.FC = () => {
 			<RootPathInput />
 
 			<DefaultDownloadSource />
+
+			<MusicTimeLimit />
 
 			<SlowRender />
 
