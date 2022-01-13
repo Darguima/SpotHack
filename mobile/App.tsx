@@ -1,12 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StatusBar, LogBox } from 'react-native'
+import NetInfo from '@react-native-community/netinfo'
 
 import * as RNFS from 'react-native-fs'
 
 import { AuthProvider } from './src/contexts/auth'
 import Routes from './src/routes/index'
+import NoInternetConnection from './src/pages/SpotHackPages/NoInternetConnection'
 
 const mobile:React.FC = () => {
+	const [isOnline, setIsOnline] = useState(false)
+
+	NetInfo.fetch().then(state => {
+		setIsOnline((state.isConnected || false) && (state.isInternetReachable || false))
+	})
+
 	useEffect(() => {
 		LogBox.ignoreLogs([
 			'react-native-ytdl is out of date! If the latest port is available, update with "npm install react-native-ytdl@latest".',
@@ -30,7 +38,8 @@ const mobile:React.FC = () => {
 		<AuthProvider>
 			<StatusBar barStyle={'light-content'} translucent={false} backgroundColor={'#1c5ed6'}/>
 
-			<Routes />
+			{isOnline ? <Routes /> : <NoInternetConnection />}
+
 		</ AuthProvider>
 	)
 }
