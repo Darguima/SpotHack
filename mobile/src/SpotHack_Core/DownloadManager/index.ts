@@ -266,6 +266,18 @@ export class DownloadManager {
 
 			if (!apiPlaylist) return
 
+			const tracks = apiPlaylist.tracks.items
+
+			while (true) {
+				const newTracks: SpotifyApi.PlaylistTrackResponse = (await spotifyApi.get(
+					`playlists/${playlistId}/tracks?offset=${tracks.length}`
+				)).data
+
+				tracks.push(...newTracks.items)
+
+				if (tracks.length >= newTracks.total) break
+			}
+
 			this.apiUpdatedPlaylists[playlistId] = {
 				playlistName: apiPlaylist.name,
 
@@ -273,20 +285,24 @@ export class DownloadManager {
 					? { uri: (apiPlaylist.images[1] || apiPlaylist.images[0]).url }
 					: require('../../assets/graySquare.jpg'),
 
-				tracks: apiPlaylist.tracks.items.map(({ track }) => ({
-					spotifyId: track.id,
+				tracks: tracks
+					.filter(({ track }) => (!!track))
+					.map(({ track }) => {
+						return {
+							spotifyId: track.id,
 
-					title: track.name,
-					artists: convertArtistsArrayToString(track.artists),
+							title: track.name,
+							artists: convertArtistsArrayToString(track.artists),
 
-					youtubeQuery: createYoutubeQuery(convertArtistsArrayToString(track.artists), track.name),
+							youtubeQuery: createYoutubeQuery(convertArtistsArrayToString(track.artists), track.name),
 
-					playlistName: apiPlaylist.name,
-					albumName: track.album.name,
-					thumbnail: track.album.images.length > 0
-						? track.album.images[0].url
-						: '../../assets/graySquare.jpg'
-				}))
+							playlistName: apiPlaylist.name,
+							albumName: track.album.name,
+							thumbnail: track.album.images.length > 0
+								? track.album.images[0].url
+								: '../../assets/graySquare.jpg'
+						}
+					})
 			}
 		}
 

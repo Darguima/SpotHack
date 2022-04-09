@@ -54,6 +54,18 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
 		(async () => {
 			const response: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${spotifyId}`)).data
 
+			const tracks = response.tracks.items
+
+			while (true) {
+				const newTracks: SpotifyApi.PlaylistTrackResponse = (await spotifyApi.get(
+					`playlists/${spotifyId}/tracks?offset=${tracks.length}`
+				)).data
+
+				tracks.push(...newTracks.items)
+
+				if (tracks.length >= newTracks.total) break
+			}
+
 			const newPlaylistInfo = {
 				spotifyId,
 
@@ -66,12 +78,12 @@ const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
 
 				description: response.description || '',
 
-				totalTracks: response.tracks.items.length,
+				totalTracks: response.tracks.total,
 				followers: response.followers.total,
 				isPublic: response.public || true,
 				collaborative: response.collaborative,
 
-				tracks: response.tracks.items
+				tracks: tracks.filter(({ track }) => (!!track.id))
 			}
 
 			if (isMounted) setPlaylistInfo(newPlaylistInfo)
