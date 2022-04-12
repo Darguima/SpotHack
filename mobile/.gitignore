@@ -1,5 +1,4 @@
-src/services/spotify/spotifyApiCredentials.json
-src/services/youtubeApi/youtubeApiCredentials.json
+.env
 
 # OSX
 #

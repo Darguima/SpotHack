@@ -27,6 +27,7 @@
     "on-change": "^2.2.3",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-dotenv": "^3.3.1",
     "react-native-ffmpeg": "^0.5.1",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.9.0",

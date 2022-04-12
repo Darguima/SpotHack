@@ -1,5 +1,5 @@
 import axios from 'axios'
-import youtubeApiCredentials from './youtubeApiCredentials.json'
+import { YOUTUBE_API_KEY } from '@env'
 
 export interface youtubeApiResponseItemsArrayItems {
 	kind: string,
@@ -28,7 +28,7 @@ const youtubeApi = axios.create(
 	{
 		baseURL: 'https://www.googleapis.com/youtube/v3/',
 		params: {
-			key: youtubeApiCredentials.key
+			key: YOUTUBE_API_KEY || ''
 		}
 	}
 )

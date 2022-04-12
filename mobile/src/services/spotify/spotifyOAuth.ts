@@ -4,17 +4,19 @@ import { Linking } from 'react-native'
 import axios from 'axios'
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 
-import spotifyApiCredentials from './spotifyApiCredentials.json'
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@env'
+import { Buffer } from 'buffer'
 import uriQueryParse from '../../utils/uriQueryParse'
 
 const redirectUri = 'com.darguima.spothack://oauthredirect'
+const base64Key = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`, 'utf-8').toString('base64')
 
 export const getoAuthCode = async (setOAuthCode: React.Dispatch<React.SetStateAction<string | undefined>>) => {
 	const scopes = ['playlist-read-private', 'playlist-read-collaborative']
 	try {
 		const url = 'https://accounts.spotify.com/authorize' +
 			'?response_type=code' +
-			'&client_id=' + spotifyApiCredentials.client_id +
+			'&client_id=' + SPOTIFY_CLIENT_ID +
 			'&scope=' + encodeURIComponent(scopes.join(' ')) +
 			'&redirect_uri=' + encodeURIComponent(redirectUri)
 
@@ -55,7 +57,7 @@ export const getOauthCredentials = async (oAuthCode: string) => {
 				},
 
 				headers: {
-					Authorization: `Basic ${spotifyApiCredentials.base64_key}`,
+					Authorization: `Basic ${base64Key}`,
 					'Content-Type': 'application/x-www-form-urlencoded'
 				}
 			}
@@ -88,11 +90,11 @@ export const refreshToken = async (refreshToken: string) => {
 				params: {
 					grant_type: 'refresh_token',
 					refresh_token: refreshToken,
-					client_id: spotifyApiCredentials.client_id
+					client_id: SPOTIFY_CLIENT_ID
 				},
 
 				headers: {
-					Authorization: `Basic ${spotifyApiCredentials.base64_key}`,
+					Authorization: `Basic ${base64Key}`,
 					'Content-Type': 'application/x-www-form-urlencoded'
 				}
 			}
