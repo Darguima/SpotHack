@@ -5,6 +5,8 @@ import addMusicsToDownloadQueue from './machineMethods/addMusicsToDownloadQueue'
 import setFinalPath from './machineMethods/setFinalPath'
 import getDownloadsStatus from './machineMethods/getDownloadsStatus'
 
+import * as fgService from './machineMethods/foregroundService'
+
 import getYoutubeIds from './downloadMethods/getYoutubeIds'
 import getDownloadUrls from './downloadMethods/getDownloadUrls'
 import downloadMusicsVideos from './downloadMethods/downloadMusicsVideos'
@@ -124,6 +126,10 @@ export class DownloadMachine {
 	public removeQueueChangesListener = (functionIdentifier: number) => {
 		this.queueChangesListenerFunctions[functionIdentifier] = () => {}
 	}
+
+	public isFgServiceOn = false
+	protected startFgService = fgService.startFgService
+	public stopFgService = fgService.stopFgService
 
 	protected youtubeIdsQueue = [] as Array<number>
 	protected isGetYoutubeIdsActive = false

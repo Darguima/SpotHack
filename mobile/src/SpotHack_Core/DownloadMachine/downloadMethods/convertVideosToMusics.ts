@@ -71,5 +71,7 @@ export default async function convertVideosToMusics (this: DownloadMachine) {
 	}
 
 	this.isConvertVideosToMusicsActive = false
+	this.stopFgService()
+
 	return 1
 }

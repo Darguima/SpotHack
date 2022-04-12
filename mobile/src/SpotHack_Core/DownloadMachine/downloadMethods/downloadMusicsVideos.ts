@@ -56,6 +56,8 @@ export default async function downloadMusicsVideos (this: DownloadMachine) {
 	}
 
 	this.isDownloadMusicsVideosActive = false
+	this.stopFgService()
+
 	return 1
 }
 

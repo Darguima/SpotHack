@@ -5,6 +5,10 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 	if (this.isGetYoutubeIdsActive === true) return 0
 	this.isGetYoutubeIdsActive = true
 
+	if (this.youtubeIdsQueue.length > 0) {
+		this.startFgService()
+	}
+
 	while (this.youtubeIdsQueue.length > 0) {
 		const queue = this.queue
 		const queueIndex = this.youtubeIdsQueue[0]
@@ -72,6 +76,7 @@ export default async function getYoutubeIds (this: DownloadMachine) {
 	}
 
 	this.isGetYoutubeIdsActive = false
+	this.stopFgService()
 
 	return 1
 }

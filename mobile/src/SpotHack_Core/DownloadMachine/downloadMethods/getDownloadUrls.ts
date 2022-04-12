@@ -46,5 +46,7 @@ export default async function getDownloadUrls (this: DownloadMachine) {
 	}
 
 	this.isGetDownloadUrlsActive = false
+	this.stopFgService()
+
 	return 1
 }

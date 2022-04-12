@@ -2,7 +2,7 @@ import { DownloadMachine } from '../index'
 
 import downloadManager from '../../DownloadManager'
 
-export default function convertVideosToMusics (this: DownloadMachine, queueIndex: number) {
+export default function finishDownload (this: DownloadMachine, queueIndex: number) {
 	const musicInfo = this.queue[queueIndex]
 
 	downloadManager.addDownloadedMusicInfo(

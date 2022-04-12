@@ -7,6 +7,7 @@ import * as RNFS from 'react-native-fs'
 import { AuthProvider } from './src/contexts/auth'
 import Routes from './src/routes/index'
 import NoInternetConnection from './src/pages/SpotHackPages/NoInternetConnection'
+import downloadMachine from './src/SpotHack_Core/DownloadMachine'
 
 const mobile:React.FC = () => {
 	const [isOnline, setIsOnline] = useState(false)
@@ -22,17 +23,19 @@ const mobile:React.FC = () => {
 		])
 	}, [])
 
-	RNFS.readDir(RNFS.CachesDirectoryPath)
-		.then(foldersOnCache => {
-			if (foldersOnCache
-				.some(pathOnCache => (pathOnCache.name === 'musicsVideos' && pathOnCache.isDirectory()))
-			) {
-				RNFS.readDir(RNFS.CachesDirectoryPath + '/musicsVideos')
-					.then(musicsToDelete =>
-						musicsToDelete.forEach(musicToDelete => RNFS.unlink(musicToDelete.path))
-					)
-			}
-		})
+	if (!downloadMachine.isFgServiceOn) {
+		RNFS.readDir(RNFS.CachesDirectoryPath)
+			.then(foldersOnCache => {
+				if (foldersOnCache
+					.some(pathOnCache => (pathOnCache.name === 'musicsVideos' && pathOnCache.isDirectory()))
+				) {
+					RNFS.readDir(RNFS.CachesDirectoryPath + '/musicsVideos')
+						.then(musicsToDelete =>
+							musicsToDelete.forEach(musicToDelete => RNFS.unlink(musicToDelete.path))
+						)
+				}
+			})
+	}
 
 	return (
 		<AuthProvider>

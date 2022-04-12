@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Text, View, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
+import { Text, View, StyleSheet, FlatList, ActivityIndicator, AppState } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import downloadMachine, { queueSchema, defaultStatistics, musicOnQueueSchema, playlistsOnQueueSchema } from '../../../SpotHack_Core/DownloadMachine'
 import StatisticsInfoBox from './components/StatisticsInfoBox'
@@ -61,6 +61,15 @@ const DownloadMusicPage:React.FC<StackScreenProps<any>> = ({ navigation }) => {
 	useEffect(() => {
 		navigation.addListener('focus', onFocus)
 		navigation.addListener('blur', onBlur)
+		AppState.addEventListener('focus', onFocus)
+		AppState.addEventListener('blur', onBlur)
+
+		return () => {
+			navigation.removeListener('focus', onFocus)
+			navigation.removeListener('blur', onBlur)
+			AppState.removeEventListener('focus', onFocus)
+			AppState.removeEventListener('blur', onBlur)
+		}
 	}, [])
 
 	const renderDownloadProgressView = ({ item, index }: {item: musicOnQueueSchema, index: number}) => (
