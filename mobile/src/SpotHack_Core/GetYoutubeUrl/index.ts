@@ -1,5 +1,4 @@
 import youtubeIdsStorage from './youtubeIdsStorage'
-import firebase from '../../services/firebase'
 import { searchYoutubeVideo } from '../../services/youtubeApi'
 import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
 
@@ -13,7 +12,7 @@ export interface youtubeIdsSchema {
 	ytLyricsVideo: string
 }
 
-export type infoSourceIcon = 'error' | 'asyncStorage' | 'firebase' | 'ytScrape' | 'ytApi'
+export type infoSourceIcon = 'error' | 'asyncStorage' | 'ytScrape' | 'ytApi'
 
 export interface getYoutubeUrlReturn {
 	youtubeId: youtubeIdsSchema,
@@ -39,26 +38,7 @@ const main = async (
 		} as getYoutubeUrlReturn
 	}
 
-	/*
-	* Search the youtubeId on Firebase
-	*/
-
 	try {
-		const firebaseResponse = await firebase.getYoutubeId(spotifyId)
-
-		if (firebaseResponse.val()) {
-			const firebaseMusicInfo = JSON.parse(firebaseResponse.val()) as youtubeIdsSchema
-
-			youtubeIdsStorage.storeYoutubeId(spotifyId, firebaseMusicInfo)
-
-			return {
-				youtubeId: firebaseMusicInfo,
-				youtubeQuery: youtubeQuery,
-				success: 1,
-				infoSourceIcon: 'firebase'
-			} as getYoutubeUrlReturn
-		}
-
 		/*
 		 * Search for the video on internet
 		*/
@@ -134,10 +114,9 @@ const main = async (
 		}
 
 		/*
-		 * Save the youtubeId on Firebase and Async Storage
+		 * Save the youtubeId on Async Storage
 		*/
 		if (youtubeInfo.success === 1) {
-			firebase.storeYoutubeId(spotifyId, JSON.stringify(youtubeInfo.youtubeId))
 			youtubeIdsStorage.storeYoutubeId(spotifyId, youtubeInfo.youtubeId)
 		}
 

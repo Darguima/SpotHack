@@ -13,7 +13,6 @@ const YoutubeIdSourcesIcons:React.FC<YoutubeIdSourcesIconsProps> = ({ iconName }
 	const statusIcons: {[key: string]: React.ReactNode} = {
 		loading: <MaterialCommunityIcons name="clock-time-three-outline" size={17} color="#aaa" />,
 		asyncStorage: <MaterialCommunityIcons name="safe" size={20} color="green" />,
-		firebase: <MaterialCommunityIcons name="firebase" size={17} color="yellow" />,
 		ytScrape: <MaterialCommunityIcons name="web" size={18} color="blue" />,
 		ytApi: <MaterialCommunityIcons name="youtube" size={17} color="red" />,
 		error: <Entypo name="cross" size={20} color="red" />
