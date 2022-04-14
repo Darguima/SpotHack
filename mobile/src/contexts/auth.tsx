@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 
+import useSpotifyDevCredentials from './spotifyDevCredentials'
+
 import spotifyOAuth from '../services/spotify/spotifyOAuth'
 import spotifyApi from '../services/spotify/spotifyApi'
 import Axios from 'axios'
@@ -27,6 +29,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
 	const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
 	const [refreshToken, seRefreshToken] = useState<string | undefined>(undefined)
+
+	const { spotifyClientId, spotifyBase64Key, isLoginPossible } = useSpotifyDevCredentials()
 
 	// Take the saved data from AsyncStorage
 	useEffect(() => {
@@ -57,7 +61,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 	useEffect(() => {
 		const refreshAccessToken = async () => {
 			if (refreshToken) {
-				const newAccessToken = await spotifyOAuth.refreshToken(refreshToken)
+				const newAccessToken = await spotifyOAuth.refreshToken(refreshToken, spotifyClientId, spotifyBase64Key)
 
 				if (newAccessToken.access_token === 'error') {
 					return { response: 'error on refresh', refresh: 0 }
@@ -101,8 +105,13 @@ export const AuthProvider: React.FC = ({ children }) => {
 	}, [refreshToken])
 
 	const logIn = async () => {
-		await spotifyOAuth.getoAuthCode(setOAuthCode)
-		// This will change the value on oAuthCode and fire the next useEffect
+		if (isLoginPossible()) {
+			setErrorOnLogin('')
+			await spotifyOAuth.getoAuthCode(setOAuthCode, spotifyClientId)
+			// This will change the value on oAuthCode and fire the next useEffect
+		} else {
+			setErrorOnLogin('Spotify Credentials in fault! Swipe Up!')
+		}
 	}
 
 	// logIn() continue in this useEffect
@@ -111,7 +120,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 		(async () => {
 			if (oAuthCode) {
 				if (oAuthCode !== 'error') {
-					const credentials = await spotifyOAuth.getOauthCredentials(oAuthCode)
+					const credentials = await spotifyOAuth.getOauthCredentials(oAuthCode, spotifyBase64Key)
 
 					if (credentials.access_token && credentials.refresh_token) {
 						if (credentials.access_token !== 'error' && credentials.refresh_token !== 'error') {

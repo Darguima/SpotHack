@@ -4,19 +4,16 @@ import { Linking } from 'react-native'
 import axios from 'axios'
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 
-import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@env'
-import { Buffer } from 'buffer'
 import uriQueryParse from '../../utils/uriQueryParse'
 
 const redirectUri = 'com.darguima.spothack://oauthredirect'
-const base64Key = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`, 'utf-8').toString('base64')
 
-export const getoAuthCode = async (setOAuthCode: React.Dispatch<React.SetStateAction<string | undefined>>) => {
+export const getoAuthCode = async (setOAuthCode: React.Dispatch<React.SetStateAction<string | undefined>>, spotifyClientId: string) => {
 	const scopes = ['playlist-read-private', 'playlist-read-collaborative']
 	try {
 		const url = 'https://accounts.spotify.com/authorize' +
 			'?response_type=code' +
-			'&client_id=' + SPOTIFY_CLIENT_ID +
+			'&client_id=' + spotifyClientId +
 			'&scope=' + encodeURIComponent(scopes.join(' ')) +
 			'&redirect_uri=' + encodeURIComponent(redirectUri)
 
@@ -44,7 +41,7 @@ export const getoAuthCode = async (setOAuthCode: React.Dispatch<React.SetStateAc
 	})
 }
 
-export const getOauthCredentials = async (oAuthCode: string) => {
+export const getOauthCredentials = async (oAuthCode: string, spotifyBase64Key: string) => {
 	try {
 		const oAuthCredentials = await axios.post(
 			'https://accounts.spotify.com/api/token',
@@ -57,7 +54,7 @@ export const getOauthCredentials = async (oAuthCode: string) => {
 				},
 
 				headers: {
-					Authorization: `Basic ${base64Key}`,
+					Authorization: `Basic ${spotifyBase64Key}`,
 					'Content-Type': 'application/x-www-form-urlencoded'
 				}
 			}
@@ -81,7 +78,7 @@ export const getOauthCredentials = async (oAuthCode: string) => {
 	}
 }
 
-export const refreshToken = async (refreshToken: string) => {
+export const refreshToken = async (refreshToken: string, spotifyClientId: string, spotifyBase64Key: string) => {
 	try {
 		const oAuthCredentials = await axios.post(
 			'https://accounts.spotify.com/api/token',
@@ -90,11 +87,11 @@ export const refreshToken = async (refreshToken: string) => {
 				params: {
 					grant_type: 'refresh_token',
 					refresh_token: refreshToken,
-					client_id: SPOTIFY_CLIENT_ID
+					client_id: spotifyClientId
 				},
 
 				headers: {
-					Authorization: `Basic ${base64Key}`,
+					Authorization: `Basic ${spotifyBase64Key}`,
 					'Content-Type': 'application/x-www-form-urlencoded'
 				}
 			}

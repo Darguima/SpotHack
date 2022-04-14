@@ -6264,6 +6264,11 @@ react-native-dotenv@^3.3.1:
   dependencies:
     dotenv "^10.0.0"
 
+react-native-encrypted-storage@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-encrypted-storage/-/react-native-encrypted-storage-4.0.2.tgz#c7d59b1d3ff2f80d572be3e85aaab3fdee16744a"
+  integrity sha512-vneDkHGDuTvLQjUBztqb2YI8QoH1zxdJonPGTS+g57lfJZff9fAjoLSSb6NgMBebpXFcK3I3sEresGyL+3AArw==
+
 react-native-ffmpeg@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/react-native-ffmpeg/-/react-native-ffmpeg-0.5.1.tgz#24e94f346961bad3b46b81b0c89f6182ab0a28d5"
