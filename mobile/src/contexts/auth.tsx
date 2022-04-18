@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 
-import useSpotifyDevCredentials from './spotifyDevCredentials'
+import useSpotifyDevCredentials from './apiCredentials'
 
 import spotifyOAuth from '../services/spotify/spotifyOAuth'
 import spotifyApi from '../services/spotify/spotifyApi'
@@ -30,7 +30,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 	const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
 	const [refreshToken, seRefreshToken] = useState<string | undefined>(undefined)
 
-	const { spotifyClientId, spotifyBase64Key, isLoginPossible } = useSpotifyDevCredentials()
+	const { spotifyClientId, spotifyBase64Key, isSpotifyLoginPossible } = useSpotifyDevCredentials()
 
 	// Take the saved data from AsyncStorage
 	useEffect(() => {
@@ -105,7 +105,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 	}, [refreshToken])
 
 	const logIn = async () => {
-		if (isLoginPossible()) {
+		if (isSpotifyLoginPossible()) {
 			setErrorOnLogin('')
 			await spotifyOAuth.getoAuthCode(setOAuthCode, spotifyClientId)
 			// This will change the value on oAuthCode and fire the next useEffect

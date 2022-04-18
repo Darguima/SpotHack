@@ -4,11 +4,10 @@ import useSpotifyDevCredentials from '../../../../contexts/apiCredentials'
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const SpotifyCredentialsPage:React.FC = () => {
-	const { credentialsStored, storeSpotifyClientId, storeSpotifyClientSecret } = useSpotifyDevCredentials()
+const YoutubeCredentialsPage:React.FC = () => {
+	const { credentialsStored, storeYoutubeApiKey } = useSpotifyDevCredentials()
 
-	const [newSpotifyClientId, setNewSpotifyClientId] = useState(credentialsStored.spotifyClientId)
-	const [newSpotifyClientSecret, setNewSpotifyClientSecret] = useState(credentialsStored.spotifyClientSecret)
+	const [newYoutubeApiKey, setNewYoutubeApiKey] = useState(credentialsStored.youtubeApiKey)
 
 	return (
 		<View style={styles.container}>
@@ -16,58 +15,43 @@ const SpotifyCredentialsPage:React.FC = () => {
 			<View style={styles.infoTextContainer}>
 				<View style={styles.infoTextTitleContainer}>
 					<Text style={styles.infoTextTitle}>
-						Spotify Credentials
+						Youtube Credentials
 					</Text>
-					<MaterialCommunityIcons name="spotify" size={48} color="#4caf50" />
+					<MaterialCommunityIcons name="youtube" size={48} color="#f00" />
 				</View>
 
 				<Text style={styles.infoText}>
-					How to get Spotify Developer Credentials:
+					How to get Youtube API Credentials:
 					{'\n\n'}
-					1. Access <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://developer.spotify.com/dashboard/login')} >Spotify For Developers</Text>.
+					1. Access <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://console.cloud.google.com/getting-started')}>Google Cloud Platform</Text>.
 					{'\n'}
-					2. Login with your Spotify Account.
+					2. Select and create a new project.
 					{'\n'}
-					3. Create An App.
+					3. Add the <Text style={styles.underlinedText}>YouTube Data API v3</Text> to your project from APIs Library.
 					{'\n'}
-					4. Copy the credentials.
+					4. Create and copy the credentials.
 					{'\n\n'}
 					Or you can watch our <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://github.com/Darguima/SpotHack')} >GitHub tutorial video</Text>.
 				</Text>
 
 			</View>
-
 			<View style={styles.inputArea}>
-
 				<View style={styles.inputContainer}>
 
-					<Text style={styles.inputInfoText}>Client Id (required):</Text>
+					<Text style={styles.inputInfoText}>API Key (optional):</Text>
 					<TextInput
 						style={styles.input}
-						value={newSpotifyClientId}
-						onChangeText={text => setNewSpotifyClientId(text)}
-						onEndEditing={({ nativeEvent: { text } }) => { storeSpotifyClientId(text) }}
+						value={newYoutubeApiKey}
+						onChangeText={text => setNewYoutubeApiKey(text)}
+						onEndEditing={({ nativeEvent: { text } }) => { storeYoutubeApiKey(text) }}
 					/>
 
 				</View>
-
-				<View style={styles.inputContainer}>
-
-					<Text style={styles.inputInfoText}>Client Secret (required):</Text>
-					<TextInput
-						style={styles.input}
-						value={newSpotifyClientSecret}
-						onChangeText={text => setNewSpotifyClientSecret(text)}
-						onEndEditing={({ nativeEvent: { text } }) => { storeSpotifyClientSecret(text) }}
-					/>
-
-				</View>
-
 			</View>
 
 			<View style={styles.swipeSideContainer}>
-				<MaterialCommunityIcons name="gesture-swipe-left" size={24} color="#000" />
-				<Text style={styles.swipeSideText}>Swipe Left - Youtube Credentials</Text>
+				<MaterialCommunityIcons name="gesture-swipe-right" size={24} color="#000" />
+				<Text style={styles.swipeSideText}>Swipe Right - Spotify Credentials</Text>
 			</View>
 
 		</View>
@@ -150,4 +134,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default SpotifyCredentialsPage
+export default YoutubeCredentialsPage

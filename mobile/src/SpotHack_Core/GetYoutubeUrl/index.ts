@@ -1,5 +1,5 @@
 import youtubeIdsStorage from './youtubeIdsStorage'
-import { searchYoutubeVideo } from '../../services/youtubeApi'
+import youtubeApi from '../../services/youtubeApi'
 import { scrapeFromYoutubeVideo } from '../../services/youtubeScrape'
 
 import createYoutubeQuery from '../../utils/createYoutubeQuery'
@@ -97,8 +97,8 @@ const main = async (
 		*/
 
 		if (!youtubeInfo.success) {
-			const ytApiResponse1stVideoOnSearch = await searchYoutubeVideo(youtubeQuery)
-			const ytApiResponseLyricsVideo = await searchYoutubeVideo(youtubeQuery + ' lyrics', ytApiResponse1stVideoOnSearch.id.videoId || '')
+			const ytApiResponse1stVideoOnSearch = await youtubeApi.searchYoutubeVideo(youtubeQuery)
+			const ytApiResponseLyricsVideo = await youtubeApi.searchYoutubeVideo(youtubeQuery + ' lyrics', ytApiResponse1stVideoOnSearch.id.videoId || '')
 
 			if (ytApiResponse1stVideoOnSearch.success === 1 && ytApiResponseLyricsVideo.success === 1) {
 				youtubeInfo = {

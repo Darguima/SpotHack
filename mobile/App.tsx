@@ -5,7 +5,7 @@ import NetInfo from '@react-native-community/netinfo'
 import * as RNFS from 'react-native-fs'
 
 import { AuthProvider } from './src/contexts/auth'
-import { SpotifyDevCredentialsProvider } from './src/contexts/spotifyDevCredentials'
+import { ApiCredentialsProvider } from './src/contexts/apiCredentials'
 
 import Routes from './src/routes/index'
 import NoInternetConnection from './src/pages/SpotHackPages/NoInternetConnection'
@@ -40,14 +40,14 @@ const mobile:React.FC = () => {
 	}
 
 	return (
-		<SpotifyDevCredentialsProvider>
+		<ApiCredentialsProvider>
 			<AuthProvider>
 				<StatusBar barStyle={'light-content'} translucent={false} backgroundColor={'#1c5ed6'}/>
 
 				{isOnline ? <Routes /> : <NoInternetConnection />}
 
 			</ AuthProvider>
-		</SpotifyDevCredentialsProvider>
+		</ApiCredentialsProvider>
 	)
 }
 

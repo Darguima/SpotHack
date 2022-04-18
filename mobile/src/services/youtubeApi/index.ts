@@ -24,40 +24,44 @@ export interface searchYoutubeVideoSchema extends youtubeApiResponseItemsArrayIt
 	success: number
 }
 
-const youtubeApi = axios.create(
-	{
-		baseURL: 'https://www.googleapis.com/youtube/v3/',
-		params: {
-			key: YOUTUBE_API_KEY || ''
-		}
+export const youtubeBaseUrl = 'https://www.youtube.com/watch?v='
+const youtubeApiBaseUrl = 'https://www.googleapis.com/youtube/v3'
+
+class YoutubeApi {
+	public apiKey = YOUTUBE_API_KEY || ''
+	public setApiKey (newKey: string) {
+		this.apiKey = newKey
 	}
-)
 
-export const searchYoutubeVideo = async (q: string, ignoreId?: string) => {
-	const youtubeApiResponse: Array<youtubeApiResponseItemsArrayItems> = (await youtubeApi.get('/search', {
-		params: {
-			q,
-			maxResults: 2,
-			type: 'video',
-			videoCategoryId: '10'
+	public async searchYoutubeVideo (q: string, ignoreId?: string) {
+		console.log(`Requested - ${this.apiKey}`)
+
+		const youtubeApiResponse: Array<youtubeApiResponseItemsArrayItems> = (await axios.get(`${youtubeApiBaseUrl}/search`, {
+			params: {
+				q,
+				maxResults: 2,
+				type: 'video',
+				videoCategoryId: '10',
+				key: this.apiKey
+			}
+		})).data.items
+
+		if (youtubeApiResponse.length !== 0) {
+			const video = youtubeApiResponse[0].id.videoId !== ignoreId ? youtubeApiResponse[0] : youtubeApiResponse[1]
+
+			return {
+				...video,
+				success: 1
+			} as searchYoutubeVideoSchema
+		} else {
+			return {
+				success: 0
+			} as searchYoutubeVideoSchema
 		}
-	})).data.items
-
-	if (youtubeApiResponse.length !== 0) {
-		const video = youtubeApiResponse[0].id.videoId !== ignoreId ? youtubeApiResponse[0] : youtubeApiResponse[1]
-
-		return {
-			...video,
-			success: 1
-		} as searchYoutubeVideoSchema
-	} else {
-		return {
-			success: 0
-		} as searchYoutubeVideoSchema
 	}
 }
 
-export const youtubeBaseUrl = 'https://www.youtube.com/watch?v='
+const youtubeApi = new YoutubeApi()
 
 export default youtubeApi
 

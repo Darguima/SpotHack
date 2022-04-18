@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native'
 
 import SpotifyCredentialsPage from './pages/SpotifyCredentialsPage'
 import SpotifyLoginPage from './pages/SpotifyLoginPage'
+import YoutubeCredentialsPage from './pages/YoutubeCredentialsPage'
 
 const LoginPage:React.FC = () => {
 	return (
@@ -12,7 +13,15 @@ const LoginPage:React.FC = () => {
 			showsVerticalScrollIndicator={false}
 		>
 			<SpotifyLoginPage />
-			<SpotifyCredentialsPage />
+
+			<ScrollView
+				horizontal={true}
+				pagingEnabled={true}
+			>
+				<SpotifyCredentialsPage />
+				<YoutubeCredentialsPage />
+			</ScrollView>
+
 		</ScrollView>
 	)
 }
