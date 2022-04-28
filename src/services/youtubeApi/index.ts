@@ -34,8 +34,6 @@ class YoutubeApi {
 	}
 
 	public async searchYoutubeVideo (q: string, ignoreId?: string) {
-		console.log(`Requested - ${this.apiKey}`)
-
 		const youtubeApiResponse: Array<youtubeApiResponseItemsArrayItems> = (await axios.get(`${youtubeApiBaseUrl}/search`, {
 			params: {
 				q,
