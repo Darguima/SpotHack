@@ -46,7 +46,6 @@ buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
-!spotHackKey.keystore
 
 # fastlane
 #

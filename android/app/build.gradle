@@ -153,10 +153,10 @@ android {
         }
 
         release {
-            storeFile file('spotHackKey.keystore')
-            storePassword 'spothack'
-            keyAlias 'spotHackAlias'
-            keyPassword 'spothack'
+            storeFile file('spothack.keystore')
+            storePassword 'password'
+            keyAlias 'spothack'
+            keyPassword 'password'
         }
     }
     buildTypes {
