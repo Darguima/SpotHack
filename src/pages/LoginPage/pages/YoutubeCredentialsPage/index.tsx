@@ -25,13 +25,17 @@ const YoutubeCredentialsPage:React.FC = () => {
 					{'\n\n'}
 					1. Access <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://console.cloud.google.com/getting-started')}>Google Cloud Platform</Text>.
 					{'\n'}
-					2. Select and create a new project.
+					2. Login with any Google Account.
 					{'\n'}
-					3. Add the <Text style={styles.underlinedText}>YouTube Data API v3</Text> to your project from APIs Library.
+					3. Select and create a new project.
 					{'\n'}
-					4. Create and copy the credentials.
+					4. Add the <Text style={styles.underlinedText}>YouTube Data API v3</Text> to your project from APIs Library.
+					{'\n'}
+					6. Fill in the "OAuth consent Screen".
+					{'\n'}
+					5. Create and copy the credentials.
 					{'\n\n'}
-					Or you can watch our <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://github.com/Darguima/SpotHack')} >GitHub tutorial video</Text>.
+					Or you can watch our <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://github.com/Darguima/SpotHack/tree/main#youtube')} >GitHub tutorial video</Text>.
 				</Text>
 
 			</View>

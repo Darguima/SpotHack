@@ -26,13 +26,17 @@ const SpotifyCredentialsPage:React.FC = () => {
 					{'\n\n'}
 					1. Access <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://developer.spotify.com/dashboard/login')} >Spotify For Developers</Text>.
 					{'\n'}
-					2. Login with your Spotify Account.
+					2. Login with any Spotify Account.
 					{'\n'}
 					3. Create An App.
 					{'\n'}
-					4. Copy the credentials.
+					4. Add "com.darguima.spothack://oauthredirect" to "Redirect URIs" on settings.
+					{'\n'}
+					5. Add your account on "Users and Access".
+					{'\n'}
+					6. Copy the credentials.
 					{'\n\n'}
-					Or you can watch our <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://github.com/Darguima/SpotHack')} >GitHub tutorial video</Text>.
+					Or you can watch our <Text style={styles.underlinedText} onPress={() => Linking.openURL('https://github.com/Darguima/SpotHack/tree/main#spotify')} >GitHub tutorial video</Text>.
 				</Text>
 
 			</View>
