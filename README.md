@@ -24,21 +24,21 @@ SpotHack is a project where you can convert your Spotify Playlists to .mp3 files
 
 ## Table of Contents 🗃️
 
-- [Download & Installation](#download--installation)
-- [How it works?](#how-it-works)
-- [Getting Started](#getting-started)
+- [Download & Installation](#download--installation-)
+- [How it works?](#how-it-works-)
+- [Getting Started](#getting-started-)
 - [API Credentials](#api-credentials)
-- [Pages/Features](#pagesfeatures)
-- [Technologies Used](#technologies-used)
-- [Disclaimer](#disclaimer)
-- [License](#license)
+- [Pages/Features](#pagesfeatures-)
+- [Technologies Used](#technologies-used-)
+- [Disclaimer](#-disclaimer-)
+- [License](#license-%EF%B8%8F)
 
 ## Download & Installation 📥📲
 
 You can download this App in the Releases or build the code with some changes that  you may want.
 
 * [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.0/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials))
-* [Download and Build the Code](#getting-started)
+* [Download and Build the Code](#getting-started-)
 
 ## How it works? ⚙⚙
 
@@ -113,7 +113,7 @@ cd android
 
 ---
 
-## API Credentials 🪪
+## API Credentials🪪
 
 For store the credentials you can create a file `.env` with the next structure or you can input the credentials directly in the App, on Login Screen.
 
@@ -145,7 +145,7 @@ https://user-images.githubusercontent.com/49988070/164891563-79bcd7d5-7d0e-417c-
 
 Unlike Spotify, YouTube API is not essential for the App flow, so you can omit this key without problems, but if for some reason the [`YouTube Scrape` Server](https://github.com/HermanFassett/youtube-scrape) is not working, this can be a plan B for Music Download. To get the `API Key` is a little more complicated than Spotify; Follow the next steps:
 
-1. Access the [Google Cloud Platform Console](https://console.cloud.google.com/getting-started).
+1. Access the [Google Cloud Platform Console](https://console.cloud.google.com/getting-started-).
 
 2. Login with any Google Account.
 
