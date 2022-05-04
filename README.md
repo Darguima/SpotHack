@@ -37,8 +37,9 @@ SpotHack is a project where you can convert your Spotify Playlists to .mp3 files
 
 You can download this App in the Releases or build the code with some changes that  you may want.
 
-* [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.0/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials))
+* [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials))
 * [Download and Build the Code](#getting-started-)
+* [Download APK 🔑](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHackLocked.zip) for my friends - (__need password to install__ 🔒)
 
 ## How it works? ⚙⚙
 

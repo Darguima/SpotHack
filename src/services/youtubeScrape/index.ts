@@ -24,14 +24,8 @@ interface searchYoutubeVideoSchema extends searchYoutubeVideoResponse {
 	success: number
 }
 
-const youtubeScrape = axios.create(
-	{
-		baseURL: 'http://youtube-scrape.herokuapp.com/api'
-	}
-)
-
 export const scrapeFromYoutubeVideo = async (q: string, ignoreId?: string, minDuration?: number, maxDuration?: number) => {
-	const { data } = await youtubeScrape.get('search', {
+	const { data } = await axios.get('https://youtube-scrape.herokuapp.com/api/search', {
 		params: {
 			q
 		}
@@ -61,7 +55,5 @@ export const scrapeFromYoutubeVideo = async (q: string, ignoreId?: string, minDu
 		} as searchYoutubeVideoSchema
 	}
 }
-
-export default youtubeScrape
 
 // https://github.com/HermanFassett/youtube-scrape
