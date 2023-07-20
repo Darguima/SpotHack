@@ -38,7 +38,8 @@
     "react-native-screens": "^2.16.1",
     "react-native-tab-view": "^2.15.2",
     "react-native-vector-icons": "^7.1.0",
-    "react-native-ytdl": "^4.8.2"
+    "react-native-ytdl": "^4.8.2",
+    "scrape-youtube": "^2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

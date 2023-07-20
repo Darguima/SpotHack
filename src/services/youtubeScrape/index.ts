@@ -1,49 +1,26 @@
 /* eslint-disable camelcase */
-import axios from 'axios'
+import { youtube, Video } from 'scrape-youtube';
 import convertTimerToSeconds from '../../utils/convertTimerToSeconds'
-
-interface searchYoutubeVideoResponse {
-	uploader: {
-		url: string,
-		username: string,
-		verified: boolean
-	},
-	video: {
-		duration: string,
-		id: string,
-		snippet: string,
-		thumbnail_src: string,
-		title: string,
-		upload_date: string,
-		url: string,
-		views: string
-	}
-}
-
-interface searchYoutubeVideoSchema extends searchYoutubeVideoResponse {
+interface searchYoutubeVideoSchema extends Video {
 	success: number
 }
 
-export const scrapeFromYoutubeVideo = async (q: string, ignoreId?: string, minDuration?: number, maxDuration?: number) => {
-	const { data } = await axios.get('https://youtube-scrape.herokuapp.com/api/search', {
-		params: {
-			q
-		}
-	})
-
-	let { results } : {results: Array<searchYoutubeVideoResponse>} = data
+export const scrapeFromYoutubeVideo = async (query: string, ignoreId?: string, minDuration?: number, maxDuration?: number) => {
+	let { videos } = await youtube.search(query, { type: 'video' });
+	console.log("videos:")
+	console.log(videos)
 
 	if (minDuration && maxDuration) {
-		results = results.filter(video => {
-			if (!video?.video?.duration) return false
-			const duration = convertTimerToSeconds(video.video.duration)
+		videos = videos.filter(video => {
+			if (!video.duration) return false
+			const duration = convertTimerToSeconds(`${video.duration}`)
 
 			return minDuration <= duration && duration <= maxDuration
 		})
 	}
 
-	if (results.length !== 0) {
-		const video = results[0].video.id !== ignoreId ? results[0] : results[1]
+	if (videos.length !== 0) {
+		const video = videos[0].id !== ignoreId ? videos[0] : videos[1]
 
 		return {
 			...video,
