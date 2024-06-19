@@ -6,11 +6,10 @@ import {
   Image,
   ViewStyle,
   ImageSourcePropType,
+  TouchableOpacity,
 } from 'react-native';
 
 import Entypo from 'react-native-vector-icons/Entypo';
-
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 interface SearchBarHeaderProps {
   imageSource: ImageSourcePropType;

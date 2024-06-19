@@ -1,12 +1,17 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, ViewStyle, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ViewStyle,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {musicOnQueueSchema} from '../../../../../SpotHack_Core/DownloadMachine';
 import convertCodeAndErrorsToColor from './convertCodeAndErrorsToColor';
 import MemoizedMusicPlaylistView from './MemoizedMusicPlaylistView';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 interface DownloadProgressViewProps {
   musicInfo: musicOnQueueSchema;

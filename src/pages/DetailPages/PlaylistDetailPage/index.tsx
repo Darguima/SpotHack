@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, ImageSourcePropType, Image} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageSourcePropType,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 
 import Description from './Components/Description';
 import PlaylistOptions from './Components/PlaylistOptions';

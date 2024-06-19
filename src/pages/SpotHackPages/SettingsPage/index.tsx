@@ -1,6 +1,11 @@
 import React from 'react';
-import {Text, View, StyleSheet, KeyboardAvoidingView} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Text,
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 
 import SpotifyAccountSettings from './Components/SpotifyAccountSettings';
 import SpotHackSettings from './Components/SpotHackSettings';

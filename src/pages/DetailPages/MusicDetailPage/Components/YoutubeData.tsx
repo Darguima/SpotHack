@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, Linking, ToastAndroid} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Linking,
+  ToastAndroid,
+  TouchableOpacity,
+} from 'react-native';
 
 import ContentBox from '../../../Components/ContentBox';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,7 +15,6 @@ import getYoutubeInfo, {
   getYoutubeUrlReturn,
 } from '../../../../SpotHack_Core/GetYoutubeUrl';
 import downloadMachine from '../../../../SpotHack_Core/DownloadMachine';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {youtubeBaseUrl} from '../../../../services/youtubeApi';
 import YoutubeIdSourcesIcons from '../../../Components/YoutubeIdSourcesIcons';
 
