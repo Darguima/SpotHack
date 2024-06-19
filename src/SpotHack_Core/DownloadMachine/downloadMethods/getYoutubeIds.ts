@@ -20,6 +20,7 @@ export default async function getYoutubeIds(this: DownloadMachine) {
         this.queue[queueIndex].spotifyId,
         '',
         '',
+        this.musicTimeLimit,
         this.queue[queueIndex].youtubeQuery,
         this.queue[queueIndex].approxDurationMs / 1000,
       );

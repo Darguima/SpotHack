@@ -4,8 +4,6 @@ import {scrapeFromYoutubeVideo} from '../../services/youtubeScrape';
 
 import createYoutubeQuery from '../../utils/createYoutubeQuery';
 
-import downloadMachine from '../DownloadMachine';
-
 export interface youtubeIdsSchema {
   [key: string]: string;
   ytFirstVideoOnSearch: string;
@@ -25,6 +23,7 @@ const main = async (
   spotifyId: string,
   title: string,
   artists: string,
+  musicTimeLimit: number,
   youtubeQuery?: string,
   spotifyDurationSec?: number,
 ) => {
@@ -61,8 +60,8 @@ const main = async (
     let minDuration: number | undefined;
     let maxDuration: number | undefined;
     if (spotifyDurationSec) {
-      minDuration = spotifyDurationSec * (1 - downloadMachine.musicTimeLimit);
-      maxDuration = spotifyDurationSec * (1 + downloadMachine.musicTimeLimit);
+      minDuration = spotifyDurationSec * (1 - musicTimeLimit);
+      maxDuration = spotifyDurationSec * (1 + musicTimeLimit);
     }
 
     /*
