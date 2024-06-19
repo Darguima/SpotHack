@@ -1,14 +1,18 @@
-/* eslint-disable camelcase */
-
 /*
  * Based on types of node-ytdl-core
  * https://www.github.com/fent/node-ytdl-core/typings/index.d.ts
-*/
+ */
 
 declare module 'react-native-ytdl' {
-
   namespace ytdl {
-    type Filter = 'audioandvideo' | 'videoandaudio' | 'video' | 'videoonly' | 'audio' | 'audioonly' | ((format: videoFormat) => boolean);
+    type Filter =
+      | 'audioandvideo'
+      | 'videoandaudio'
+      | 'video'
+      | 'videoonly'
+      | 'audio'
+      | 'audioonly'
+      | ((format: videoFormat) => boolean);
 
     interface getInfoOptions {
       lang?: string;
@@ -16,7 +20,17 @@ declare module 'react-native-ytdl' {
     }
 
     interface chooseFormatOptions {
-      quality?: 'lowest' | 'highest' | 'highestaudio' | 'lowestaudio' | 'highestvideo' | 'lowestvideo' | string | number | string[] | number[];
+      quality?:
+        | 'lowest'
+        | 'highest'
+        | 'highestaudio'
+        | 'lowestaudio'
+        | 'highestvideo'
+        | 'lowestvideo'
+        | string
+        | number
+        | string[]
+        | number[];
       filter?: Filter;
       format?: videoFormat;
     }
@@ -29,14 +43,46 @@ declare module 'react-native-ytdl' {
       audioBitrate?: number;
       width?: number;
       height?: number;
-      initRange?: { start: string; end: string };
-      indexRange?: { start: string; end: string };
+      initRange?: {start: string; end: string};
+      indexRange?: {start: string; end: string};
       lastModified: string;
       contentLength: string;
-      quality: 'tiny' | 'small' | 'medium' | 'large' | 'hd720' | 'hd1080' | 'hd1440' | 'hd2160' | 'highres' | string;
-      qualityLabel: '144p' | '144p 15fps' | '144p60 HDR' | '240p' | '240p60 HDR' | '270p' | '360p' | '360p60 HDR'
-        | '480p' | '480p60 HDR' | '720p' | '720p60' | '720p60 HDR' | '1080p' | '1080p60' | '1080p60 HDR' | '1440p'
-        | '1440p60' | '1440p60 HDR' | '2160p' | '2160p60' | '2160p60 HDR' | '4320p' | '4320p60';
+      quality:
+        | 'tiny'
+        | 'small'
+        | 'medium'
+        | 'large'
+        | 'hd720'
+        | 'hd1080'
+        | 'hd1440'
+        | 'hd2160'
+        | 'highres'
+        | string;
+      qualityLabel:
+        | '144p'
+        | '144p 15fps'
+        | '144p60 HDR'
+        | '240p'
+        | '240p60 HDR'
+        | '270p'
+        | '360p'
+        | '360p60 HDR'
+        | '480p'
+        | '480p60 HDR'
+        | '720p'
+        | '720p60'
+        | '720p60 HDR'
+        | '1080p'
+        | '1080p60'
+        | '1080p60 HDR'
+        | '1440p'
+        | '1440p60'
+        | '1440p60 HDR'
+        | '2160p'
+        | '2160p60'
+        | '2160p60 HDR'
+        | '4320p'
+        | '4320p60';
       projectionType?: 'RECTANGULAR';
       fps?: number;
       averageBitrate?: number;
@@ -75,28 +121,222 @@ declare module 'react-native-ytdl' {
     interface captionTrack {
       baseUrl: string;
       name: {
-        simpleText: 'Afrikaans' | 'Albanian' | 'Amharic' | 'Arabic' | 'Armenian' | 'Azerbaijani' | 'Bangla' | 'Basque'
-        | 'Belarusian' | 'Bosnian' | 'Bulgarian' | 'Burmese' | 'Catalan' | 'Cebuano' | 'Chinese (Simplified)'
-        | 'Chinese (Traditional)' | 'Corsican' | 'Croatian' | 'Czech' | 'Danish' | 'Dutch' | 'English'
-        | 'English (auto-generated)' | 'Esperanto' | 'Estonian' | 'Filipino' | 'Finnish' | 'French' | 'Galician'
-        | 'Georgian' | 'German' | 'Greek' | 'Gujarati' | 'Haitian Creole' | 'Hausa' | 'Hawaiian' | 'Hebrew' | 'Hindi'
-        | 'Hmong' | 'Hungarian' | 'Icelandic' | 'Igbo' | 'Indonesian' | 'Irish' | 'Italian' | 'Japanese' | 'Javanese'
-        | 'Kannada' | 'Kazakh' | 'Khmer' | 'Korean' | 'Kurdish' | 'Kyrgyz' | 'Lao' | 'Latin' | 'Latvian' | 'Lithuanian'
-        | 'Luxembourgish' | 'Macedonian' | 'Malagasy' | 'Malay' | 'Malayalam' | 'Maltese' | 'Maori' | 'Marathi'
-        | 'Mongolian' | 'Nepali' | 'Norwegian' | 'Nyanja' | 'Pashto' | 'Persian' | 'Polish' | 'Portuguese' | 'Punjabi'
-        | 'Romanian' | 'Russian' | 'Samoan' | 'Scottish Gaelic' | 'Serbian' | 'Shona' | 'Sindhi' | 'Sinhala' | 'Slovak'
-        | 'Slovenian' | 'Somali' | 'Southern Sotho' | 'Spanish' | 'Spanish (Spain)' | 'Sundanese' | 'Swahili'
-        | 'Swedish' | 'Tajik' | 'Tamil' | 'Telugu' | 'Thai' | 'Turkish' | 'Ukrainian' | 'Urdu' | 'Uzbek' | 'Vietnamese'
-        | 'Welsh' | 'Western Frisian' | 'Xhosa' | 'Yiddish' | 'Yoruba' | 'Zulu' | string;
+        simpleText:
+          | 'Afrikaans'
+          | 'Albanian'
+          | 'Amharic'
+          | 'Arabic'
+          | 'Armenian'
+          | 'Azerbaijani'
+          | 'Bangla'
+          | 'Basque'
+          | 'Belarusian'
+          | 'Bosnian'
+          | 'Bulgarian'
+          | 'Burmese'
+          | 'Catalan'
+          | 'Cebuano'
+          | 'Chinese (Simplified)'
+          | 'Chinese (Traditional)'
+          | 'Corsican'
+          | 'Croatian'
+          | 'Czech'
+          | 'Danish'
+          | 'Dutch'
+          | 'English'
+          | 'English (auto-generated)'
+          | 'Esperanto'
+          | 'Estonian'
+          | 'Filipino'
+          | 'Finnish'
+          | 'French'
+          | 'Galician'
+          | 'Georgian'
+          | 'German'
+          | 'Greek'
+          | 'Gujarati'
+          | 'Haitian Creole'
+          | 'Hausa'
+          | 'Hawaiian'
+          | 'Hebrew'
+          | 'Hindi'
+          | 'Hmong'
+          | 'Hungarian'
+          | 'Icelandic'
+          | 'Igbo'
+          | 'Indonesian'
+          | 'Irish'
+          | 'Italian'
+          | 'Japanese'
+          | 'Javanese'
+          | 'Kannada'
+          | 'Kazakh'
+          | 'Khmer'
+          | 'Korean'
+          | 'Kurdish'
+          | 'Kyrgyz'
+          | 'Lao'
+          | 'Latin'
+          | 'Latvian'
+          | 'Lithuanian'
+          | 'Luxembourgish'
+          | 'Macedonian'
+          | 'Malagasy'
+          | 'Malay'
+          | 'Malayalam'
+          | 'Maltese'
+          | 'Maori'
+          | 'Marathi'
+          | 'Mongolian'
+          | 'Nepali'
+          | 'Norwegian'
+          | 'Nyanja'
+          | 'Pashto'
+          | 'Persian'
+          | 'Polish'
+          | 'Portuguese'
+          | 'Punjabi'
+          | 'Romanian'
+          | 'Russian'
+          | 'Samoan'
+          | 'Scottish Gaelic'
+          | 'Serbian'
+          | 'Shona'
+          | 'Sindhi'
+          | 'Sinhala'
+          | 'Slovak'
+          | 'Slovenian'
+          | 'Somali'
+          | 'Southern Sotho'
+          | 'Spanish'
+          | 'Spanish (Spain)'
+          | 'Sundanese'
+          | 'Swahili'
+          | 'Swedish'
+          | 'Tajik'
+          | 'Tamil'
+          | 'Telugu'
+          | 'Thai'
+          | 'Turkish'
+          | 'Ukrainian'
+          | 'Urdu'
+          | 'Uzbek'
+          | 'Vietnamese'
+          | 'Welsh'
+          | 'Western Frisian'
+          | 'Xhosa'
+          | 'Yiddish'
+          | 'Yoruba'
+          | 'Zulu'
+          | string;
       };
       vssId: string;
-      languageCode: 'af' | 'sq' | 'am' | 'ar' | 'hy' | 'az' | 'bn' | 'eu' | 'be' | 'bs' | 'bg' | 'my' | 'ca' | 'ceb'
-      | 'zh-Hans' | 'zh-Hant' | 'co' | 'hr' | 'cs' | 'da' | 'nl' | 'en' | 'eo' | 'et' | 'fil' | 'fi' | 'fr' | 'gl'
-      | 'ka' | 'de' | 'el' | 'gu' | 'ht' | 'ha' | 'haw' | 'iw' | 'hi' | 'hmn' | 'hu' | 'is' | 'ig' | 'id' | 'ga' | 'it'
-      | 'ja' | 'jv' | 'kn' | 'kk' | 'km' | 'ko' | 'ku' | 'ky' | 'lo' | 'la' | 'lv' | 'lt' | 'lb' | 'mk' | 'mg' | 'ms'
-      | 'ml' | 'mt' | 'mi' | 'mr' | 'mn' | 'ne' | 'no' | 'ny' | 'ps' | 'fa' | 'pl' | 'pt' | 'pa' | 'ro' | 'ru' | 'sm'
-      | 'gd' | 'sr' | 'sn' | 'sd' | 'si' | 'sk' | 'sl' | 'so' | 'st' | 'es' | 'su' | 'sw' | 'sv' | 'tg' | 'ta' | 'te'
-      | 'th' | 'tr' | 'uk' | 'ur' | 'uz' | 'vi' | 'cy' | 'fy' | 'xh' | 'yi' | 'yo' | 'zu' | string;
+      languageCode:
+        | 'af'
+        | 'sq'
+        | 'am'
+        | 'ar'
+        | 'hy'
+        | 'az'
+        | 'bn'
+        | 'eu'
+        | 'be'
+        | 'bs'
+        | 'bg'
+        | 'my'
+        | 'ca'
+        | 'ceb'
+        | 'zh-Hans'
+        | 'zh-Hant'
+        | 'co'
+        | 'hr'
+        | 'cs'
+        | 'da'
+        | 'nl'
+        | 'en'
+        | 'eo'
+        | 'et'
+        | 'fil'
+        | 'fi'
+        | 'fr'
+        | 'gl'
+        | 'ka'
+        | 'de'
+        | 'el'
+        | 'gu'
+        | 'ht'
+        | 'ha'
+        | 'haw'
+        | 'iw'
+        | 'hi'
+        | 'hmn'
+        | 'hu'
+        | 'is'
+        | 'ig'
+        | 'id'
+        | 'ga'
+        | 'it'
+        | 'ja'
+        | 'jv'
+        | 'kn'
+        | 'kk'
+        | 'km'
+        | 'ko'
+        | 'ku'
+        | 'ky'
+        | 'lo'
+        | 'la'
+        | 'lv'
+        | 'lt'
+        | 'lb'
+        | 'mk'
+        | 'mg'
+        | 'ms'
+        | 'ml'
+        | 'mt'
+        | 'mi'
+        | 'mr'
+        | 'mn'
+        | 'ne'
+        | 'no'
+        | 'ny'
+        | 'ps'
+        | 'fa'
+        | 'pl'
+        | 'pt'
+        | 'pa'
+        | 'ro'
+        | 'ru'
+        | 'sm'
+        | 'gd'
+        | 'sr'
+        | 'sn'
+        | 'sd'
+        | 'si'
+        | 'sk'
+        | 'sl'
+        | 'so'
+        | 'st'
+        | 'es'
+        | 'su'
+        | 'sw'
+        | 'sv'
+        | 'tg'
+        | 'ta'
+        | 'te'
+        | 'th'
+        | 'tr'
+        | 'uk'
+        | 'ur'
+        | 'uz'
+        | 'vi'
+        | 'cy'
+        | 'fy'
+        | 'xh'
+        | 'yi'
+        | 'yo'
+        | 'zu'
+        | string;
       kind: string;
       rtl?: boolean;
       isTranslatable: boolean;
@@ -196,7 +436,9 @@ declare module 'react-native-ytdl' {
       storyboardCount: number;
     }
 
-    interface MoreVideoDetails extends Omit<VideoDetails, 'author' | 'thumbnail' | 'shortDescription'>, Omit<MicroformatRenderer, 'title' | 'description'> {
+    interface MoreVideoDetails
+      extends Omit<VideoDetails, 'author' | 'thumbnail' | 'shortDescription'>,
+        Omit<MicroformatRenderer, 'title' | 'description'> {
       published: number;
       video_url: string;
       age_restricted: boolean;
@@ -360,17 +602,29 @@ declare module 'react-native-ytdl' {
       isLive: boolean;
     }
 
-    function getBasicInfo(url: string, options?: getInfoOptions): Promise<videoInfo>;
+    function getBasicInfo(
+      url: string,
+      options?: getInfoOptions,
+    ): Promise<videoInfo>;
     function getInfo(url: string, options?: getInfoOptions): Promise<videoInfo>;
-    function chooseFormat(format: videoFormat | videoFormat[], options?: chooseFormatOptions): videoFormat | never;
-    function filterFormats(formats: videoFormat | videoFormat[], filter?: Filter): videoFormat[];
+    function chooseFormat(
+      format: videoFormat | videoFormat[],
+      options?: chooseFormatOptions,
+    ): videoFormat | never;
+    function filterFormats(
+      formats: videoFormat | videoFormat[],
+      filter?: Filter,
+    ): videoFormat[];
     function validateID(string: string): boolean;
     function validateURL(string: string): boolean;
     function getURLVideoID(string: string): string | never;
     function getVideoID(string: string): string | never;
   }
 
-  function ytdl(link: string, options?: ytdl.downloadOptions): Promise<Array<{headers: Array<any>, url: string}>>;
+  function ytdl(
+    link: string,
+    options?: ytdl.downloadOptions,
+  ): Promise<Array<{headers: Array<any>; url: string}>>;
 
   export = ytdl;
 }

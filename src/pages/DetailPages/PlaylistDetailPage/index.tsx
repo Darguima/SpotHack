@@ -1,209 +1,218 @@
-import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, ImageSourcePropType, Image } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import React, {useEffect, useState} from 'react';
+import {Text, View, StyleSheet, ImageSourcePropType, Image} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
-import Description from './Components/Description'
-import PlaylistOptions from './Components/PlaylistOptions'
-import PlaylistChanges from './Components/PlaylistChanges'
-import PlaylistData from './Components/PlaylistData'
+import Description from './Components/Description';
+import PlaylistOptions from './Components/PlaylistOptions';
+import PlaylistChanges from './Components/PlaylistChanges';
+import PlaylistData from './Components/PlaylistData';
 
-import Entypo from 'react-native-vector-icons/Entypo'
+import Entypo from 'react-native-vector-icons/Entypo';
 
-import spotifyApi from '../../../services/spotify/spotifyApi'
-import { useNavigation } from '@react-navigation/native'
+import spotifyApi from '../../../services/spotify/spotifyApi';
+import {useNavigation} from '@react-navigation/native';
 
 interface PlaylistDetailPageProps {
-	route: {
-		params: {
-			spotifyId: string,
+  route: {
+    params: {
+      spotifyId: string;
 
-			image?: ImageSourcePropType,
+      image?: ImageSourcePropType;
 
-			name?: string,
-			owner?: string
-		}
-	}
+      name?: string;
+      owner?: string;
+    };
+  };
 }
 
-const PlaylistDetailPage:React.FC<PlaylistDetailPageProps> = ({
-	route: {
-		params:
-	{ spotifyId, image = require('../../../assets/graySquare.jpg'), name = 'Playlist', owner = 'Owner' }
-	}
+const PlaylistDetailPage: React.FC<PlaylistDetailPageProps> = ({
+  route: {
+    params: {
+      spotifyId,
+      image = require('../../../assets/graySquare.jpg'),
+      name = 'Playlist',
+      owner = 'Owner',
+    },
+  },
 }) => {
-	const [playlistInfo, setPlaylistInfo] = useState({
-		spotifyId,
-		image,
-		name,
-		owner,
+  const [playlistInfo, setPlaylistInfo] = useState({
+    spotifyId,
+    image,
+    name,
+    owner,
 
-		description: '',
+    description: '',
 
-		totalTracks: 0,
-		followers: 0,
-		isPublic: false,
-		collaborative: false,
+    totalTracks: 0,
+    followers: 0,
+    isPublic: false,
+    collaborative: false,
 
-		tracks: [] as Array<SpotifyApi.PlaylistTrackObject>
-	})
+    tracks: [] as Array<SpotifyApi.PlaylistTrackObject>,
+  });
 
-	const { goBack } = useNavigation()
+  const {goBack} = useNavigation();
 
-	useEffect(() => {
-		let isMounted = true;
-		(async () => {
-			const response: SpotifyApi.PlaylistObjectFull = (await spotifyApi.get(`playlists/${spotifyId}`)).data
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      const response: SpotifyApi.PlaylistObjectFull = (
+        await spotifyApi.get(`playlists/${spotifyId}`)
+      ).data;
 
-			const tracks = response.tracks.items
+      const tracks = response.tracks.items;
 
-			while (true) {
-				const newTracks: SpotifyApi.PlaylistTrackResponse = (await spotifyApi.get(
-					`playlists/${spotifyId}/tracks?offset=${tracks.length}`
-				)).data
+      while (true) {
+        const newTracks: SpotifyApi.PlaylistTrackResponse = (
+          await spotifyApi.get(
+            `playlists/${spotifyId}/tracks?offset=${tracks.length}`,
+          )
+        ).data;
 
-				tracks.push(...newTracks.items)
+        tracks.push(...newTracks.items);
 
-				if (tracks.length >= newTracks.total) break
-			}
+        if (tracks.length >= newTracks.total) {
+          break;
+        }
+      }
 
-			const newPlaylistInfo = {
-				spotifyId,
+      const newPlaylistInfo = {
+        spotifyId,
 
-				image: response.images.length > 0
-					? { uri: response.images[0].url }
-					: require('../../../assets/graySquare.jpg'),
+        image:
+          response.images.length > 0
+            ? {uri: response.images[0].url}
+            : require('../../../assets/graySquare.jpg'),
 
-				name: response.name,
-				owner: response.owner.display_name || 'Owner',
+        name: response.name,
+        owner: response.owner.display_name || 'Owner',
 
-				description: response.description || '',
+        description: response.description || '',
 
-				totalTracks: response.tracks.total,
-				followers: response.followers.total,
-				isPublic: response.public || true,
-				collaborative: response.collaborative,
+        totalTracks: response.tracks.total,
+        followers: response.followers.total,
+        isPublic: response.public || true,
+        collaborative: response.collaborative,
 
-				tracks: tracks.filter(({ track }) => (!!track.id))
-			}
+        tracks: tracks.filter(({track}) => !!track.id),
+      };
 
-			if (isMounted) setPlaylistInfo(newPlaylistInfo)
-		})()
-		return () => { isMounted = false }
-	}, [])
+      if (isMounted) {
+        setPlaylistInfo(newPlaylistInfo);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-	return (
-		<View style={styles.container}>
-			<ScrollView contentContainerStyle={styles.scrollViewContentContainerStyle}>
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContentContainerStyle}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.goBackIconContainer} onPress={goBack}>
+            <Entypo name="chevron-left" style={styles.goBackIcon} size={30} />
+          </TouchableOpacity>
+        </View>
 
-				<View style={styles.header}>
-					<TouchableOpacity style={styles.goBackIconContainer} onPress={goBack}>
-						<Entypo name="chevron-left" style={styles.goBackIcon} size={30}/>
-					</TouchableOpacity>
-				</View>
+        <View style={styles.mainImageContainer}>
+          <Image source={playlistInfo.image} style={styles.mainImage} />
+        </View>
 
-				<View style={styles.mainImageContainer}>
-					<Image source={playlistInfo.image} style={styles.mainImage} />
-				</View>
+        <View style={styles.playlistNameOwnerContainer}>
+          <Text style={styles.playlistNameText}>{playlistInfo.name}</Text>
+          <Text style={styles.playlistOwnerText}>{playlistInfo.owner}</Text>
+        </View>
 
-				<View style={styles.playlistNameOwnerContainer}>
-					<Text style={styles.playlistNameText}>{playlistInfo.name}</Text>
-					<Text style={styles.playlistOwnerText}>{playlistInfo.owner}</Text>
-				</View>
+        <Description description={playlistInfo.description} />
 
-				<Description
-					description={playlistInfo.description}
-				/>
+        <PlaylistOptions
+          musicsArray={playlistInfo.tracks}
+          playlistName={playlistInfo.name}
+          playlistId={playlistInfo.spotifyId}
+        />
 
-				<PlaylistOptions
-					musicsArray={playlistInfo.tracks}
-					playlistName={playlistInfo.name}
-					playlistId={playlistInfo.spotifyId}
-				/>
+        <PlaylistChanges playlistId={playlistInfo.spotifyId} />
 
-				<PlaylistChanges
-					playlistId={playlistInfo.spotifyId}
-				/>
-
-				<PlaylistData
-					totalTracks={playlistInfo.totalTracks}
-					followers={playlistInfo.followers}
-					isPublic={playlistInfo.isPublic}
-					collaborative={playlistInfo.collaborative}
-				/>
-
-			</ScrollView>
-		</View>
-	)
-}
+        <PlaylistData
+          totalTracks={playlistInfo.totalTracks}
+          followers={playlistInfo.followers}
+          isPublic={playlistInfo.isPublic}
+          collaborative={playlistInfo.collaborative}
+        />
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
+  container: {
+    flex: 1,
 
-		backgroundColor: '#000'
-	},
+    backgroundColor: '#000',
+  },
 
-	header: {
-		flexDirection: 'row',
-		justifyContent: 'flex-start',
-		alignItems: 'center',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
 
-		width: '100%',
-		height: 60,
+    width: '100%',
+    height: 60,
 
-		backgroundColor: '#1c5ed6'
-	},
+    backgroundColor: '#1c5ed6',
+  },
 
-	goBackIconContainer: {
-		justifyContent: 'center',
-		alignItems: 'center',
+  goBackIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
 
-		height: '100%',
-		aspectRatio: 1
-	},
+    height: '100%',
+    aspectRatio: 1,
+  },
 
-	goBackIcon: {
+  goBackIcon: {
+    color: '#fff',
+  },
 
-		color: '#fff'
-	},
+  scrollViewContentContainerStyle: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
 
-	scrollViewContentContainerStyle: {
-		flexGrow: 1,
-		alignItems: 'center'
-	},
+  mainImageContainer: {
+    width: '50%',
+    aspectRatio: 1,
 
-	mainImageContainer: {
-		width: '50%',
-		aspectRatio: 1,
+    marginTop: 50,
+  },
 
-		marginTop: 50
-	},
+  mainImage: {
+    width: '100%',
+    height: '100%',
+  },
 
-	mainImage: {
-		width: '100%',
-		height: '100%'
-	},
+  playlistNameOwnerContainer: {
+    alignItems: 'center',
 
-	playlistNameOwnerContainer: {
-		alignItems: 'center',
+    width: '80%',
+    marginTop: '15%',
+  },
 
-		width: '80%',
-		marginTop: '15%'
-	},
+  playlistNameText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 25,
 
-	playlistNameText: {
-		color: '#fff',
-		textAlign: 'center',
-		fontSize: 25,
+    marginBottom: '4%',
+  },
 
-		marginBottom: '4%'
-	},
+  playlistOwnerText: {
+    color: '#aaa',
+    textAlign: 'center',
+    fontSize: 20,
+  },
+});
 
-	playlistOwnerText: {
-		color: '#aaa',
-		textAlign: 'center',
-		fontSize: 20
-	}
-})
-
-export default PlaylistDetailPage
+export default PlaylistDetailPage;

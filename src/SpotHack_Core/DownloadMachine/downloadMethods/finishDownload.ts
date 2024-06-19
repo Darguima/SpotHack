@@ -1,35 +1,38 @@
-import { DownloadMachine } from '../index'
+import {DownloadMachine} from '../index';
 
-import downloadManager from '../../DownloadManager'
+import downloadManager from '../../DownloadManager';
 
-export default function finishDownload (this: DownloadMachine, queueIndex: number) {
-	const musicInfo = this.queue[queueIndex]
+export default function finishDownload(
+  this: DownloadMachine,
+  queueIndex: number,
+) {
+  const musicInfo = this.queue[queueIndex];
 
-	downloadManager.addDownloadedMusicInfo(
-		musicInfo.playlistId,
-		musicInfo.playlistName,
-		{
-			spotifyId: musicInfo.spotifyId,
+  downloadManager.addDownloadedMusicInfo(
+    musicInfo.playlistId,
+    musicInfo.playlistName,
+    {
+      spotifyId: musicInfo.spotifyId,
 
-			title: musicInfo.musicName,
-			artists: musicInfo.artists,
+      title: musicInfo.musicName,
+      artists: musicInfo.artists,
 
-			albumName: musicInfo.albumName,
-			playlistName: musicInfo.playlistName,
-			thumbnail: musicInfo.thumbnail,
+      albumName: musicInfo.albumName,
+      playlistName: musicInfo.playlistName,
+      thumbnail: musicInfo.thumbnail,
 
-			youtubeQuery: musicInfo.youtubeQuery
-		}
-	)
+      youtubeQuery: musicInfo.youtubeQuery,
+    },
+  );
 
-	// downloadsStatistics
-	this.downloadsStatistics.downloadedMusics += 1
-	// =
+  // downloadsStatistics
+  this.downloadsStatistics.downloadedMusics += 1;
+  // =
 
-	this.queue[queueIndex] = {
-		...musicInfo,
+  this.queue[queueIndex] = {
+    ...musicInfo,
 
-		progress: 6,
-		stage: 'downloadedMusic'
-	}
+    progress: 6,
+    stage: 'downloadedMusic',
+  };
 }

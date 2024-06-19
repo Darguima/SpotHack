@@ -1,11 +1,36 @@
-export default (sentence: string, specialChars = ['#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', '$', '!', "'", '"', ':', '@', '+', '`', '|', '=']) => {
-	const finalSentence = [...sentence]
+export default (
+  sentence: string,
+  specialChars = [
+    '#',
+    '%',
+    '&',
+    '{',
+    '}',
+    '\\',
+    '<',
+    '>',
+    '*',
+    '?',
+    '/',
+    '$',
+    '!',
+    "'",
+    '"',
+    ':',
+    '@',
+    '+',
+    '`',
+    '|',
+    '=',
+  ],
+) => {
+  const finalSentence = [...sentence];
 
-	for (let i = 0; i < finalSentence.length; i++) {
-		if (specialChars.includes(finalSentence[i])) {
-			finalSentence[i] = ''
-		}
-	}
+  for (let i = 0; i < finalSentence.length; i++) {
+    if (specialChars.includes(finalSentence[i])) {
+      finalSentence[i] = '';
+    }
+  }
 
-	return finalSentence.join('')
-}
+  return finalSentence.join('');
+};

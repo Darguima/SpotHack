@@ -1,35 +1,32 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 
-import RootPathInput from './components/RootPathInput'
-import DefaultDownloadSource from './components/DefaultDownloadSource'
-import MusicTimeLimit from './components/MusicTimeLimit'
-import SlowRender from './components/SlowRender'
+import RootPathInput from './components/RootPathInput';
+import DefaultDownloadSource from './components/DefaultDownloadSource';
+import MusicTimeLimit from './components/MusicTimeLimit';
+import SlowRender from './components/SlowRender';
 
-const SpotifyAccountSettings:React.FC = () => {
-	return (
-		<View style={styles.spotHackContainer}>
+const SpotifyAccountSettings: React.FC = () => {
+  return (
+    <View style={styles.spotHackContainer}>
+      <RootPathInput />
 
-			<RootPathInput />
+      <DefaultDownloadSource />
 
-			<DefaultDownloadSource />
+      <MusicTimeLimit />
 
-			<MusicTimeLimit />
-
-			<SlowRender />
-
-		</View>
-	)
-}
+      <SlowRender />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-	spotHackContainer: {
-		flexDirection: 'column',
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-		width: '100%'
-	}
+  spotHackContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '100%',
+  },
+});
 
-})
-
-export default SpotifyAccountSettings
+export default SpotifyAccountSettings;

@@ -1,48 +1,54 @@
-import React, { useEffect } from 'react'
+import React, {useEffect} from 'react';
 
-import { createStackNavigator } from '@react-navigation/stack'
-import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
+import {createStackNavigator} from '@react-navigation/stack';
+import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 
-import SearchMusicPage from '../pages/SpotifyPages/SearchMusicPage'
-import MusicDetailPage from '../pages/DetailPages/MusicDetailPage'
+import SearchMusicPage from '../pages/SpotifyPages/SearchMusicPage';
+import MusicDetailPage from '../pages/DetailPages/MusicDetailPage';
 
-import useAppUtils from '../contexts/appUtils'
+import useAppUtils from '../contexts/appUtils';
 
-const { Navigator, Screen } = createStackNavigator()
+const {Navigator, Screen} = createStackNavigator();
 
-const SearchMusicRoutes: React.FC<MaterialTopTabScreenProps<any>> = ({ navigation }) => {
-	const { changeMusicSearchInputValue } = useAppUtils()
+const SearchMusicRoutes: React.FC<MaterialTopTabScreenProps<any>> = ({
+  navigation,
+}) => {
+  const {changeMusicSearchInputValue} = useAppUtils();
 
-	useEffect(() => {
-		const addListenerTabPress = () => {
-			navigation.addListener('tabPress', handleTabPress)
-		}
+  useEffect(() => {
+    const addListenerTabPress = () => {
+      navigation.addListener('tabPress', handleTabPress);
+    };
 
-		const removeListenerTabPress = () => {
-			navigation.removeListener('tabPress', handleTabPress)
-		}
+    const removeListenerTabPress = () => {
+      navigation.removeListener('tabPress', handleTabPress);
+    };
 
-		const handleTabPress = () => {
-			changeMusicSearchInputValue('')
-		}
+    const handleTabPress = () => {
+      changeMusicSearchInputValue('');
+    };
 
-		navigation.addListener('focus', addListenerTabPress)
+    navigation.addListener('focus', addListenerTabPress);
 
-		navigation.addListener('blur', removeListenerTabPress)
+    navigation.addListener('blur', removeListenerTabPress);
 
-		return () => {
-			navigation.removeListener('focus', addListenerTabPress)
-			navigation.removeListener('blur', removeListenerTabPress)
-		}
-	}, [changeMusicSearchInputValue])
+    return () => {
+      navigation.removeListener('focus', addListenerTabPress);
+      navigation.removeListener('blur', removeListenerTabPress);
+    };
+  }, [changeMusicSearchInputValue]);
 
-	return (
-		<Navigator screenOptions={{ headerShown: false }}>
-			<Screen name="SearchMusicPage" component={SearchMusicPage}/>
+  return (
+    <Navigator screenOptions={{headerShown: false}}>
+      <Screen name="SearchMusicPage" component={SearchMusicPage} />
 
-			<Screen name="MusicDetailPage" component={MusicDetailPage} initialParams={{ spotifyId: '' }}/>
-		</Navigator>
-	)
-}
+      <Screen
+        name="MusicDetailPage"
+        component={MusicDetailPage}
+        initialParams={{spotifyId: ''}}
+      />
+    </Navigator>
+  );
+};
 
-export default SearchMusicRoutes
+export default SearchMusicRoutes;

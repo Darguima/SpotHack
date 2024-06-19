@@ -1,3 +1,4 @@
-const createYoutubeQuery = (artists: string, title: string) => (artists + ' - ' + title)
+const createYoutubeQuery = (artists: string, title: string) =>
+  artists + ' - ' + title;
 
-export default createYoutubeQuery
+export default createYoutubeQuery;
