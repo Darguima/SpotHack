@@ -17,7 +17,7 @@ import downloadMachine, {
 import createYoutubeQuery from '../../../../utils/createYoutubeQuery';
 import convertArtistsArrayToString from '../../../../utils/convertArtistsArrayToString';
 import useSpotHackSettings from '../../../../contexts/spotHackSettings';
-import Clipboard from '@react-native-community/clipboard';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 interface PlaylistOptionsProps {
   musicsArray: Array<SpotifyApi.PlaylistTrackObject>;

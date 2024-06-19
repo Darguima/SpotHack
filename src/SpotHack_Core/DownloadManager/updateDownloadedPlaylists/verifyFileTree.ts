@@ -20,13 +20,15 @@ export default async (
 
   for (const pathIndex in playlistsPaths) {
     const path = playlistsPaths[pathIndex];
-    if (!(await RNFS.exists(path))) continue;
+    if (!(await RNFS.exists(path))) {
+      continue;
+    }
     const playlistsOnPath = (await RNFS.readDir(path))
       .filter(possibleDirectory => possibleDirectory.isDirectory())
       .map(possiblePlaylist => {
         return playlistsIdsNames.find(playlist => {
           return (
-            removeSpecialChars(playlist.playlistName) === possiblePlaylist.name;
+            removeSpecialChars(playlist.playlistName) === possiblePlaylist.name
           );
         });
       })

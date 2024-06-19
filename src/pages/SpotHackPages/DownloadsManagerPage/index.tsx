@@ -70,7 +70,7 @@ const DownloadsManagerPage: React.FC = () => {
             <ActivityIndicator size="large" color="#1c5ed6" />
           </View>
         </View>
-      </>;
+      </>
     );
   }
 
@@ -138,7 +138,7 @@ const DownloadsManagerPage: React.FC = () => {
                 name: playlist.playlistName,
               });
             }}
-          />;
+          />
         );
       })}
     </ScrollView>

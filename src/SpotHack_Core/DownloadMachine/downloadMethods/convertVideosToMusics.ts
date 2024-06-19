@@ -1,4 +1,9 @@
-import {RNFFmpeg, RNFFmpegConfig} from 'react-native-ffmpeg';
+import {
+  FFmpegKit,
+  ReturnCode,
+  FFmpegKitConfig,
+  FFmpegSession,
+} from 'ffmpeg-kit-react-native';
 
 import {DownloadMachine} from '../index';
 
@@ -34,19 +39,22 @@ export default async function convertVideosToMusics(this: DownloadMachine) {
       approxDurationMs,
     } = queue[queueIndex];
 
+    let session: FFmpegSession | undefined;
+
     try {
       await createAssetsOnPath(finalPathWithFile);
 
-      RNFFmpegConfig.enableStatisticsCallback(async ffmpegStatus => {
+      FFmpegKitConfig.enableStatisticsCallback(async ffmpegStatus => {
         queue[queueIndex] = {
           ...queue[queueIndex],
-          stageProgress: (ffmpegStatus.time / Number(approxDurationMs)) * 100,
+          stageProgress:
+            (ffmpegStatus.getTime() / Number(approxDurationMs)) * 100,
         };
       });
 
-      RNFFmpegConfig.disableLogs();
+      // FFmpegKit.disableLogs(); This was used on the deprecated FFmpeg package
 
-      const response = await RNFFmpeg.execute(
+      session = await FFmpegKit.execute(
         `-i "${temporaryPathWithFile}" ${
           thumbnail
             ? '-i "' +
@@ -62,7 +70,9 @@ export default async function convertVideosToMusics(this: DownloadMachine) {
         ])}" -metadata spotifyId="${spotifyId}" -metadata thumbnail="${thumbnail}" "${finalPathWithFile}" -y`,
       );
 
-      if (response !== 0) {
+      const returnCode = await session.getReturnCode();
+
+      if (!ReturnCode.isSuccess(returnCode)) {
         throw new Error('ffmpeg response != 0');
       }
 
@@ -90,8 +100,7 @@ export default async function convertVideosToMusics(this: DownloadMachine) {
 
         progress: 0,
         stage: `convertedVideoToMusic - ${err} - ${
-          (await RNFFmpegConfig.getLastCommandOutput()) ||
-          'no output from ffmpeg'
+          (await session?.getOutput()) || 'no output from ffmpeg'
         }`,
       };
 

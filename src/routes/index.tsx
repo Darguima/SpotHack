@@ -38,7 +38,7 @@ const Routes: React.FC = () => {
       </AppUtilsProvider>
     </UserDataProvider>
   ) : (
-    <AuthRoutes />;
+    <AuthRoutes />
   );
 };
 

@@ -1,5 +1,4 @@
 import * as RNFS from 'react-native-fs';
-import {RNFFmpegConfig, RNFFprobe} from 'react-native-ffmpeg';
 import removeSpecialChars from '../../../utils/removeSpecialChars';
 
 import {
@@ -93,7 +92,7 @@ export default async (
           musicName: fileName.replace('.mp3', ''),
         }));
 
-      RNFFmpegConfig.disableLogs();
+      // FFmpegKit.disableLogs(); This was used on the deprecated FFmpeg package
 
       const filesInfoToRemove: Array<removedMusicToPlaylistInfoSchema> = [];
 

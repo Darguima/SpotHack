@@ -145,7 +145,7 @@ const AddUnrecognizedPlaylistPage: React.FC<Prop> = ({
                 marginTop: '2%',
                 marginBottom: index === rootPathItems.length - 1 ? '4%' : '2%',
               }}
-            />;
+            />
           );
         })}
       </View>

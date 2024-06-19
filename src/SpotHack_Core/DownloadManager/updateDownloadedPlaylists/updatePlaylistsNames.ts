@@ -16,11 +16,15 @@ export default async (
 
       const playlistsWithDifferentName = playlistsIds
         .filter(playlistId => {
-          if (!playlistsOnPath[playlistId] || !apiUpdatedPlaylists[playlistId])
+          if (
+            !playlistsOnPath[playlistId] ||
+            !apiUpdatedPlaylists[playlistId]
+          ) {
             return false;
+          }
           return (
             playlistsOnPath[playlistId].playlistName !==
-            apiUpdatedPlaylists[playlistId].playlistName;
+            apiUpdatedPlaylists[playlistId].playlistName
           );
         })
         .map(playlistId => ({
@@ -41,7 +45,9 @@ export default async (
 };
 
 export const renameFolder = async (currentPath: string, newPath: string) => {
-  if (!(await RNFS.exists(currentPath)) || currentPath === newPath) return;
+  if (!(await RNFS.exists(currentPath)) || currentPath === newPath) {
+    return;
+  }
 
   await RNFS.mkdir(newPath);
 
