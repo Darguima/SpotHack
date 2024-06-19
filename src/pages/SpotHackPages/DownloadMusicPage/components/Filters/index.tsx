@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Switch} from 'react-native';
-import {Picker} from '@react-native-community/picker';
+import {Picker} from '@react-native-picker/picker';
 
 import useSpotHackSettings from '../../../../../contexts/spotHackSettings';
 import {playlistsOnQueueSchema} from '../../../../../SpotHack_Core/DownloadMachine';

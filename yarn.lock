@@ -2159,13 +2159,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/picker@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "@react-native-community/picker@npm:1.8.1"
+"@react-native-picker/picker@npm:^2.7.7":
+  version: 2.7.7
+  resolution: "@react-native-picker/picker@npm:2.7.7"
   peerDependencies:
-    react: ^16.0
-    react-native: ">=0.57"
-  checksum: a38132feb910ea2f79acbdeda523a17641b8eb27d83f62f4a8932f2699e16227f05ce1006f2ba833f10d6054250f88cb3be8b915c4c912c7fd38ff0a2aaf2a55
+    react: "*"
+    react-native: "*"
+  checksum: 54e38c47ca07e70586789bbabe1a57c4e30f1cd071c0d7a7a113dc65ecb10e84bacae93c0445513351e2c41a6a86f880389bdd468f2572dbf1fdbb690a444c93
   languageName: node
   linkType: hard
 
@@ -8220,7 +8220,7 @@ __metadata:
     "@react-native-clipboard/clipboard": ^1.14.1
     "@react-native-community/async-storage": ^1.12.1
     "@react-native-community/netinfo": ^11.3.2
-    "@react-native-community/picker": ^1.8.1
+    "@react-native-picker/picker": ^2.7.7
     "@react-native/babel-preset": 0.74.84
     "@react-native/eslint-config": 0.74.84
     "@react-native/metro-config": 0.74.84
