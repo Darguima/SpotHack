@@ -25,20 +25,20 @@ const AppRoutes: React.FC = () => {
       {userData.display_name /* the page only can render after have the userData */ && (
         <NavigationContainer>
           <Navigator
-            initialRouteName="Home"
+            initialRouteName="HomeStack"
             tabBarPosition="bottom"
             initialLayout={{
               width:
                 Dimensions.get('window')
                   .width /* To don't have half the screen white on initial render */,
             }}
-            tabBarOptions={{
-              inactiveTintColor: '#fff',
-              activeTintColor: '#1c5ed6',
-              showIcon: true,
-              showLabel: false,
+            screenOptions={{
+              tabBarInactiveTintColor: '#fff',
+              tabBarActiveTintColor: '#1c5ed6',
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
 
-              tabStyle: {
+              tabBarStyle: {
                 backgroundColor: '#212121',
               },
             }}>
@@ -77,7 +77,7 @@ const AppRoutes: React.FC = () => {
             />
 
             <Screen
-              name="Home"
+              name="HomeStack"
               component={HomeRoutes}
               options={{
                 tabBarLabel: 'Home',
@@ -99,7 +99,7 @@ const AppRoutes: React.FC = () => {
             />
 
             <Screen
-              name="SavedMusicPage"
+              name="SavedMusicStack"
               component={SavedMusicRoutes}
               options={{
                 tabBarLabel: 'Saved Music',
@@ -116,7 +116,7 @@ const AppRoutes: React.FC = () => {
             />
 
             <Screen
-              name="SettingsPage"
+              name="SettingsStack"
               component={SettingsPage}
               options={{
                 tabBarLabel: 'Settings',
