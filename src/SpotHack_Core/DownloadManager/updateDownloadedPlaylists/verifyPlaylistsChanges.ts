@@ -1,4 +1,5 @@
 import * as RNFS from 'react-native-fs';
+import {FFprobeKit} from 'ffmpeg-kit-react-native';
 import removeSpecialChars from '../../../utils/removeSpecialChars';
 
 import {
@@ -111,11 +112,9 @@ export default async (
           musicName = fileNameSplitted.join(' - ');
         }
 
-        const metadata = (
-          await RNFFprobe.getMediaInformation(file.path)
-        ).getAllProperties() as unknown as {
-          format?: {tags?: {[key: string]: string}};
-        };
+        const metadata = (await FFprobeKit.getMediaInformation(file.path))
+          .getMediaInformation()
+          .getAllProperties();
 
         if (metadata.format) {
           if (metadata.format.tags) {
