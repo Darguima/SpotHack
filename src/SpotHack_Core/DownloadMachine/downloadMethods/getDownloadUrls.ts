@@ -1,5 +1,10 @@
+import axios from 'axios';
 import {DownloadMachine} from '../index';
-import ytdl from 'react-native-ytdl';
+
+interface getDownloadUrlsResponse {
+  approxDurationMs: number;
+  url: string;
+}
 
 export default async function getDownloadUrls(this: DownloadMachine) {
   if (this.isGetDownloadUrlsActive === true) {
@@ -12,10 +17,20 @@ export default async function getDownloadUrls(this: DownloadMachine) {
     const queueIndex = this.downloadUrlsQueue[0];
 
     try {
-      const videoFormats = await ytdl.getInfo(queue[queueIndex].youtubeId);
-      const {approxDurationMs, url} = ytdl.chooseFormat(videoFormats.formats, {
-        quality: 'highestaudio',
-      });
+      if (this.spotHackServerURL === undefined) {
+        throw 'spotHackServerURL is not defined - go to settings';
+      }
+
+      const {data} = await axios.get(
+        `${this.spotHackServerURL}/getDownloadUrls`,
+        {
+          params: {
+            videoId: queue[queueIndex].youtubeId,
+          },
+        },
+      );
+
+      const {approxDurationMs, url}: getDownloadUrlsResponse = data;
 
       // downloadsStatistics
       this.downloadsStatistics.musicsWithDownloadUrl += 1;

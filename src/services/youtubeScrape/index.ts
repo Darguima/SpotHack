@@ -1,58 +1,57 @@
 import axios from 'axios';
-import convertTimerToSeconds from '../../utils/convertTimerToSeconds';
 
 interface searchYoutubeVideoResponse {
-  uploader: {
-    url: string;
-    username: string;
-    verified: boolean;
-  };
-  video: {
-    duration: string;
+  id: string;
+  title: string;
+  link: string;
+  thumbnail: string;
+  channel: {
     id: string;
-    snippet: string;
-    thumbnail_src: string;
-    title: string;
-    upload_date: string;
-    url: string;
-    views: string;
+    name: string;
+    link: string;
+    handle: string;
+    verified: false;
+    thumbnail: string;
   };
+  description: string;
+  views: number;
+  uploaded: string;
+  duration: number;
+  durationString: string;
 }
 
-interface searchYoutubeVideoSchema extends searchYoutubeVideoResponse {
+interface searchYoutubeVideoSchema {
+  id: string;
   success: number;
 }
 
 export const scrapeFromYoutubeVideo = async (
-  q: string,
+  query: string,
+  spotHackServerURL: string,
   ignoreId?: string,
   minDuration?: number,
   maxDuration?: number,
 ) => {
-  const {data} = await axios.get(
-    'https://youtube-scrape.herokuapp.com/api/search',
-    {
-      params: {
-        q,
-      },
+  const {data} = await axios.get(`${spotHackServerURL}/getYoutubeIds`, {
+    params: {
+      query,
     },
-  );
+  });
 
-  let {results}: {results: Array<searchYoutubeVideoResponse>} = data;
+  let results: Array<searchYoutubeVideoResponse> = data;
 
   if (minDuration && maxDuration) {
     results = results.filter(video => {
-      if (!video?.video?.duration) {
+      if (!video?.duration) {
         return false;
       }
-      const duration = convertTimerToSeconds(video.video.duration);
 
-      return minDuration <= duration && duration <= maxDuration;
+      return minDuration <= video.duration && video.duration <= maxDuration;
     });
   }
 
   if (results.length !== 0) {
-    const video = results[0].video.id !== ignoreId ? results[0] : results[1];
+    const video = results[0].id !== ignoreId ? results[0] : results[1];
 
     return {
       ...video,
@@ -64,5 +63,3 @@ export const scrapeFromYoutubeVideo = async (
     } as searchYoutubeVideoSchema;
   }
 };
-
-// https://github.com/HermanFassett/youtube-scrape

@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import RootPathInput from './components/RootPathInput';
+import SpotHackServerUrlInput from './components/SpotHackServerUrlInput';
 import DefaultDownloadSource from './components/DefaultDownloadSource';
 import MusicTimeLimit from './components/MusicTimeLimit';
 import SlowRender from './components/SlowRender';
@@ -10,6 +11,8 @@ const SpotifyAccountSettings: React.FC = () => {
   return (
     <View style={styles.spotHackContainer}>
       <RootPathInput />
+
+      <SpotHackServerUrlInput />
 
       <DefaultDownloadSource />
 

@@ -22,6 +22,8 @@ interface spotHackSettingsSchema {
   rootPath: string;
   defaultDownloadSource: string;
 
+  spothackServerUrl: string | undefined;
+
   musicTimeLimit: number;
   slowRender: boolean;
 
@@ -33,6 +35,8 @@ interface spotHackSettingsSchema {
 const defaultSpotHackSettings: spotHackSettingsSchema = {
   rootPath: `${DownloadDirectoryPath}/`,
   defaultDownloadSource: 'ytFirstVideoOnSearch',
+
+  spothackServerUrl: undefined,
 
   musicTimeLimit: 0.75,
   slowRender: true,
@@ -105,6 +109,8 @@ export const SpotHackSettingsProvider: React.FC = ({children}) => {
 
       prevSpotHackSettingsRef.current = spotHackSettings;
     })();
+
+    downloadMachine.setSpotHackServerURL(spotHackSettings.spothackServerUrl);
   }, [spotHackSettings]);
 
   const saveNewSpotHackSettings = (

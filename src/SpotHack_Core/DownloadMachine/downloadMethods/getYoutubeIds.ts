@@ -21,6 +21,7 @@ export default async function getYoutubeIds(this: DownloadMachine) {
         '',
         '',
         this.musicTimeLimit,
+        this.spotHackServerURL,
         this.queue[queueIndex].youtubeQuery,
         this.queue[queueIndex].approxDurationMs / 1000,
       );

@@ -20,8 +20,8 @@ export interface youtubeApiResponse {
   data: youtubeApiResponseItems;
 }
 
-export interface searchYoutubeVideoSchema
-  extends youtubeApiResponseItemsArrayItems {
+export interface searchYoutubeVideoSchema {
+  id: string;
   success: number;
 }
 
@@ -54,7 +54,7 @@ class YoutubeApi {
           : youtubeApiResponse[1];
 
       return {
-        ...video,
+        id: video.id.videoId,
         success: 1,
       } as searchYoutubeVideoSchema;
     } else {

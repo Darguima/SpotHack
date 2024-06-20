@@ -95,7 +95,8 @@ const RootPathInput: React.FC = () => {
           setNewRootPath(e);
         }}
         editable={rootPathIsEditable}
-        multiline={true}
+        multiline={false}
+        autoCapitalize={'none'}
       />
 
       <View style={styles.buttonsRowContainer}>

@@ -1,5 +1,6 @@
 import * as RNFS from 'react-native-fs';
 import onChange from 'on-change';
+import {SPOTHACK_SERVER_URL} from '@env';
 
 import addMusicsToDownloadQueue from './machineMethods/addMusicsToDownloadQueue';
 import setFinalPath from './machineMethods/setFinalPath';
@@ -116,6 +117,11 @@ export class DownloadMachine {
   protected temporaryPath = `${RNFS.CachesDirectoryPath}/musicsVideos/`;
   protected finalPath = `${RNFS.DownloadDirectoryPath}/`;
   public setFinalPath = setFinalPath;
+
+  protected spotHackServerURL: string | undefined = SPOTHACK_SERVER_URL;
+  public setSpotHackServerURL = (newURL: string | undefined) => {
+    this.spotHackServerURL = newURL || SPOTHACK_SERVER_URL;
+  };
 
   public musicTimeLimit = 0.75;
 

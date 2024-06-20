@@ -5,5 +5,12 @@ declare module '@env' {
 
   const YOUTUBE_API_KEY: string | undefined;
 
-  export {SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, YOUTUBE_API_KEY};
+  const SPOTHACK_SERVER_URL: string | undefined;
+
+  export {
+    SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET,
+    YOUTUBE_API_KEY,
+    SPOTHACK_SERVER_URL,
+  };
 }

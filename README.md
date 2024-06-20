@@ -49,7 +49,7 @@ For future references, this are the next steps to conclude the V1.1:
 
 You can download this App in the Releases or build the code with some changes that  you may want.
 
-* [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials))
+* [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials) and the SpotHack Server)
 * [Download and Build the Code](#getting-started-)
 * [Download APK 🔑](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHackLocked.zip) for my friends - (__need password to install__ 🔒)
 
@@ -57,7 +57,7 @@ You can download this App in the Releases or build the code with some changes th
 
 ## How it works? ⚙⚙
 
-After you select your music or playlist our `Download Machine` will, with the [YouTube Scraper](https://github.com/HermanFassett/youtube-scrape) or the [YouTube API](https://developers.google.com/youtube/v3), search for the music video, with the query starting with the artists name followed by the track name. Once we get the YouTube ID we can download the music video and convert it to  `.mp3` with `ffmpeg`.
+After you select your music or playlist our `Download Machine` will, with the `YouTube Scraper` or the `YouTube API`, search for the music video, with the query starting with the artists name followed by the track name. Once we get the YouTube ID we can download the music video and convert it to  `.mp3` with `ffmpeg`.
 
 ## Getting Started 🚀
 

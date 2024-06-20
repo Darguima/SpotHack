@@ -24,6 +24,7 @@ const main = async (
   title: string,
   artists: string,
   musicTimeLimit: number,
+  spotHackServerURL?: string | undefined,
   youtubeQuery?: string,
   spotifyDurationSec?: number,
 ) => {
@@ -65,19 +66,25 @@ const main = async (
     }
 
     /*
-     * Search the youtubeQuery on Youtube (with scrape-youtube)
+     * Search the youtubeQuery on Youtube with a scraper
      */
 
     try {
+      if (!spotHackServerURL) {
+        throw new Error('just to continue');
+      }
+
       const ytResponse1stVideoOnSearch = await scrapeFromYoutubeVideo(
         youtubeQuery,
+        spotHackServerURL,
         undefined,
         minDuration,
         maxDuration,
       );
       const ytResponseLyricsVideo = await scrapeFromYoutubeVideo(
         youtubeQuery + ' lyrics',
-        ytResponse1stVideoOnSearch.video.id || '',
+        spotHackServerURL,
+        ytResponse1stVideoOnSearch.id || '',
         minDuration,
         maxDuration,
       );
@@ -88,8 +95,8 @@ const main = async (
       ) {
         youtubeInfo = {
           youtubeId: {
-            ytFirstVideoOnSearch: ytResponse1stVideoOnSearch.video.id,
-            ytLyricsVideo: ytResponseLyricsVideo.video.id,
+            ytFirstVideoOnSearch: ytResponse1stVideoOnSearch.id,
+            ytLyricsVideo: ytResponseLyricsVideo.id,
           },
           youtubeQuery: youtubeQuery,
           success: 1,
@@ -108,7 +115,7 @@ const main = async (
       );
       const ytApiResponseLyricsVideo = await youtubeApi.searchYoutubeVideo(
         youtubeQuery + ' lyrics',
-        ytApiResponse1stVideoOnSearch.id.videoId || '',
+        ytApiResponse1stVideoOnSearch.id || '',
       );
 
       if (
@@ -117,8 +124,8 @@ const main = async (
       ) {
         youtubeInfo = {
           youtubeId: {
-            ytFirstVideoOnSearch: ytApiResponse1stVideoOnSearch.id.videoId,
-            ytLyricsVideo: ytApiResponseLyricsVideo.id.videoId,
+            ytFirstVideoOnSearch: ytApiResponse1stVideoOnSearch.id,
+            ytLyricsVideo: ytApiResponseLyricsVideo.id,
           },
           youtubeQuery: youtubeQuery,
           success: 1,
