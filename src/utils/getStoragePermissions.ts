@@ -1,10 +1,14 @@
-import {PermissionsAndroid, PermissionStatus, ToastAndroid} from 'react-native';
+import {PermissionsAndroid, Platform, ToastAndroid} from 'react-native';
 
 const getExternalStoragePermissions = async (errorAction = () => {}) => {
-  let permissionGranted: PermissionStatus = PermissionsAndroid.RESULTS.DENIED;
+  const permissionType =
+    Number(Platform.Version) >= 33
+      ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO
+      : PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
   try {
-    permissionGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    const permissionGranted = await PermissionsAndroid.request(
+      permissionType,
 
       {
         title: 'SpotHack Storage Permission',
@@ -13,19 +17,17 @@ const getExternalStoragePermissions = async (errorAction = () => {}) => {
         buttonPositive: 'Ok',
       },
     );
+
+    if (PermissionsAndroid.RESULTS.GRANTED !== permissionGranted) {
+      errorAction();
+      ToastAndroid.show('We need Storage Permissions', ToastAndroid.LONG);
+    }
+
+    return PermissionsAndroid.RESULTS.GRANTED === permissionGranted;
   } catch (err) {
     errorAction();
     ToastAndroid.show('Error Getting Storage Permissions', ToastAndroid.LONG);
     return false;
-  }
-
-  if (PermissionsAndroid.RESULTS.GRANTED !== permissionGranted) {
-    errorAction();
-    ToastAndroid.show('We need Storage Permissions', ToastAndroid.LONG);
-
-    return false;
-  } else {
-    return true;
   }
 };
 

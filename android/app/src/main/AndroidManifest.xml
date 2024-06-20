@@ -2,7 +2,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- For SDK 32 and lower -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- For SDK 33 and higher -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <application
       android:name=".MainApplication"
