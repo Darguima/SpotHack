@@ -22,6 +22,18 @@ SpotHack is a project where you can convert your Spotify Playlists to .mp3 files
 
 <br/>
 
+## Version 1.1
+
+You are currently in the branch for the V1.1. All the packages (including React Native) were updated (until the last commit). However, we concluded that one crucial package (`react-native-ytdl`) is outdated and doesn't have replacement by now. So this branch is by now paused.
+
+For future references, this are the next steps to conclude the V1.1:
+
+- [ ] Update the `react-native-ytdl` package or find a replacement
+- [ ] Reactive `src/SpotHack_Core/DownloadMachine/machineMethods/foregroundService.ts`
+- [ ] Check if the `react-native-ffmpeg` is still working (mainly because `FFmpegKit.disableLogs()`)
+- [ ] Find a new Youtube Scraper (optional)
+- [ ] Improve the DownloadMachine (optional)
+
 ## Table of Contents 🗃️
 
 - [Download & Installation](#download--installation-)
