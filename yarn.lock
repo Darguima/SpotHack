@@ -7497,7 +7497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-ytdl@npm:latest":
+"react-native-ytdl@npm:^4.8.3":
   version: 4.8.3
   resolution: "react-native-ytdl@npm:4.8.3"
   dependencies:
@@ -8248,7 +8248,7 @@ __metadata:
     react-native-screens: ^3.32.0
     react-native-tab-view: ^3.5.2
     react-native-vector-icons: ^10.1.0
-    react-native-ytdl: latest
+    react-native-ytdl: ^4.8.3
     react-test-renderer: 18.2.0
     typescript: 5.0.4
   languageName: unknown
