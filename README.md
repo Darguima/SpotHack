@@ -34,6 +34,7 @@ For future references, this are the next steps to conclude the V1.1:
 - [ ] Find a new Youtube Scraper (optional)
 - [ ] Improve the DownloadMachine (optional)
 
+
 ## Table of Contents 🗃️
 
 - [Download & Installation](#download--installation-)

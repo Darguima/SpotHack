@@ -33,7 +33,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({
 
         <ShortcutsToTabs
           navigationFunction={jumpTo}
-          jumpToRoutePageName="SettingsPage"
+          jumpToRoutePageName="SettingsStack"
           imageSource={require('../../../assets/settings.png')}
           descriptionText={'Settings Page'}
         />
@@ -51,7 +51,7 @@ const Home: React.FC<MaterialTopTabScreenProps<any>> = ({
       />
       <BigShortcutsToTabs
         navigationFunction={jumpTo}
-        jumpToRoutePageName="SavedMusicPage"
+        jumpToRoutePageName="SavedMusicStack"
         imageSource={require('../../../assets/savedMusic.png')}
       />
     </ScrollView>
