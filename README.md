@@ -9,7 +9,7 @@
 </h2>
 
 <p align="center">
-SpotHack is a project where you can convert your Spotify Playlists to .mp3 files in the respective folder. Download your favorites musics and playlists to listen when you are offline. SpotHack is also an open-source project so is possible anyone help since reporting bugs, writing code, documentation, giving ideas or just checking the <a href="https://www.github.com/Darguima/SpotHack">homepage</a>.
+SpotHack is a project that allows you to convert your Spotify playlists to .mp3 files in the respective folder. Download your favorite music and playlists to listen to when you are offline. SpotHaSpotHack is also an open-source project, so anyone can help by reporting bugs, writing code, contributing to documentation, providing ideas, or just checking the <a href="https://www.github.com/Darguima/SpotHack">homepage</a>.
 </p>
 
 <h4 align="center">
@@ -47,9 +47,9 @@ For future references, this are the next steps to conclude the V1.1:
 
 ## Download & Installation 📥📲
 
-You can download this App in the Releases or build the code with some changes that  you may want.
+You can download this app from the Releases section or build the code with any changes you may want.
 
-* [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials) and the SpotHack Server)
+* [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials) and the [SpotHack Server](#spothack-server-))
 * [Download and Build the Code](#getting-started-)
 * [Download APK 🔑](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHackLocked.zip) for my friends - (__need password to install__ 🔒)
 
@@ -57,7 +57,7 @@ You can download this App in the Releases or build the code with some changes th
 
 ## How it works? ⚙⚙
 
-After you select your music or playlist our `Download Machine` will, with the `YouTube Scraper` or the `YouTube API`, search for the music video, with the query starting with the artists name followed by the track name. Once we get the YouTube ID we can download the music video and convert it to  `.mp3` with `ffmpeg`.
+After you select your music or playlist, our `Download Machine` will use the `YouTube Scraper` or the YouTube API to search for the music video, starting with the artist's name followed by the track name. Once we get the YouTube ID, we can download the music video and convert it to `.mp3` with `ffmpeg`.
 
 ## Getting Started 🚀
 
@@ -69,7 +69,7 @@ After you select your music or playlist our `Download Machine` will, with the `Y
 
 - `Node 18` or newer;
 
-- For run the project you will need the `React Native` Environment configured. You can follow the [ReactNative Official Documentation](https://reactnative.dev/docs/environment-setup#development-os);
+- To run the project, you will need the `React Native` Environment configured. You can follow the [ReactNative Official Documentation](https://reactnative.dev/docs/environment-setup#development-os);
 
 
 ##### Cloning
@@ -84,11 +84,17 @@ $ git clone git@github.com:Darguima/SpotHack.git
 $ yarn
 ```
 
+##### Setting the SpotHack Server 🌐
+
+Unfortunately, after the first version we needed to create a server to deal with some steps.
+
+You can save the Server URL in a `.env` file or input them directly on the App. To deploy the server you can follow our [tutorial](#spothack-server-).
+
 ##### Set credentials for third-party APIs 🪪
 
 This App use 2 third-party APIs:
 * Spotify Api (Web Api)
-* Youtube Api (YouTube Data API v3)
+* Youtube Api (YouTube Data API v3) - optional
 
 You can save this credentials in a `.env` file or input them directly on the App. To get the required credentials you can follow our [tutorial](#api-credentials).
 
@@ -108,7 +114,7 @@ At this moment you should have a Android Emulator with `SpotHack` running
 
 #### Generate a KeyStore 🔑
 
-Fill in the required inputs (and remember the password):
+Fill in the required fields (and remember the password):
 
 ```bash
 $ keytool -genkey -v -keystore android/app/spothack.keystore -alias spothack -keyalg RSA -keysize 2048 -validity 10000
@@ -129,9 +135,40 @@ cd android
 
 ---
 
-## API Credentials🪪
+## SpotHack Server 🌐
 
-For store the credentials you can create a file `.env` with the next structure or you can input the credentials directly in the App, on Login Screen.
+The initial version of SpotHack managed to don't rely on a server, however, due the Youtube restrictions and the React Native limitations, we had to create a Node.js server that is dealing with some steps (by now, is doing the Youtube Scrape and the conversion from the video Id to a downloadable link).
+
+To host this server, you can use basic computers (like Raspberry Pi), since it is just a small [Express](http://expressjs.com/) server. If you don't want a dedicated server, you can even use your computer, as long as the server is on when you are using the app.
+
+To setup the server you can follow the next steps:
+
+```bash
+# Clone this repo on a dedicated folder
+$ git clone git@github.com:Darguima/SpotHack.git SpotHackServer 
+
+# Enter the folder
+$ cd SpotHackServer
+
+# Install the dependencies
+$ yarn
+
+# Start the server
+$ yarn build
+$ yarn deploy
+```
+
+Now you need to provide the server URL to the app. To store the URL, you can create a file named `.env` with the following structure, or you can input it directly in the app, below the login page or in the app settings.
+
+```env
+SPOTHACK_SERVER_URL= ...
+```
+
+---
+
+## API Credentials 🪪
+
+To store the credentials, you can create a file named `.env` with the following structure, or you can input the credentials directly in the app, below the Login Page.
 
 ```env
 SPOTIFY_CLIENT_ID= ...
@@ -141,7 +178,7 @@ YOUTUBE_API_KEY= ...
 
 ### Spotify
 
-As the entire App is based on Spotify's repertoire, it is required have access to their API, or in others words: a `Client Id` and a `Client Secret`. To get this tokens you can follow the next tutorial:
+As the entire app is based on Spotify's repertoire, it is required to have access to their API, or in other words, a `Client ID` and a `Client Secret`. To get these tokens, you can follow this tutorial:
 
 1. Access the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).
 
@@ -159,7 +196,9 @@ https://user-images.githubusercontent.com/49988070/164891563-79bcd7d5-7d0e-417c-
 
 ### YouTube
 
-Unlike Spotify, YouTube API is not essential for the App flow, so you can omit this key without problems, but if for some reason the [`YouTube Scrape` Server](https://github.com/HermanFassett/youtube-scrape) is not working, this can be a plan B for Music Download. To get the `API Key` is a little more complicated than Spotify; Follow the next steps:
+Unlike Spotify, the YouTube API is not essential for the app flow, so you can omit this key without any issues. However, if for some reason the [`YouTube Scrape` Server](https://github.com/HermanFassett/youtube-scrape) is not working, this can serve as a backup plan for Music Download.
+
+Unlike Spotify, YouTube API is not essential for the App flow, so you can omit this key without problems, but if for some reason the [`YouTube Scrape` Server](https://github.com/HermanFassett/youtube-scrape) is not working, this can be a plan B for Music Download. Getting the `API Key` is a bit more complicated than for Spotify; follow these steps:
 
 1. Access the [Google Cloud Platform Console](https://console.cloud.google.com/getting-started-).
 
@@ -255,10 +294,9 @@ ___
 	- [react-native-dotenv](https://github.com/goatandsheep/react-native-dotenv) - to save my APIs tokens
 
 - download 📥
-	- [react-native-ytdl](https://github.com/ytdl-js/react-native-ytdl) - used to download the mp4 video from Youtube
 	- [react-native-ffmpeg](https://github.com/tanersener/react-native-ffmpeg) - used to convert mp4 videos downloaded to mp3
 	- [react-native-fs](https://github.com/itinance/react-native-fs) - used to save the mp3 files on the chosen path
-	- [react-native-foreground-service](https://github.com/voximplant/react-native-foreground-service) - used to keep the download process active even if in background or closed
+	<!-- - [react-native-foreground-service](https://github.com/voximplant/react-native-foreground-service) - used to keep the download process active even if in background or closed -->
 
 - others
 	- [react-native-inappbrowser-reborn](https://github.com/proyecto26/react-native-inappbrowser) - used to access the Spotify Login Page
