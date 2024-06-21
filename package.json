@@ -1,0 +1,25 @@
+{
+  "name": "spothack-server",
+  "version": "1.0.0",
+  "description": "An aux Server to SpotHack",
+  "main": "index.js",
+  "author": "Darguima",
+  "license": "MIT",
+  "scripts": {
+    "dev_build": "tsc -w",
+    "dev_deploy": "nodemon build/index.js",
+    "dev": "yarn dev_build & yarn dev_deploy",
+    "build": "tsc",
+    "deploy": "node build/index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "scrape-youtube": "^2.4.0",
+    "typescript": "^5.4.5",
+    "ytdl-core": "^4.11.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.1.4"
+  }
+}
