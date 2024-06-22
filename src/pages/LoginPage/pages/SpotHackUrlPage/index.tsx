@@ -124,9 +124,10 @@ const styles = StyleSheet.create({
 
   infoTextContainer: {
     width: '100%',
-    height: '40%',
+    height: '60%',
 
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    gap: 32,
     alignItems: 'center',
   },
 
