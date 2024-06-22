@@ -28,10 +28,10 @@ You are currently in the branch for the V1.1. All the packages (including React 
 
 For future references, this are the next steps to conclude the V1.1:
 
-- [ ] Update the `react-native-ytdl` package or find a replacement
+- [x] Update the `react-native-ytdl` package or find a replacement
 - [ ] Reactive `src/SpotHack_Core/DownloadMachine/machineMethods/foregroundService.ts`
-- [ ] Check if the `react-native-ffmpeg` is still working (mainly because `FFmpegKit.disableLogs()`)
-- [ ] Find a new Youtube Scraper (optional)
+- [x] Check if the `react-native-ffmpeg` is still working (mainly because `FFmpegKit.disableLogs()`)
+- [x] Find a new Youtube Scraper (optional)
 - [ ] Improve the DownloadMachine (optional)
 
 ## Table of Contents 🗃️

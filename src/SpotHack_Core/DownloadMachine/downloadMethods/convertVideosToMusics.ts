@@ -52,7 +52,7 @@ export default async function convertVideosToMusics(this: DownloadMachine) {
         };
       });
 
-      // FFmpegKit.disableLogs(); This was used on the deprecated FFmpeg package
+      FFmpegKitConfig.enableLogCallback(_ => {}); // disable logs
 
       session = await FFmpegKit.execute(
         `-i "${temporaryPathWithFile}" ${
