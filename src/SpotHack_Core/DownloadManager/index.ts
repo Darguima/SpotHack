@@ -317,6 +317,10 @@ export class DownloadManager {
           )
         ).data;
 
+        if (!newTracks) {
+          break;
+        }
+
         tracks.push(...newTracks.items);
 
         if (tracks.length >= newTracks.total) {

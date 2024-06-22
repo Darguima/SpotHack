@@ -28,23 +28,25 @@ const mobile: React.FC = () => {
     ]);
   }, []);
 
-  if (!downloadMachine.isFgServiceOn) {
-    RNFS.readDir(RNFS.CachesDirectoryPath).then(foldersOnCache => {
-      if (
-        foldersOnCache.some(
-          pathOnCache =>
-            pathOnCache.name === 'musicsVideos' && pathOnCache.isDirectory(),
-        )
-      ) {
-        RNFS.readDir(RNFS.CachesDirectoryPath + '/musicsVideos').then(
-          musicsToDelete =>
-            musicsToDelete.forEach(musicToDelete =>
-              RNFS.unlink(musicToDelete.path),
-            ),
-        );
-      }
-    });
-  }
+  useEffect(() => {
+    if (!downloadMachine.isFgServiceOn) {
+      RNFS.readDir(RNFS.CachesDirectoryPath).then(foldersOnCache => {
+        if (
+          foldersOnCache.some(
+            pathOnCache =>
+              pathOnCache.name === 'musicsVideos' && pathOnCache.isDirectory(),
+          )
+        ) {
+          RNFS.readDir(RNFS.CachesDirectoryPath + '/musicsVideos').then(
+            musicsToDelete =>
+              musicsToDelete.forEach(musicToDelete =>
+                RNFS.unlink(musicToDelete.path),
+              ),
+          );
+        }
+      });
+    }
+  }, []);
 
   return (
     <ApiCredentialsProvider>
