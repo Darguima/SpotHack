@@ -58,8 +58,10 @@ const SearchBarHeader: React.FC<SearchBarHeaderProps> = ({
     Keyboard.addListener('keyboardDidHide', handleHideKeyboard);
 
     return () => {
-      Keyboard.removeListener('keyboardDidShow', handleShowKeyboard);
-      Keyboard.removeListener('keyboardDidHide', handleHideKeyboard);
+      // Keyboard.removeListener('keyboardDidShow', handleShowKeyboard);
+      // Keyboard.removeListener('keyboardDidHide', handleHideKeyboard);
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
     };
   }, []);
 

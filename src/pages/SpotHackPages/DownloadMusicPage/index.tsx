@@ -97,8 +97,8 @@ const DownloadMusicPage: React.FC<StackScreenProps<any>> = ({navigation}) => {
     return () => {
       navigation.removeListener('focus', onFocus);
       navigation.removeListener('blur', onBlur);
-      AppState.removeEventListener('focus', onFocus);
-      AppState.removeEventListener('blur', onBlur);
+      // AppState.removeEventListener('focus', onFocus);
+      // AppState.removeEventListener('blur', onBlur);
     };
   }, []);
 
