@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,35 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import {SPOTHACK_SERVER_URL} from '@env';
+
 import useAuth from '../../../../contexts/auth';
+import useSpotHackSettings from '../../../../contexts/spotHackSettings';
 
 const SpotifyLoginPage: React.FC = () => {
   const {logIn, errorOnLogin} = useAuth();
+  const {spotHackSettings} = useSpotHackSettings();
+
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [serverUrlInFault, setServerUrlInFault] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (errorOnLogin) {
+      setErrorMsg(errorOnLogin);
+    } else if (serverUrlInFault) {
+      setErrorMsg('Please, set the SpotHack Server URL first.');
+    } else {
+      setErrorMsg('');
+    }
+  }, [errorOnLogin, serverUrlInFault]);
 
   const loginButtonPress = () => {
-    logIn();
+    const serverUrl = spotHackSettings.spothackServerUrl || SPOTHACK_SERVER_URL;
+    setServerUrlInFault(!serverUrl);
+
+    if (serverUrl) {
+      logIn();
+    }
   };
 
   return (
@@ -28,9 +50,9 @@ const SpotifyLoginPage: React.FC = () => {
           />
         </View>
 
-        {!!errorOnLogin && (
+        {!!errorMsg && (
           <View style={styles.errorMsgContainer}>
-            <Text style={styles.errorMsg}>{errorOnLogin}</Text>
+            <Text style={styles.errorMsg}>{errorMsg}</Text>
           </View>
         )}
 

@@ -10,6 +10,7 @@ import {
 import useSpotHackSettings from '../../../../../../contexts/spotHackSettings';
 import ContentBox from '../../../../../Components/ContentBox';
 import {SPOTHACK_SERVER_URL} from '@env';
+import validateURL from '../../../../../../utils/validateURL';
 
 const SpotHackServerUrlInput: React.FC = () => {
   const {spotHackSettings, saveNewSpotHackSettings} = useSpotHackSettings();
@@ -28,12 +29,9 @@ const SpotHackServerUrlInput: React.FC = () => {
   }, [spotHackSettings]);
 
   const verifyAndSetNewUrlValid = (possibleNewUrl: string | undefined) => {
-    const pattern =
-      /^(https?:\/\/)?([a-zA-Z0-9.-]+(:[a-zA-Z0-9.-]+)?@)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(:\d{2,5})?(\/[^\s]*)?$/;
-
     const valid =
-      pattern.test(possibleNewUrl) ||
       possibleNewUrl === undefined ||
+      validateURL(possibleNewUrl) ||
       possibleNewUrl === '';
 
     setIsNewServerUrlValid(valid);

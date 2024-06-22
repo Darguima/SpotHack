@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet} from 'react-native';
 import SpotifyCredentialsPage from './pages/SpotifyCredentialsPage';
 import SpotifyLoginPage from './pages/SpotifyLoginPage';
 import YoutubeCredentialsPage from './pages/YoutubeCredentialsPage';
+import SpotHackUrlPage from './pages/SpotHackUrlPage';
 
 const LoginPage: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const LoginPage: React.FC = () => {
 
       <ScrollView horizontal={true} pagingEnabled={true}>
         <SpotifyCredentialsPage />
+        <SpotHackUrlPage />
         <YoutubeCredentialsPage />
       </ScrollView>
     </ScrollView>

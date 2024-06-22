@@ -9,7 +9,6 @@ import useAuth from '../contexts/auth';
 import {UserDataProvider} from '../contexts/userData';
 import {AppUtilsProvider} from '../contexts/appUtils';
 import {UserHistoryProvider} from '../contexts/userHistory';
-import {SpotHackSettingsProvider} from '../contexts/spotHackSettings';
 import {DownloadsInfoProvider} from '../contexts/downloadsInfo';
 
 import downloadManager from '../SpotHack_Core/DownloadManager';
@@ -29,11 +28,9 @@ const Routes: React.FC = () => {
     <UserDataProvider>
       <AppUtilsProvider>
         <UserHistoryProvider>
-          <SpotHackSettingsProvider>
-            <DownloadsInfoProvider>
-              <AppRoutes />
-            </DownloadsInfoProvider>
-          </SpotHackSettingsProvider>
+          <DownloadsInfoProvider>
+            <AppRoutes />
+          </DownloadsInfoProvider>
         </UserHistoryProvider>
       </AppUtilsProvider>
     </UserDataProvider>

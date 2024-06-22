@@ -150,6 +150,9 @@ $ git clone git@github.com:Darguima/SpotHack.git SpotHackServer
 # Enter the folder
 $ cd SpotHackServer
 
+# Go to the server branch
+$ git switch server
+
 # Install the dependencies
 $ yarn
 
@@ -158,7 +161,7 @@ $ yarn build
 $ yarn deploy
 ```
 
-Now you need to provide the server URL to the app. To store the URL, you can create a file named `.env` with the following structure, or you can input it directly in the app, below the login page or in the app settings.
+Now you need to provide the server URL to the app. This URL is the link that you use to access the server from **outside the localhost** (probably is `https://<server_IP>:3000`). To store the URL, you can create a file named `.env` with the following structure, or you can input it directly in the app, below the login page or in the app settings.
 
 ```env
 SPOTHACK_SERVER_URL= ...

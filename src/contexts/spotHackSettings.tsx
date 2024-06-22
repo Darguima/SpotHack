@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import {SPOTHACK_SERVER_URL} from '@env';
 
 import {mkdir, DownloadDirectoryPath} from 'react-native-fs';
 
@@ -22,7 +23,7 @@ interface spotHackSettingsSchema {
   rootPath: string;
   defaultDownloadSource: string;
 
-  spothackServerUrl: string | undefined;
+  spothackServerUrl: string;
 
   musicTimeLimit: number;
   slowRender: boolean;
@@ -36,7 +37,7 @@ const defaultSpotHackSettings: spotHackSettingsSchema = {
   rootPath: `${DownloadDirectoryPath}/`,
   defaultDownloadSource: 'ytFirstVideoOnSearch',
 
-  spothackServerUrl: undefined,
+  spothackServerUrl: '',
 
   musicTimeLimit: 0.75,
   slowRender: true,
@@ -51,6 +52,7 @@ const voidSpotHackSettings: spotHackSettingsSchema = {
 
   rootPath: '',
   defaultDownloadSource: '',
+  spothackServerUrl: '',
 };
 
 const SpotHackSettingsContext = createContext<SpotHackSettingsContextData>(
@@ -93,6 +95,7 @@ export const SpotHackSettingsProvider: React.FC = ({children}) => {
     })();
   }, []);
 
+  // This will be run always at the start of the App due the Async Storage read
   useEffect(() => {
     (async () => {
       await mkdir(spotHackSettings.rootPath);
@@ -110,7 +113,9 @@ export const SpotHackSettingsProvider: React.FC = ({children}) => {
       prevSpotHackSettingsRef.current = spotHackSettings;
     })();
 
-    downloadMachine.setSpotHackServerURL(spotHackSettings.spothackServerUrl);
+    downloadMachine.setSpotHackServerURL(
+      spotHackSettings.spothackServerUrl || SPOTHACK_SERVER_URL,
+    );
   }, [spotHackSettings]);
 
   const saveNewSpotHackSettings = (

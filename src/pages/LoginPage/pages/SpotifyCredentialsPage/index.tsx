@@ -100,7 +100,7 @@ const SpotifyCredentialsPage: React.FC = () => {
           color="#000"
         />
         <Text style={styles.swipeSideText}>
-          Swipe Left - Youtube Credentials
+          Swipe Left - Youtube and Server
         </Text>
       </View>
     </View>

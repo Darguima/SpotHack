@@ -6,6 +6,7 @@ import * as RNFS from 'react-native-fs';
 
 import {AuthProvider} from './src/contexts/auth';
 import {ApiCredentialsProvider} from './src/contexts/apiCredentials';
+import {SpotHackSettingsProvider} from './src/contexts/spotHackSettings';
 
 import Routes from './src/routes/index';
 import NoInternetConnection from './src/pages/SpotHackPages/NoInternetConnection';
@@ -48,13 +49,15 @@ const mobile: React.FC = () => {
   return (
     <ApiCredentialsProvider>
       <AuthProvider>
-        <StatusBar
-          barStyle={'light-content'}
-          translucent={false}
-          backgroundColor={'#1c5ed6'}
-        />
+        <SpotHackSettingsProvider>
+          <StatusBar
+            barStyle={'light-content'}
+            translucent={false}
+            backgroundColor={'#1c5ed6'}
+          />
 
-        {isOnline ? <Routes /> : <NoInternetConnection />}
+          {isOnline ? <Routes /> : <NoInternetConnection />}
+        </SpotHackSettingsProvider>
       </AuthProvider>
     </ApiCredentialsProvider>
   );
