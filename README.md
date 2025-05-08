@@ -1,75 +1,173 @@
-<h1 align="center">
-	<a href="https://github.com/Darguima/SpotHack">
-		<img alt="SpotHack" src="./readme/Logo/SpotHackLogoHorizontal_500.png" width="350px"/>
-	</a>
-</h1>
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/darguima/spothack">
+    <img src="./readme/Logo/SpotHackLogoHorizontal_500.png" alt="SpotHack thumbnail" width="350px">
+  </a>
 
-<h2 align="center">
-	SpotHack
-</h2>
+  <h3 align="center">SpotHack</h3>
 
-<p align="center">
-SpotHack is a project where you can convert your Spotify Playlists to .mp3 files in the respective folder. Download your favorites musics and playlists to listen when you are offline. SpotHack is also an open-source project so is possible anyone help since reporting bugs, writing code, documentation, giving ideas or just checking the <a href="https://www.github.com/Darguima/SpotHack">homepage</a>.
-</p>
+  <p align="center">
+    Convert your Spotify Playlists to offline versions that are always up to date, without paying the Premium.
+    <br />
+    <br />
+    <a href="#️-download--installation">Download Project</a>
+    &middot;
+    <a href="#-getting-started-with-development">Start Developing</a>
+  </p>
 
 <h4 align="center">
 ⭐ Don't forget to Starring ⭐
 </h4>
 
-<h1 align="center">
-		<img alt="SpotHack" src="./readme/ScreenShots/AllPages.png" max-height=5000px"/>
-</h1>
+  <div align="center">
 
-<br/>
+[![TypeScript][TypeScript-badge]][TypeScript-url]
+[![ReactNative][ReactNative-badge]][ReactNative-url]
 
-## Table of Contents 🗃️
+  </div>
 
-- [Download & Installation](#download--installation-)
-- [How it works?](#how-it-works-)
-- [Getting Started](#getting-started-)
+  <p align="center">
+    <img alt="SpotHack Media" src="./readme/ScreenShots/AllPages.png" width="100%" height="auto" />
+  </p>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>📋 Table of Contents</summary>
+
+## 📋 Table of Contents
+
+- [About The Project](#-about-the-project)
+- [Download & Installation](#️-download--installation)
+- [Getting Started with Development](#-getting-started-with-development)
 - [API Credentials](#api-credentials)
-- [Pages/Features](#pagesfeatures-)
-- [Technologies Used](#technologies-used-)
-- [Disclaimer](#-disclaimer-)
-- [License](#license-%EF%B8%8F)
+- [Contributing](#-contributing)
+- [License](#️-license)
+- [Disclaimer](#️-disclaimer)
+</details>
 
-## Download & Installation 📥📲
+
+
+## 🔍 About The Project
+
+### ⚙️ How it works?
+
+After you select your music or playlist, our `Download Machine` will, with the [YouTube Scraper](https://github.com/HermanFassett/youtube-scrape) or the [YouTube API](https://developers.google.com/youtube/v3), search for the music video, with the query starting with the artists name followed by the track name. Once we get the YouTube ID we can download the music video and convert it to  `.mp3` with `ffmpeg`.
+
+### 📱 Pages
+
+<details>
+  <summary>Click to expand pages</summary>
+
+### Login Page
+
+<img src="./readme/ScreenShots/LoginPage.png" style='width: 80%'/>
+
+* Enter your APIs tokens (if not configured on APK building).
+* Login !!
+
+### Home Page
+
+<img src="./readme/ScreenShots/HomePage.png" style='width: 30%'/>
+
+* Shortcuts to "Outdated Playlists", "Downloads Manager", "Settings Page" and others ...
+
+___
+
+### Search Pages
+
+<img src="./readme/ScreenShots/SearchPage.png" style='width: 80%'/>
+
+* Search for your favorite musics and playlists.
+* Download them !!
+
+___
+
+### Download Page
+
+<img src="./readme/ScreenShots/DownloadPage.png" style='width: 30%'/>
+
+* Follow the download status of your musics.
+* Know about the errors.
+
+___
+
+### Settings Page
+
+<img src="./readme/ScreenShots/SettingsPage.png" style='width: 80%'/>
+
+* Change the "Root Path", "Download Default Source", "Music Time Limit", and the Render Mode.
+
+___
+
+### Outdate Playlist Page
+
+<img src="./readme/ScreenShots/OutdatedPlaylistsPage.png" style='width: 30%'/>
+
+* Follow your playlist Status.
+* Download the news musics.
+* Delete the old ones.
+
+___
+
+### Add Playlist Page
+
+<img src="./readme/ScreenShots/AddPlaylistPage.png" style='width: 45%'/>
+
+* Reference a Playlist to a folder, if we can't do it.
+
+</details>
+
+
+
+## ⬇️ Download & Installation
 
 You can download this App in the Releases or build the code with some changes that  you may want.
 
 * [Download APK](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHack.apk) - (don't forget the [API Credentials](#api-credentials))
-* [Download and Build the Code](#getting-started-)
-* [Download APK 🔑](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHackLocked.zip) for my friends - (__need password to install__ 🔒)
+* [Download and Build the Code](#-getting-started-with-development)
+* [Download APK 🔑](https://github.com/Darguima/SpotHack/releases/download/v1.0.1/SpotHackLocked.zip) for my friends - (__need password to install__ 🔒) 
 
-## How it works? ⚙⚙
 
-After you select your music or playlist our `Download Machine` will, with the [YouTube Scraper](https://github.com/HermanFassett/youtube-scrape) or the [YouTube API](https://developers.google.com/youtube/v3), search for the music video, with the query starting with the artists name followed by the track name. Once we get the YouTube ID we can download the music video and convert it to  `.mp3` with `ffmpeg`.
 
-## Getting Started 🚀
+## 🚀 Getting Started with Development
 
-### Prerequisites
+To get a local copy up and running follow these simple example steps.
 
-- `Git` to clone the repository;
+### 1. Prerequisites
 
-- `Yarn` to install dependencies;
+Start by installing the following tools:
 
-- For run the project you will need the `React Native` Environment configured. You can follow the [ReactNative Official Documentation](https://reactnative.dev/docs/environment-setup#development-os);
+* [Git](https://git-scm.com/downloads) - Version Control System
+
+* [Yarn](https://yarnpkg.com/getting-started/install) - Package Manager
+
+* For run the project you will need the `React Native` Environment configured. You can follow the [ReactNative Official Documentation](https://reactnative.dev/docs/environment-setup#development-os);
 
 ###### Note: This project was only tested and developed for Android, so I don't know if it works properly in IOS. Is recommended that you run it in an `Android Phone`;
 
-##### Cloning
+### 2. Cloning
+
+Now clone the repository to your local machine. You can do this using Git:
 
 ```bash
 $ git clone https://github.com/Darguima/SpotHack.git
+# or
+$ git clone git@github.com:Darguima/SpotHack.git
 ```
 
-##### Installing Dependencies
+### 3. Dependencies
+
+Install the dependencies using Yarn:
 
 ```bash
 $ yarn
 ```
 
-##### Set credentials for third-party APIs 🪪
+### 4. Set credentials for third-party APIs 🪪
 
 This App use 2 third-party APIs:
 * Spotify Api (Web Api)
@@ -77,7 +175,7 @@ This App use 2 third-party APIs:
 
 You can save this credentials in a `.env` file or input them directly on the App. To get the required credentials you can follow our [tutorial](#api-credentials).
 
-### Setup 🛠️
+### 4. Setup 🛠️
 
 - To setup the application you can use:
 
@@ -88,8 +186,7 @@ yarn android
 
 At this moment you should have a Android Emulator with `SpotHack` running
 
-
-### Building the APK
+### 5. Building the APK
 
 #### Generate a KeyStore 🔑
 
@@ -164,96 +261,54 @@ Unlike Spotify, YouTube API is not essential for the App flow, so you can omit t
 
 https://user-images.githubusercontent.com/49988070/164891593-d4cd9acc-14b3-428c-a65d-604975ad4a83.mp4
 
-## Pages/Features 📚
-
-### Login Page
-
-<img src="./readme/ScreenShots/LoginPage.png" style='width: 80%'/>
-
-* Enter your APIs tokens (if not configured on APK building).
-* Login !!
-
-___
-
-### Home Page
-
-<img src="./readme/ScreenShots/HomePage.png" style='width: 30%'/>
-
-* Shortcuts to "Outdated Playlists", "Downloads Manager", "Settings Page" and others ...
-
-___
-
-### Search Pages
-
-<img src="./readme/ScreenShots/SearchPage.png" style='width: 80%'/>
-
-* Search for your favorite musics and playlists.
-* Download them !!
-
-___
-
-### Download Page
-
-<img src="./readme/ScreenShots/DownloadPage.png" style='width: 30%'/>
-
-* Follow the download status of your musics.
-* Know about the errors.
-
-___
-
-### Settings Page
-
-<img src="./readme/ScreenShots/SettingsPage.png" style='width: 80%'/>
-
-* Change the "Root Path", "Download Default Source", "Music Time Limit", and the Render Mode.
-
-___
-
-### Outdate Playlist Page
-
-<img src="./readme/ScreenShots/OutdatedPlaylistsPage.png" style='width: 30%'/>
-
-* Follow your playlist Status.
-* Download the news musics.
-* Delete the old ones.
-
-___
-
-### Add Playlist Page
-
-<img src="./readme/ScreenShots/AddPlaylistPage.png" style='width: 45%'/>
-
-* Reference a Playlist to a folder, if we can't do it.
-
-___
 
 
-## Technologies Used 💻
+## 🤝 Contributing
 
-- core ⚛
-	- JavaScript/TypeScript
-	- React Native
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-- storage 💾
-	- [Async Storage](https://github.com/react-native-async-storage/async-storage) - to save data as settings and histories
-	- [react-native-encrypted-storage](https://github.com/emeraldsanto/react-native-encrypted-storage) - to save users' APIs tokens
-	- [react-native-dotenv](https://github.com/goatandsheep/react-native-dotenv) - to save my APIs tokens
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-- download 📥
-	- [react-native-ytdl](https://github.com/ytdl-js/react-native-ytdl) - used to download the mp4 video from Youtube
-	- [react-native-ffmpeg](https://github.com/tanersener/react-native-ffmpeg) - used to convert mp4 videos downloaded to mp3
-	- [react-native-fs](https://github.com/itinance/react-native-fs) - used to save the mp3 files on the chosen path
-	- [react-native-foreground-service](https://github.com/voximplant/react-native-foreground-service) - used to keep the download process active even if in background or closed
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-- others
-	- [react-native-inappbrowser-reborn](https://github.com/proyecto26/react-native-inappbrowser) - used to access the Spotify Login Page
 
----
 
-## 🚨 Disclaimer 🚨
+## ⚖️ License
+
+Distributed under the MIT LICENSE. See `LICENSE` file for more information.
+
+
+
+## ⚠️ Disclaimer
 
 This project can be considered a piracy service to download music. No source code here was used in production, nor was it ever used with the idea of making money. I only disposed of the code as open source because this is a study project. If you want to use it as a service, use it at your own risk, but remember that artists and publishers are likely to own the downloaded music.
 
 
-## License 👨🏾‍⚖️
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[project-thumbnail]: ./readme/Logo/SpotHackLogoHorizontal_500.png
+
+[university-badge]: https://img.shields.io/badge/University-Universidade%20do%20Minho-red?style=for-the-badge
+[subject-badge]: https://img.shields.io/badge/Subject-[UNI_SUBJECT_NAME]-blue?style=for-the-badge
+[grade-badge]: https://img.shields.io/badge/Grade-[UNI_GRADE]%2F20-brightgreen?style=for-the-badge
+
+[JavaScript-badge]: https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black
+[JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+
+[TypeScript-badge]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[TypeScript-url]: https://www.typescriptlang.org
+
+[React.js-badge]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+
+[Next.js-badge]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+
+[ReactNative-badge]: https://img.shields.io/badge/React%20Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[ReactNative-url]: https://reactnative.dev
